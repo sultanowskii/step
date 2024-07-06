@@ -1,0 +1,8 @@
+*.elf
+*.o
+*.out
+
+.gdb_history
+vgcore.*
+
+.vscode/
