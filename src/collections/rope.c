@@ -142,19 +142,15 @@ struct Rope *rope_merge(struct Rope *r1, struct Rope *r2) {
     return rope_rebalance(root);
 }
 
-// TODO: handle edge cases (0, 1, length, length-1, length+1)
+// Index can't be 0 and length-1 - none of these make sense
 struct RopePair rope_split(struct Rope *rope, size_t index) {
     struct Rope *left = NULL;
     struct Rope *right = NULL;
 
-    if (rope == NULL) {
-        goto RETURN;
-    }
-
     if (rope->str != NULL) {
         left = _rope_create_from_string(rope->str, 0, index);
         right = _rope_create_from_string(rope->str, index, rope->length);
-        goto CLEAN;
+        goto RETURN;
     }
 
     if (index <= rope->left->length) {
@@ -167,12 +163,11 @@ struct RopePair rope_split(struct Rope *rope, size_t index) {
         right = rope_rebalance(pair.second);
     }
 
-CLEAN:
+RETURN:
     // invalidate and clean the parent
     rope->left = NULL;
     rope->right = NULL;
     rope_destroy(rope);
-RETURN:
     return (struct RopePair) {
         left,
         right,
@@ -180,6 +175,22 @@ RETURN:
 }
 
 struct Rope *rope_delete(struct Rope *rope, size_t l, size_t r) {
+    if (rope == NULL) {
+        return NULL;
+    }
+
+    if (l == 0) {
+        struct RopePair pair = rope_split(rope, r);
+        rope_destroy(pair.first);
+        return pair.second;
+    }
+
+    if (r == rope->length - 1) {
+        struct RopePair pair = rope_split(rope, l);
+        rope_destroy(pair.second);
+        return pair.first;
+    }
+
     struct RopePair pair1 = rope_split(rope, l);
     struct Rope *result_left = pair1.first;
 
@@ -193,12 +204,22 @@ struct Rope *rope_delete(struct Rope *rope, size_t l, size_t r) {
 }
 
 struct Rope *rope_insert(struct Rope *root, size_t index, const char *s) {
-    struct RopePair pair = rope_split(root, index);
     struct Rope *piece = rope_create_from_string(s);
+
+    if (index == 0) {
+        return rope_merge(piece, root);
+    }
+
+    if (index == root->length - 1) {
+        return rope_merge(root, piece);
+    }
+
+    struct RopePair pair = rope_split(root, index);
     struct Rope *left_part = rope_merge(pair.first, piece);
     return rope_merge(left_part, pair.second);
 }
 
+// ==== DARK MAGIC BEGINS HERE ====
 size_t _get_total_length(struct Rope *rope) {
     if (rope == NULL) {
         return 0;
@@ -304,3 +325,4 @@ struct Rope* rope_rebalance(struct Rope *rope) {
     }
     return rope;
 }
+// ==== DARK MAGIC ENDS HERE ====
