@@ -1,9 +1,9 @@
 CFLAGS        = -Wall -Wextra -fPIC -g
 CFLAGS_DEBUG  = -Wall -Wextra -fPIC -g
-INCLUDES      = -Isrc -L.
+INCLUDES      = -Isrc
 
 NAME          = ste
-SRCS          = $(wildcard src/*.c)
+SRCS          = $(wildcard src/*.c src/**/*.c)
 0BJS          = $(SRCS:.c=.o)
 TARGET        = $(NAME).elf
 
@@ -12,7 +12,7 @@ default: clean build
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET) *.o src/*.o
+	rm -f $(TARGET) *.o src/*.o src/**/*.o
 
 .PHONY: build
 build: $(TARGET)

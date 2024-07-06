@@ -1,10 +1,11 @@
-#include "rope.h"
+#include "collections/rope.h"
 
 #include <stddef.h>
 #include <malloc.h>
 #include <string.h>
 
-#include "string_util.h"
+#include "math.h"
+#include "str.h"
 #include "util.h"
 
 struct Rope {
