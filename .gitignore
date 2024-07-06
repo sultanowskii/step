@@ -1,6 +1,7 @@
 *.elf
 *.o
 *.out
+ste
 
 .gdb_history
 vgcore.*
