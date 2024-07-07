@@ -1,7 +1,7 @@
 #include "collections/rope.h"
 
-#include <stddef.h>
 #include <malloc.h>
+#include <stddef.h>
 #include <string.h>
 
 #include "math.h"
@@ -14,7 +14,7 @@ struct Rope {
     struct Rope *parent;
     char *str;
     size_t length;
-    
+
     // for balancing
     size_t total_length;
     int height;
@@ -91,7 +91,7 @@ void rope_print(struct Rope *rope) {
         return;
     }
 
-    if (rope->left != NULL){
+    if (rope->left != NULL) {
         rope_print(rope->left);
     }
     if (rope->right != NULL) {
@@ -168,9 +168,9 @@ RETURN:
     rope->left = NULL;
     rope->right = NULL;
     rope_destroy(rope);
-    return (struct RopePair) {
-        left,
-        right,
+    return (struct RopePair){
+     left,
+     right,
     };
 }
 
@@ -244,7 +244,7 @@ int _get_balance_factor(struct Rope *rope) {
 void _recalculate_height(struct Rope *rope) {
     if (rope != NULL) {
         size_t left_height = _get_height(rope->left);
-        size_t right_height = _get_height(rope->right); 
+        size_t right_height = _get_height(rope->right);
         rope->height = 1 + MAX(left_height, right_height);
     }
 }
@@ -260,7 +260,7 @@ void _recalculate_balancing_parameters(struct Rope *rope) {
     _recalculate_total_length(rope);
 }
 
-struct Rope* _rope_rotate_left(struct Rope *rope) {
+struct Rope *_rope_rotate_left(struct Rope *rope) {
     struct Rope *new_root = rope->right;
     rope->right = new_root->left;
     if (new_root->left != NULL) {
@@ -282,7 +282,7 @@ struct Rope* _rope_rotate_left(struct Rope *rope) {
     return new_root;
 }
 
-struct Rope* _rope_rotate_right(struct Rope *rope) {
+struct Rope *_rope_rotate_right(struct Rope *rope) {
     struct Rope *new_root = rope->left;
     rope->left = new_root->right;
     if (new_root->right != NULL) {
@@ -304,7 +304,7 @@ struct Rope* _rope_rotate_right(struct Rope *rope) {
     return new_root;
 }
 
-struct Rope* rope_rebalance(struct Rope *rope) {
+struct Rope *rope_rebalance(struct Rope *rope) {
     if (rope == NULL) {
         return rope;
     }

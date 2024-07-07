@@ -53,7 +53,6 @@ int main() {
             puts("str");
             printf("> ");
             scanf(" %1024s", data);
-            
             text = rope_insert(text, index, data);
         } else if (c == 'd') {
             int l, r;

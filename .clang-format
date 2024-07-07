@@ -1,0 +1,5 @@
+BreakBeforeBraces: Attach
+IndentWidth: 4
+AllowShortFunctionsOnASingleLine: None
+ColumnLimit: 0
+ContinuationIndentWidth: 1
