@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #define MAX_LEAF_LENGTH 6
@@ -20,6 +21,9 @@ struct RopePair rope_split(struct Rope *rope, size_t index);
 
 struct Rope *rope_delete(struct Rope *rope, size_t l, size_t r);
 struct Rope *rope_insert(struct Rope *root, size_t index, const char *s);
+
+char rope_get_at(struct Rope *root, size_t index);
+bool rope_is_index_within(struct Rope *rope, size_t index);
 
 struct Rope *rope_rebalance(struct Rope *rope);
 

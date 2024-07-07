@@ -1,6 +1,7 @@
 #include "collections/rope.h"
 
 #include <malloc.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -22,6 +23,7 @@ struct Rope {
 
 struct Rope *_rope_create_from_string(const char *s, size_t l, size_t r);
 void _rope_debug_print(struct Rope *rope, size_t depth);
+char _rope_get_at(struct Rope *rope, size_t index);
 
 struct Rope *create_empty_rope() {
     struct Rope *rope = malloc(sizeof(struct Rope));
@@ -217,6 +219,28 @@ struct Rope *rope_insert(struct Rope *root, size_t index, const char *s) {
     struct RopePair pair = rope_split(root, index);
     struct Rope *left_part = rope_merge(pair.first, piece);
     return rope_merge(left_part, pair.second);
+}
+
+char rope_get_at(struct Rope *root, size_t index) {
+    return _rope_get_at(root, index);
+}
+
+char _rope_get_at(struct Rope *rope, size_t index) {
+    if (rope->str != NULL) {
+        return rope->str[index];
+    }
+
+    size_t left_length = rope->left->length;
+
+    if (index < left_length) {
+        return _rope_get_at(rope->left, index);
+    } else {
+        return _rope_get_at(rope->right, index - left_length);
+    }
+}
+
+bool rope_is_index_within(struct Rope *rope, size_t index) {
+    return 0 <= index && index < rope->length;
 }
 
 // ==== DARK MAGIC BEGINS HERE ====

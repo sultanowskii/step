@@ -39,6 +39,7 @@ int main() {
         puts("commands:");
         puts("i(insert)");
         puts("d(elete)");
+        puts("g(et)");
         puts("e(xit)");
         printf("> ");
 
@@ -64,6 +65,14 @@ int main() {
             scanf(" %d", &r);
 
             text = rope_delete(text, l, r);
+        } else if (c == 'g') {
+            int index;
+            puts("index");
+            printf("> ");
+            scanf(" %d", &index);
+
+            char c = rope_get_at(text, index);
+            printf("%c\n", c);
         } else if (c == 'e') {
             break;
         }
