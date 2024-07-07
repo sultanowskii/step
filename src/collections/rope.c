@@ -5,9 +5,10 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "debug.h"
 #include "math.h"
+#include "mem.h"
 #include "str.h"
-#include "util.h"
 
 struct Rope {
     struct Rope *left;
@@ -240,7 +241,7 @@ char _rope_get_at(struct Rope *rope, size_t index) {
 }
 
 bool rope_is_index_within(struct Rope *rope, size_t index) {
-    return 0 <= index && index < rope->length;
+    return index < rope->length;
 }
 
 // ==== DARK MAGIC BEGINS HERE ====
