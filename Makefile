@@ -1,6 +1,6 @@
 CFLAGS         := -Wall -Wextra -fPIC -g
 CFLAGS_DEBUG   := -Wall -Wextra -fPIC -g
-INCLUDES       := -Isrc
+INCLUDES       := -Isrc -lncurses
 
 ENTRYPOINT_SRC := src/main.c
 ENTRYPOINT_OBJ := src/main.o
@@ -16,7 +16,7 @@ default: clean build
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET) *.o src/*.o src/**/*.o playgrounds/*.o
+	rm -f $(TARGET) *.o src/*.o src/**/*.o playgrounds/*.o *.elf
 
 .PHONY: build
 build: $(TARGET)

@@ -1,6 +1,10 @@
-#include <stdio.h>
+#include <ncurses.h>
 
 int main() {
-    puts("Hello, world!");
+    initscr();
+    printw("Hello, world!");
+    refresh();
+    getch();
+    endwin();
     return 0;
 }
