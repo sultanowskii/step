@@ -31,7 +31,7 @@ int main() {
 
     struct Rope *long_text = rope_create_from_string("VERY\nVERY...\nVery!\nLong text! It's\nridiculous how long it is!");
     char buffer[1024];
-    size_t long_text_symbols_written = rope_fill_buffer_from_index(long_text, buffer, 0, 1000, 6);
+    size_t long_text_symbols_written = rope_fill_buffer_from_index(long_text, buffer, 3, 1000, 6);
     buffer[long_text_symbols_written] = '\0';
     printf("Here: %s\n", buffer);
     rope_destroy(long_text);

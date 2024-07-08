@@ -354,7 +354,6 @@ struct Rope *rope_rebalance(struct Rope *rope) {
 
 struct reader {
     size_t start_index;
-    bool start_reached;
     char *buffer;
     size_t max_symbols;
     size_t max_lines;
@@ -365,7 +364,6 @@ void _rope_fill_buffer(struct Rope *rope, struct reader *r);
 size_t rope_fill_buffer_from_index(struct Rope *rope, char buffer[], size_t start_index, size_t max_symbols, size_t max_lines) {
     struct reader r = (struct reader){
         start_index,
-        false,
         buffer,
         max_symbols,
         max_lines,
@@ -399,7 +397,13 @@ void _rope_fill_buffer(struct Rope *rope, struct reader *r) {
     }
 
     if (rope->str != NULL) {
-        _str_copy(rope->str, r);
+        size_t len = strlen(rope->str);
+        if (r->start_index < len) {
+            _str_copy(rope->str + r->start_index, r);
+            r->start_index = 0;
+        } else {
+            r->start_index -= len;
+        }
         return;
     }
 
