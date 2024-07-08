@@ -25,6 +25,8 @@ struct Rope *rope_insert(struct Rope *root, size_t index, const char *s);
 char rope_get_at(struct Rope *root, size_t index);
 bool rope_is_index_within(struct Rope *rope, size_t index);
 
+size_t rope_fill_buffer_from_index(struct Rope *rope, char buffer[], size_t start_index, size_t max_symbols, size_t max_lines);
+
 struct Rope *rope_rebalance(struct Rope *rope);
 
 void rope_print(struct Rope *rope);

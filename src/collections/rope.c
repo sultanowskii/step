@@ -172,8 +172,8 @@ RETURN:
     rope->right = NULL;
     rope_destroy(rope);
     return (struct RopePair){
-     left,
-     right,
+        left,
+        right,
     };
 }
 
@@ -351,3 +351,58 @@ struct Rope *rope_rebalance(struct Rope *rope) {
     return rope;
 }
 // ==== DARK MAGIC ENDS HERE ====
+
+struct reader {
+    size_t start_index;
+    bool start_reached;
+    char *buffer;
+    size_t max_symbols;
+    size_t max_lines;
+    size_t symbols_written;
+};
+void _rope_fill_buffer(struct Rope *rope, struct reader *r);
+
+size_t rope_fill_buffer_from_index(struct Rope *rope, char buffer[], size_t start_index, size_t max_symbols, size_t max_lines) {
+    struct reader r = (struct reader){
+        start_index,
+        false,
+        buffer,
+        max_symbols,
+        max_lines,
+        0,
+    };
+    _rope_fill_buffer(rope, &r);
+
+    return r.symbols_written;
+}
+
+void _str_copy(char *src, struct reader *r) {
+    while (r->max_symbols > 0 && r->max_lines > 0 && *src != '\0') {
+        *(r->buffer) = *src;
+        (r->max_symbols)--;
+        if (*src == '\n') {
+            (r->max_lines)--;
+        }
+        (r->buffer)++;
+        src++;
+        r->symbols_written++;
+    }
+}
+
+void _rope_fill_buffer(struct Rope *rope, struct reader *r) {
+    if (rope == NULL) {
+        return;
+    }
+
+    if (r->max_lines == 0 || r->max_symbols == 0) {
+        return;
+    }
+
+    if (rope->str != NULL) {
+        _str_copy(rope->str, r);
+        return;
+    }
+
+    _rope_fill_buffer(rope->left, r);
+    _rope_fill_buffer(rope->right, r);
+}

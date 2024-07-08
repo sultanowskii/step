@@ -1,6 +1,7 @@
 CFLAGS         := -Wall -Wextra -fPIC -g
 CFLAGS_DEBUG   := -Wall -Wextra -fPIC -g
 INCLUDES       := -Isrc -lncurses
+INCLUDES_ROPE  := -Isrc
 
 ENTRYPOINT_SRC := src/main.c
 ENTRYPOINT_OBJ := src/main.o
@@ -24,7 +25,7 @@ build: $(TARGET)
 .PHONY: playground-rope
 playground-rope: $(OBJS) playgrounds/playground_rope.o
 	echo $^
-	$(CC) $(INCLUDES) $(CFLAGS) -o playground_rope.elf $^
+	$(CC) $(INCLUDES_ROPE) $(CFLAGS) -o playground_rope.elf $^
 
 .PHONY: $(TARGET)
 $(TARGET): $(OBJS) $(ENTRYPOINT_OBJ)

@@ -1,10 +1,6 @@
-#include <ncurses.h>
+#include "tui/main_window.h"
 
 int main() {
-    initscr();
-    printw("Hello, world!");
-    refresh();
-    getch();
-    endwin();
+    main_window();
     return 0;
 }
