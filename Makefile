@@ -11,6 +11,8 @@ SRCS           := $(filter-out $(ENTRYPOINT_SRC), $(SRCS))
 OBJS           := $(SRCS:.c=.o)
 TARGET         := $(NAME)
 
+# TODO: separate playground objects, source objects etc.
+
 .PHONY: default
 default: clean build
 

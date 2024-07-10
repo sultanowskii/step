@@ -14,17 +14,17 @@ struct Rope {
     struct Rope *left;
     struct Rope *right;
     struct Rope *parent;
-    char *str;
-    size_t length;
+    char        *str;
+    size_t       length;
 
     // for balancing
     size_t total_length;
-    int height;
+    int    height;
 };
 
 struct Rope *_rope_create_from_string(const char *s, size_t l, size_t r);
-void _rope_debug_print(struct Rope *rope, size_t depth);
-char _rope_get_at(struct Rope *rope, size_t index);
+void         _rope_debug_print(struct Rope *rope, size_t depth);
+char         _rope_get_at(struct Rope *rope, size_t index);
 
 struct Rope *create_empty_rope() {
     struct Rope *rope = malloc(sizeof(struct Rope));
@@ -195,10 +195,10 @@ struct Rope *rope_delete(struct Rope *rope, size_t l, size_t r) {
     }
 
     struct RopePair pair1 = rope_split(rope, l);
-    struct Rope *result_left = pair1.first;
+    struct Rope    *result_left = pair1.first;
 
     struct RopePair pair2 = rope_split(pair1.second, r - l);
-    struct Rope *result_right = pair2.second;
+    struct Rope    *result_right = pair2.second;
 
     rope_destroy(pair2.first);
     pair2.first = FREED_DUMMY;
@@ -218,7 +218,7 @@ struct Rope *rope_insert(struct Rope *root, size_t index, const char *s) {
     }
 
     struct RopePair pair = rope_split(root, index);
-    struct Rope *left_part = rope_merge(pair.first, piece);
+    struct Rope    *left_part = rope_merge(pair.first, piece);
     return rope_merge(left_part, pair.second);
 }
 
@@ -354,7 +354,7 @@ struct Rope *rope_rebalance(struct Rope *rope) {
 
 struct reader {
     size_t start_index;
-    char *buffer;
+    char  *buffer;
     size_t max_symbols;
     size_t max_lines;
     size_t symbols_written;
