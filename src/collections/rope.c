@@ -23,8 +23,8 @@ struct Rope {
 };
 
 struct Rope *_rope_create_from_string(const char *s, size_t l, size_t r);
-void         _rope_debug_print(struct Rope *rope, size_t depth);
-char         _rope_get_at(struct Rope *rope, size_t index);
+void         _rope_debug_print(const struct Rope *rope, size_t depth);
+char         _rope_get_at(const struct Rope *rope, size_t index);
 
 struct Rope *create_empty_rope() {
     struct Rope *rope = malloc(sizeof(struct Rope));
@@ -88,7 +88,7 @@ struct Rope *_rope_create_from_string(const char *s, size_t l, size_t r) {
     return root;
 }
 
-void rope_print(struct Rope *rope) {
+void rope_print(const struct Rope *rope) {
     if (rope->str != NULL) {
         printf("%s", rope->str);
         return;
@@ -102,11 +102,11 @@ void rope_print(struct Rope *rope) {
     }
 }
 
-void rope_debug_print(struct Rope *rope) {
+void rope_debug_print(const struct Rope *rope) {
     _rope_debug_print(rope, 0);
 }
 
-void _rope_debug_print(struct Rope *rope, size_t depth) {
+void _rope_debug_print(const struct Rope *rope, size_t depth) {
     print_indent(depth);
     if (rope == NULL) {
         puts("NULL");
@@ -222,11 +222,11 @@ struct Rope *rope_insert(struct Rope *root, size_t index, const char *s) {
     return rope_merge(left_part, pair.second);
 }
 
-char rope_get_at(struct Rope *root, size_t index) {
+char rope_get_at(const struct Rope *root, size_t index) {
     return _rope_get_at(root, index);
 }
 
-char _rope_get_at(struct Rope *rope, size_t index) {
+char _rope_get_at(const struct Rope *rope, size_t index) {
     if (rope->str != NULL) {
         return rope->str[index];
     }
@@ -240,26 +240,26 @@ char _rope_get_at(struct Rope *rope, size_t index) {
     }
 }
 
-bool rope_is_index_within(struct Rope *rope, size_t index) {
+bool rope_is_index_within(const struct Rope *rope, size_t index) {
     return index < rope->length;
 }
 
 // ==== DARK MAGIC BEGINS HERE ====
-size_t _get_total_length(struct Rope *rope) {
+size_t _get_total_length(const struct Rope *rope) {
     if (rope == NULL) {
         return 0;
     }
     return rope->total_length;
 }
 
-int _get_height(struct Rope *rope) {
+int _get_height(const struct Rope *rope) {
     if (rope == NULL) {
         return 0;
     }
     return rope->height;
 }
 
-int _get_balance_factor(struct Rope *rope) {
+int _get_balance_factor(const struct Rope *rope) {
     if (rope == NULL) {
         return 0;
     }
