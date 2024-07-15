@@ -1,13 +1,23 @@
 #include "collections/gap_buffer.h"
 
+#include <malloc.h>
 #include <stddef.h>
 #include <string.h>
 
+#include "mem.h"
+
+#define DEFAULT_BUFFER_SIZE 64
+#define DEFAULT_GAP_SIZE 16
+
 struct GapBuffer {
-    char  *buffer;
+    char *buffer;
+    // Size of allocated buffer
     size_t size;
+    // A total bytes occupied in buffer (string + gap)
     size_t length;
+    // Index of left gap border (inclusive)
     size_t left;
+    // Index of right gap border (inclusive)
     size_t right;
 };
 
@@ -21,16 +31,41 @@ struct GapBuffer *gap_buffer_create_empty() {
     return gb;
 }
 
-struct GapBuffer *gap_buffer_create_from_string(const char *s) {
+struct GapBuffer *gap_buffer_create() {
     struct GapBuffer *gb = gap_buffer_create_empty();
-    // TODO: implement
+    gb->buffer = malloc(DEFAULT_BUFFER_SIZE + 1);
+    gb->size = DEFAULT_BUFFER_SIZE;
+    return gb;
 }
 
-void gap_buffer_grow(struct GapBuffer *gb, size_t pos, size_t n) {
-    size_t to_move = gb->length - pos;
+struct GapBuffer *gap_buffer_create_from_string(const char *s) {
+    struct GapBuffer *gb = gap_buffer_create();
+    gap_buffer_insert(gb, 0, s);
+    return gb;
+}
 
-    for (size_t i = gb->length + to_move; i > gb->length; i--) {
-        gb->buffer[i] = gb->buffer[i - to_move];
+void gap_buffer_destroy(struct GapBuffer *gb) {
+    free(gb->buffer);
+    gb->buffer = FREED_DUMMY;
+    free(gb);
+}
+
+void _gap_buffer_inrease_size(struct GapBuffer *gb, size_t size) {
+    while (gb->size <= size) {
+        gb->size *= 2; // TODO: improve
+    }
+
+    gb->buffer = realloc(gb->buffer, gb->size);
+}
+
+void _gap_buffer_grow(struct GapBuffer *gb, size_t pos, size_t n) {
+    size_t required_size = gb->length + n;
+    if (required_size >= gb->size) {
+        _gap_buffer_inrease_size(gb, required_size);
+    }
+
+    for (size_t i = gb->length + n; i > gb->length; i--) {
+        gb->buffer[i] = gb->buffer[i - n];
     }
 
     for (size_t i = pos; i < pos + n; i++) {
@@ -84,7 +119,7 @@ void gap_buffer_insert(struct GapBuffer *gb, size_t pos, const char *s) {
 
     while (i < n) {
         if (gb->left == gb->right) {
-            gap_buffer_grow(gb, current_pos, DEFAULT_GAP_SIZE);
+            _gap_buffer_grow(gb, current_pos, DEFAULT_GAP_SIZE);
         }
 
         gb->buffer[gb->left] = s[i];
@@ -94,7 +129,60 @@ void gap_buffer_insert(struct GapBuffer *gb, size_t pos, const char *s) {
     }
 }
 
-// TODO: delete()
-// TODO: get_at
-// TODO: set_at
+void gap_buffer_delete(struct GapBuffer *gb, size_t pos) {
+    if (pos + 1 == gb->size) {
+        gap_buffer_move_gap(gb, pos);
+        gb->right++;
+        gb->buffer[gb->right] = '_'; // TODO: remove?
+        return;
+    }
+
+    gap_buffer_move_gap(gb, pos + 1);
+    gb->left--;
+    gb->buffer[gb->left] = '_'; // TODO: remove?
+}
+
+void gap_buffer_print(const struct GapBuffer *gb) {
+    size_t index = 0;
+
+    while (index < gb->length) {
+        if (index == gb->left) {
+            index = gb->right + 1;
+            if (index >= gb->length) {
+                break;
+            }
+        }
+        putc(gb->buffer[index], stdout);
+        index++;
+    }
+}
+
+size_t _gap_buffer_get_gap_size(const struct GapBuffer *gb) {
+    return gb->size;
+}
+
+size_t _gap_buffer_get_real_position(const struct GapBuffer *gb, size_t pos) {
+    if (pos < gb->left) {
+        return pos;
+    }
+    return pos + _gap_buffer_get_gap_size(gb);
+}
+
+void gap_buffer_get_at(const struct GapBuffer *gb, size_t pos) {
+    return gb->buffer[_gap_buffer_get_real_index(pos)];
+}
+
+void gap_buffer_set_at(struct GapBuffer *gb, size_t pos, char c) {
+    gb->buffer[_gap_buffer_get_real_index(pos)] = c;
+}
+
+void gap_buffer_debug_print(const struct GapBuffer *gb) {
+    printf("GapBuffer (0x%lx)\n", (size_t)gb);
+    printf(" length: %zu\n", gb->length);
+    printf(" size:   %zu\n", gb->size);
+    printf(" left:   %zu\n", gb->left);
+    printf(" right:  %zu\n", gb->right);
+    printf(" data:   %s\n", gb->buffer);
+}
+
 // TODO: iterate

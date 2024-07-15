@@ -6,10 +6,15 @@ ENTRYPOINT_SRC := src/main.c
 ENTRYPOINT_OBJ := src/main.o
 
 NAME           := ste
+TARGET         := $(NAME)
+
+TUI_SRCS       := $(wildcard src/tui/*.c src/tui/**/*.c)
+TUI_OBJS       := $(TUI_SRCS:.c=.)
+
 SRCS           := $(wildcard src/*.c src/**/*.c)
 SRCS           := $(filter-out $(ENTRYPOINT_SRC), $(SRCS))
+SRCS           := $(filter-out $(TUI_SRCS), $(SRCS))
 OBJS           := $(SRCS:.c=.o)
-TARGET         := $(NAME)
 
 # TODO: separate playground objects, source objects etc.
 
@@ -28,8 +33,13 @@ playground-rope: $(OBJS) playgrounds/playground_rope.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_rope.elf $^
 
+.PHONY: playground-gap-buffer
+playground-gap-buffer: $(OBJS) playgrounds/playground_gap_buffer.o
+	echo $^
+	$(CC) $(INCLUDES) $(CFLAGS) -o playground_gap_buffer.elf $^
+
 .PHONY: $(TARGET)
-$(TARGET): $(OBJS) $(ENTRYPOINT_OBJ)
+$(TARGET): $(OBJS) $(TUI_OBJS) $(ENTRYPOINT_OBJ)
 	$(CC) $(INCLUDES) $(CFLAGS) -o $(TARGET) $^
 
 %.o: %.c
