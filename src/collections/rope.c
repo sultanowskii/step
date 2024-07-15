@@ -25,6 +25,7 @@ struct Rope {
 struct Rope *_rope_create_from_string(const char *s, size_t l, size_t r);
 void         _rope_debug_print(const struct Rope *rope, size_t depth);
 char         _rope_get_at(const struct Rope *rope, size_t index);
+char         _rope_set_at(const struct Rope *rope, size_t index, char c);
 
 struct Rope *create_empty_rope() {
     struct Rope *rope = malloc(sizeof(struct Rope));
@@ -232,11 +233,27 @@ char _rope_get_at(const struct Rope *rope, size_t index) {
     }
 
     size_t left_length = rope->left->length;
-
     if (index < left_length) {
         return _rope_get_at(rope->left, index);
     } else {
         return _rope_get_at(rope->right, index - left_length);
+    }
+}
+
+char rope_set_at(const struct Rope *root, size_t index, char c) {
+    return _rope_set_at(root, index, c);
+}
+
+char _rope_set_at(const struct Rope *rope, size_t index, char c) {
+    if (rope->str != NULL) {
+        rope->str[index] = c;
+    }
+
+    size_t left_length = rope->left->length;
+    if (index < left_length) {
+        return _rope_set_at(rope->left, index, c);
+    } else {
+        return _rope_set_at(rope->right, index - left_length, c);
     }
 }
 
