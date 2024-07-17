@@ -83,7 +83,7 @@ struct Rope *_rope_create_from_string(const char *s, size_t l, size_t r) {
         right->parent = root;
         root->right = right;
     } else {
-        root->str = strslice(s, l, r);
+        root->str = str_slice(s, l, r);
     }
 
     return root;
