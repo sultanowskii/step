@@ -10,7 +10,7 @@ NAME           := ste
 TARGET         := $(NAME)
 
 TUI_SRCS       := $(wildcard src/tui/*.c src/tui/**/*.c)
-TUI_OBJS       := $(TUI_SRCS:.c=.)
+TUI_OBJS       := $(TUI_SRCS:.c=.o)
 
 SRCS           := $(wildcard src/*.c src/**/*.c)
 SRCS           := $(filter-out $(ENTRYPOINT_SRC), $(SRCS))

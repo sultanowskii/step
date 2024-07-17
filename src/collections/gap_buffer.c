@@ -177,7 +177,7 @@ size_t _gap_buffer_get_real_position(const struct GapBuffer *gb, size_t pos) {
     return pos + _gap_buffer_get_gap_size(gb);
 }
 
-void gap_buffer_get_at(const struct GapBuffer *gb, size_t pos) {
+char gap_buffer_get_at(const struct GapBuffer *gb, size_t pos) {
     return gb->buffer[_gap_buffer_get_real_position(gb, pos)];
 }
 

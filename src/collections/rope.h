@@ -23,7 +23,7 @@ struct Rope *rope_delete(struct Rope *rope, size_t l, size_t r);
 struct Rope *rope_insert(struct Rope *root, size_t index, const char *s);
 
 char rope_get_at(const struct Rope *root, size_t index);
-char rope_set_at(const struct Rope *root, size_t index, char c);
+void rope_set_at(const struct Rope *root, size_t index, char c);
 bool rope_is_index_within(const struct Rope *rope, size_t index);
 
 size_t rope_fill_buffer_from_index(struct Rope *rope, char buffer[], size_t start_index, size_t max_symbols, size_t max_lines);
