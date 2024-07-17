@@ -33,12 +33,15 @@ int main() {
             break;
         }
         case 'd': {
-            int index;
+            int index, n;
             puts("index");
             printf("> ");
             scanf(" %d", &index);
+            puts("n");
+            printf("> ");
+            scanf(" %d", &n);
 
-            gap_buffer_delete(gb, index);
+            gap_buffer_delete_n(gb, index, n);
             break;
         }
         default:

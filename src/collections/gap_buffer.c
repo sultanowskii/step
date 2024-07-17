@@ -151,6 +151,12 @@ void gap_buffer_delete(struct GapBuffer *gb, size_t pos) {
     gb->buffer[gb->left] = '_'; // TODO: remove?
 }
 
+void gap_buffer_delete_n(struct GapBuffer *gb, size_t pos, size_t n) {
+    for (size_t i = 0; i < n; i++) {
+        gap_buffer_delete(gb, pos);
+    }
+}
+
 void gap_buffer_print(const struct GapBuffer *gb) {
     size_t index = 0;
 
