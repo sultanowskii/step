@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "math.h"
 #include "mem.h"
 
 #define DEFAULT_BUFFER_SIZE 64
@@ -33,7 +34,7 @@ struct GapBuffer *gap_buffer_create_empty() {
 
 struct GapBuffer *gap_buffer_create() {
     struct GapBuffer *gb = gap_buffer_create_empty();
-    gb->buffer = malloc(DEFAULT_BUFFER_SIZE + 1);
+    gb->buffer = calloc(DEFAULT_BUFFER_SIZE + 1, sizeof(char));
     gb->size = DEFAULT_BUFFER_SIZE;
     return gb;
 }
@@ -59,13 +60,21 @@ void _gap_buffer_inrease_size(struct GapBuffer *gb, size_t size) {
 }
 
 void _gap_buffer_grow(struct GapBuffer *gb, size_t pos, size_t n) {
-    size_t required_size = gb->length + n;
+    size_t length = gb->length;
+    // number of symbols to move forward
+    size_t to_move = length - pos;
+
+    size_t new_length = length + n;
+    size_t required_size = new_length;
     if (required_size >= gb->size) {
         _gap_buffer_inrease_size(gb, required_size);
     }
 
-    for (size_t i = gb->length + n; i > gb->length; i--) {
-        gb->buffer[i] = gb->buffer[i - n];
+    // move TO_MOVE symbols forward with offset of n
+    for (size_t i = new_length; i > new_length - to_move; i--) {
+        // hax: prevent unsigned >= 0 error.
+        size_t index = i - 1;
+        gb->buffer[index] = gb->buffer[index - n];
     }
 
     for (size_t i = pos; i < pos + n; i++) {
@@ -74,7 +83,7 @@ void _gap_buffer_grow(struct GapBuffer *gb, size_t pos, size_t n) {
 
     gb->length += n;
     gb->left = pos;
-    gb->right = gb->left + n;
+    gb->right = gb->left + n - 1;
 }
 
 void _gap_buffer_move_left(struct GapBuffer *gb, size_t pos) {
@@ -169,11 +178,11 @@ size_t _gap_buffer_get_real_position(const struct GapBuffer *gb, size_t pos) {
 }
 
 void gap_buffer_get_at(const struct GapBuffer *gb, size_t pos) {
-    return gb->buffer[_gap_buffer_get_real_index(pos)];
+    return gb->buffer[_gap_buffer_get_real_position(gb, pos)];
 }
 
 void gap_buffer_set_at(struct GapBuffer *gb, size_t pos, char c) {
-    gb->buffer[_gap_buffer_get_real_index(pos)] = c;
+    gb->buffer[_gap_buffer_get_real_position(gb, pos)] = c;
 }
 
 void gap_buffer_debug_print(const struct GapBuffer *gb) {

@@ -1,6 +1,7 @@
 CFLAGS         := -Wall -Wextra -fPIC -g
 CFLAGS_DEBUG   := -Wall -Wextra -fPIC -g
-INCLUDES       := -Isrc -lncurses
+INCLUDES       := -Isrc
+TUI_LIBS       := -lncurses
 
 ENTRYPOINT_SRC := src/main.c
 ENTRYPOINT_OBJ := src/main.o
@@ -38,7 +39,7 @@ playground-gap-buffer: $(OBJS) playgrounds/playground_gap_buffer.o
 
 .PHONY: $(TARGET)
 $(TARGET): $(OBJS) $(TUI_OBJS) $(ENTRYPOINT_OBJ)
-	$(CC) $(INCLUDES) $(CFLAGS) -o $(TARGET) $^
+	$(CC) $(INCLUDES) $(TUI_LIBS) $(CFLAGS) -o $(TARGET) $^
 
 %.o: %.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c -o $@ $<
