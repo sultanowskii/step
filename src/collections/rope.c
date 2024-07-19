@@ -118,7 +118,7 @@ void rope_debug_print(const struct Rope *rope) {
 
 void rope_debug_print_with_indent(const struct Rope *rope, size_t indent_size) {
     if (rope == NULL) {
-        iprintf(indent_size, "NULL");
+        iprintf(indent_size, "NULL\n");
         return;
     }
 
@@ -131,11 +131,11 @@ void rope_debug_print_with_indent(const struct Rope *rope, size_t indent_size) {
 
     iprintf(indent_size, " length: %zu\n", rope->length);
 
-    iprintf(indent_size, " left:");
-    rope_debug_print_with_indent(rope->left, indent_size + 1);
+    iprintf(indent_size, " left:\n");
+    rope_debug_print_with_indent(rope->left, indent_size + 2);
 
-    iprintf(indent_size, " right:");
-    rope_debug_print_with_indent(rope->right, indent_size + 1);
+    iprintf(indent_size, " right:\n");
+    rope_debug_print_with_indent(rope->right, indent_size + 2);
 }
 
 struct Rope *rope_merge(struct Rope *r1, struct Rope *r2) {

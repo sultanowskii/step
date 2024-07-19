@@ -60,6 +60,7 @@ void _gap_buffer_inrease_size(struct GapBuffer *gb, size_t size) {
 }
 
 void _gap_buffer_grow(struct GapBuffer *gb, size_t pos, size_t n) {
+    printf("grow(%zu, %zu)\n", pos, n);
     size_t length = gb->length;
     // number of symbols to move forward
     size_t to_move = length - pos;
@@ -127,7 +128,8 @@ void gap_buffer_insert(struct GapBuffer *gb, size_t pos, const char *s) {
     size_t current_pos = pos; // TODO: just use gb->left?
 
     while (i < n) {
-        if (gb->left == gb->right) {
+        gap_buffer_debug_print(gb);
+        if (gb->left > gb->right) {
             _gap_buffer_grow(gb, current_pos, DEFAULT_GAP_SIZE);
         }
 
@@ -208,5 +210,3 @@ void gap_buffer_debug_print_with_indent(const struct GapBuffer *gb, size_t inden
     iprintf(indent_size, " right:  %zu\n", gb->right);
     iprintf(indent_size, " data:   %s\n", gb->buffer);
 }
-
-// TODO: iterate
