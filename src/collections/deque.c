@@ -3,6 +3,8 @@
 #include <malloc.h>
 #include <stddef.h>
 
+#include "mem.h"
+
 struct DequeNode {
     void             *value;
     struct DequeNode *prev;
@@ -24,6 +26,9 @@ struct DequeNode *deque_node_create(void *value) {
 }
 
 void deque_node_destroy(struct DequeNode *dnode) {
+    dnode->value = FREED_DUMMY;
+    dnode->next = FREED_DUMMY;
+    dnode->prev = FREED_DUMMY;
     free(dnode);
 }
 
@@ -52,6 +57,9 @@ void deque_destroy(struct Deque *deque, void (*destroy_value)(void *)) {
         destroy_value(value);
     }
 
+    deque->size = 0;
+    deque->head = FREED_DUMMY;
+    deque->tail = FREED_DUMMY;
     free(deque);
 }
 
