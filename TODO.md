@@ -1,21 +1,12 @@
 # TODO
 
-## rope
+## collections
 
 - benchmark (?)
+- read n symbols starting from pos
 - revisit the API
 - add methods documentation
 - const
-
-## gap buffer
-
-- read n symbols starting from pos
-- add methods documentation
-- const
-
-## stack
-
-- implement basic generic stack
 
 ## commands
 
