@@ -129,7 +129,6 @@ void gap_buffer_insert(struct GapBuffer *gb, size_t pos, const char *s) {
     size_t current_pos = pos; // TODO: just use gb->left?
 
     while (i < n) {
-        gap_buffer_debug_print(gb);
         if (gb->left > gb->right) {
             _gap_buffer_grow(gb, current_pos, DEFAULT_GAP_SIZE);
         }
