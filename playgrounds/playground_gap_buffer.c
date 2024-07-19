@@ -1,45 +1,44 @@
+#include <malloc.h>
 #include <stdio.h>
 
 #include "collections/gap_buffer.h"
+#include "fmt.h"
+#include "playground/io.h"
+
+void print_help() {
+    puts("commands:");
+    puts("i (insert)");
+    puts("d (delete)");
+    puts("e (exit)");
+}
 
 int main() {
     struct GapBuffer *gb = gap_buffer_create_from_string("Lets go!");
-    char              data[1024 + 6];
 
     while (1) {
-        puts("text:");
         gap_buffer_print(gb);
-        puts("");
+        print_newline();
         gap_buffer_debug_print(gb);
-        puts("commands:");
-        puts("i(insert)");
-        puts("d(elete)");
-        puts("e(xit)");
-        printf("> ");
 
-        char c;
-        scanf(" %c", &c);
+        print_help();
+        print_prompt();
+        char c = read_char();
 
         switch (c) {
         case 'i': {
-            int index;
-            puts("index");
-            printf("> ");
-            scanf(" %d", &index);
-            puts("str");
-            printf("> ");
-            scanf(" %1024s", data);
-            gap_buffer_insert(gb, index, data);
+            print_prompt_with_message("index");
+            size_t index = read_size_t();
+            print_prompt_with_message("str");
+            char *s = read_str();
+            gap_buffer_insert(gb, index, s);
+            free(s);
             break;
         }
         case 'd': {
-            int index, n;
-            puts("index");
-            printf("> ");
-            scanf(" %d", &index);
-            puts("n");
-            printf("> ");
-            scanf(" %d", &n);
+            print_prompt_with_message("index");
+            size_t index = read_size_t();
+            print_prompt_with_message("n");
+            size_t n = read_size_t();
 
             gap_buffer_delete_n(gb, index, n);
             break;

@@ -1,21 +1,26 @@
-CFLAGS         := -Wall -Wextra -fPIC -g
-CFLAGS_DEBUG   := -Wall -Wextra -fPIC -g
-INCLUDES       := -Isrc
-TUI_LIBS       := -lncurses
+CFLAGS           := -Wall -Wextra -fPIC -g
+CFLAGS_DEBUG     := -Wall -Wextra -fPIC -g
+INCLUDES         := -Isrc
+LIBS             := 
 
-ENTRYPOINT_SRC := src/main.c
-ENTRYPOINT_OBJ := src/main.o
+ENTRYPOINT_SRC   := src/main.c
+ENTRYPOINT_OBJ   := src/main.o
 
-NAME           := ste
-TARGET         := $(NAME)
+NAME             := ste
+TARGET           := $(NAME)
 
-TUI_SRCS       := $(wildcard src/tui/*.c src/tui/**/*.c)
-TUI_OBJS       := $(TUI_SRCS:.c=.o)
+TUI_SRCS         := $(wildcard src/tui/*.c src/tui/**/*.c)
+TUI_OBJS         := $(TUI_SRCS:.c=.o)
+TUI_LIBS         := -lncurses
 
-SRCS           := $(wildcard src/*.c src/**/*.c)
-SRCS           := $(filter-out $(ENTRYPOINT_SRC), $(SRCS))
-SRCS           := $(filter-out $(TUI_SRCS), $(SRCS))
-OBJS           := $(SRCS:.c=.o)
+PGROUND_SRCS     := $(wildcard playgrounds/playground/*.c)
+PGROUND_OBJS     := $(PGROUND_SRCS:.c=.o)
+
+SRCS             := $(wildcard src/*.c src/**/*.c)
+SRCS             := $(filter-out $(ENTRYPOINT_SRC), $(SRCS))
+SRCS             := $(filter-out $(TUI_SRCS), $(SRCS))
+OBJS             := $(SRCS:.c=.o)
+
 
 .PHONY: default
 default: clean build
@@ -28,22 +33,22 @@ clean:
 build: $(TARGET)
 
 .PHONY: playground-rope
-playground-rope: $(OBJS) playgrounds/playground_rope.o
+playground-rope: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_rope.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_rope.elf $^
 
 .PHONY: playground-gap-buffer
-playground-gap-buffer: $(OBJS) playgrounds/playground_gap_buffer.o
+playground-gap-buffer: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_gap_buffer.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_gap_buffer.elf $^
 
 .PHONY: playground-deque
-playground-deque: $(OBJS) playgrounds/playground_deque.o
+playground-deque: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_deque.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_deque.elf $^
 
 .PHONY: playground-evicting-stack
-playground-evicting-stack: $(OBJS) playgrounds/playground_evicting_stack.o
+playground-evicting-stack: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_evicting_stack.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_evicting_stack.elf $^
 

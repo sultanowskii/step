@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 #include "collections/evicting_stack.h"
+#include "fmt.h"
+#include "playground/io.h"
 
 void str_print(void *value) {
     char *s = value;
@@ -12,34 +14,32 @@ void str_destroy(void *s) {
     free(s);
 }
 
-int main() {
-    const size_t str_size = 128;
+void print_help() {
+    puts("commands:");
+    puts("P (push back)");
+    puts("O (pop back)");
+    puts("e (exit)");
+}
 
-    int max_size;
-    puts("max_size");
-    printf("> ");
-    scanf(" %d", &max_size);
+int main() {
+    print_prompt_with_message("max_size");
+    size_t max_size = read_size_t();
+
     struct EvictingStack *estack = evicting_stack_create(max_size);
 
     while (1) {
         evicting_stack_print(estack, str_print);
-        puts("");
+        print_newline();
         evicting_stack_debug_print(estack, str_print);
-        puts("commands:");
-        puts("P (push back)");
-        puts("O (pop back)");
-        puts("e (exit)");
-        printf("> ");
 
-        char c;
-        scanf(" %c", &c);
+        print_help();
+        print_prompt();
+        char c = read_char();
 
         switch (c) {
         case 'P': {
-            char *s = malloc(str_size);
-            puts("str");
-            printf("> ");
-            scanf(" %127s", s);
+            print_prompt_with_message("str");
+            char *s = read_str();
             void *value = evicting_stack_push_back(estack, s);
             str_destroy(value);
             break;

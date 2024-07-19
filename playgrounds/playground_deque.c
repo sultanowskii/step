@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 #include "collections/deque.h"
+#include "fmt.h"
+#include "playground/io.h"
 
 void str_print(void *value) {
     char *s = value;
@@ -12,32 +14,32 @@ void str_destroy(void *s) {
     free(s);
 }
 
+void print_help() {
+    puts("commands:");
+    puts("p (push front)");
+    puts("o (pop front)");
+    puts("P (push back)");
+    puts("O (pop back)");
+    puts("e (exit)");
+}
+
 int main() {
-    const size_t  str_size = 128;
     struct Deque *deque = deque_create();
 
     while (1) {
         puts("text:");
         deque_print(deque, str_print);
-        puts("");
+        print_newline();
         deque_debug_print(deque, str_print);
-        puts("commands:");
-        puts("p (push front)");
-        puts("o (pop front)");
-        puts("P (push back)");
-        puts("O (pop back)");
-        puts("e (exit)");
-        printf("> ");
 
-        char c;
-        scanf(" %c", &c);
+        print_help();
+        print_prompt();
+        char c = read_char();
 
         switch (c) {
         case 'p': {
-            char *s = malloc(str_size);
-            puts("str");
-            printf("> ");
-            scanf(" %127s", s);
+            print_prompt_with_message("str");
+            char *s = read_str();
             deque_push_front(deque, s);
             break;
         }
@@ -47,10 +49,8 @@ int main() {
             break;
         }
         case 'P': {
-            char *s = malloc(str_size);
-            puts("str");
-            printf("> ");
-            scanf(" %127s", s);
+            print_prompt_with_message("str");
+            char *s = read_str();
             deque_push_back(deque, s);
             break;
         }

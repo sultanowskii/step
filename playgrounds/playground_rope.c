@@ -1,31 +1,41 @@
+#include <malloc.h>
 #include <stdio.h>
 
 #include "collections/rope.h"
+#include "fmt.h"
+#include "playground/io.h"
+
+void print_help() {
+    puts("commands:");
+    puts("i (insert)");
+    puts("d (delete)");
+    puts("g (get at)");
+    puts("e (exit)");
+}
 
 int main() {
-    char data[1024 + 6];
     setvbuf(stdout, NULL, _IONBF, 0);
 
     struct Rope *rope = rope_create_from_string("Hello, world!");
     rope_print(rope);
-    puts("");
+    print_newline();
     rope_debug_print(rope);
 
     struct RopePair pair = rope_split(rope, 3);
     rope_print(pair.first);
-    puts("");
+    print_newline();
     rope_destroy(pair.first);
 
     rope_print(pair.second);
-    puts("");
+    print_newline();
 
     struct Rope *loworld = rope_delete(pair.second, 2, 4);
     rope_print(loworld);
-    puts("");
+    print_newline();
 
     struct Rope *loba_world = rope_insert(loworld, 2, "ba_");
     rope_print(loba_world);
-    puts("");
+    print_newline();
 
     rope_destroy(loba_world);
 
@@ -42,41 +52,29 @@ int main() {
     while (1) {
         puts("text:");
         rope_print(text);
-        puts("");
-        puts("commands:");
-        puts("i(insert)");
-        puts("d(elete)");
-        puts("g(et)");
-        puts("e(xit)");
-        printf("> ");
+        print_newline();
 
-        char c;
-        scanf(" %c", &c);
+        print_help();
+        print_prompt();
+        char c = read_char();
 
         if (c == 'i') {
-            int index;
-            puts("index");
-            printf("> ");
-            scanf(" %d", &index);
-            puts("str");
-            printf("> ");
-            scanf(" %1024s", data);
-            text = rope_insert(text, index, data);
+            print_prompt_with_message("index");
+            size_t index = read_size_t();
+            print_prompt_with_message("str");
+            char *s = read_str();
+            text = rope_insert(text, index, s);
+            free(s);
         } else if (c == 'd') {
-            int l, r;
-            puts("l");
-            printf("> ");
-            scanf(" %d", &l);
-            puts("r");
-            printf("> ");
-            scanf(" %d", &r);
+            print_prompt_with_message("l");
+            size_t l = read_size_t();
+            print_prompt_with_message("r");
+            size_t r = read_size_t();
 
             text = rope_delete(text, l, r);
         } else if (c == 'g') {
-            int index;
-            puts("index");
-            printf("> ");
-            scanf(" %d", &index);
+            print_prompt_with_message("index");
+            size_t index = read_size_t();
 
             char c = rope_get_at(text, index);
             printf("%c\n", c);
