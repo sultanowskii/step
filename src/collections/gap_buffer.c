@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "fmt.h"
 #include "math.h"
 #include "mem.h"
 

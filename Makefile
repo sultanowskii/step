@@ -42,9 +42,13 @@ playground-deque: $(OBJS) playgrounds/playground_deque.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_deque.elf $^
 
+.PHONY: playground-evicting-stack
+playground-evicting-stack: $(OBJS) playgrounds/playground_evicting_stack.o
+	echo $^
+	$(CC) $(INCLUDES) $(CFLAGS) -o playground_evicting_stack.elf $^
 
 .PHONY: playgrounds
-playgrounds: playground-rope playground-gap-buffer playground-deque
+playgrounds: playground-rope playground-gap-buffer playground-deque playground-evicting-stack
 
 .PHONY: $(TARGET)
 $(TARGET): $(OBJS) $(TUI_OBJS) $(ENTRYPOINT_OBJ)

@@ -1,7 +1,7 @@
-#include "collections/deque.h"
-
 #include <malloc.h>
 #include <stdio.h>
+
+#include "collections/deque.h"
 
 void str_print(void *value) {
     char *s = value;
@@ -38,9 +38,7 @@ int main() {
             puts("str");
             printf("> ");
             scanf(" %127s", s);
-            puts("starting");
             deque_push_front(deque, s);
-            puts("ended");
             break;
         }
         case 'o': {

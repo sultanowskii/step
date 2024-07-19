@@ -1,6 +1,6 @@
-#include "collections/gap_buffer.h"
-
 #include <stdio.h>
+
+#include "collections/gap_buffer.h"
 
 int main() {
     struct GapBuffer *gb = gap_buffer_create_from_string("Lets go!");
