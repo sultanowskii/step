@@ -157,21 +157,6 @@ void gap_buffer_delete_n(struct GapBuffer *gb, size_t pos, size_t n) {
     }
 }
 
-void gap_buffer_print(const struct GapBuffer *gb) {
-    size_t index = 0;
-
-    while (index < gb->length) {
-        if (index == gb->left) {
-            index = gb->right + 1;
-            if (index >= gb->length) {
-                break;
-            }
-        }
-        putc(gb->buffer[index], stdout);
-        index++;
-    }
-}
-
 size_t _gap_buffer_get_gap_size(const struct GapBuffer *gb) {
     return gb->size;
 }
@@ -191,13 +176,37 @@ void gap_buffer_set_at(struct GapBuffer *gb, size_t pos, char c) {
     gb->buffer[_gap_buffer_get_real_position(gb, pos)] = c;
 }
 
+void gap_buffer_print(const struct GapBuffer *gb) {
+    gap_buffer_print_with_indent(gb, 0);
+}
+
+void gap_buffer_print_with_indent(const struct GapBuffer *gb, size_t indent_size) {
+    size_t index = 0;
+
+    print_indent(indent_size);
+
+    while (index < gb->length) {
+        if (index == gb->left) {
+            index = gb->right + 1;
+            if (index >= gb->length) {
+                break;
+            }
+        }
+        putc(gb->buffer[index], stdout);
+        index++;
+    }
+}
 void gap_buffer_debug_print(const struct GapBuffer *gb) {
-    printf("GapBuffer (0x%lx)\n", (size_t)gb);
-    printf(" length: %zu\n", gb->length);
-    printf(" size:   %zu\n", gb->size);
-    printf(" left:   %zu\n", gb->left);
-    printf(" right:  %zu\n", gb->right);
-    printf(" data:   %s\n", gb->buffer);
+    gap_buffer_debug_print_with_indent(gb, 0);
+}
+
+void gap_buffer_debug_print_with_indent(const struct GapBuffer *gb, size_t indent_size) {
+    iprintf(indent_size, "GapBuffer (0x%lx)\n", (size_t)gb);
+    iprintf(indent_size, " length: %zu\n", gb->length);
+    iprintf(indent_size, " size:   %zu\n", gb->size);
+    iprintf(indent_size, " left:   %zu\n", gb->left);
+    iprintf(indent_size, " right:  %zu\n", gb->right);
+    iprintf(indent_size, " data:   %s\n", gb->buffer);
 }
 
 // TODO: iterate

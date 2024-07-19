@@ -42,6 +42,10 @@ playground-deque: $(OBJS) playgrounds/playground_deque.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_deque.elf $^
 
+
+.PHONY: playgrounds
+playgrounds: playground-rope playground-gap-buffer playground-deque
+
 .PHONY: $(TARGET)
 $(TARGET): $(OBJS) $(TUI_OBJS) $(ENTRYPOINT_OBJ)
 	$(CC) $(INCLUDES) $(TUI_LIBS) $(CFLAGS) -o $(TARGET) $^

@@ -2,6 +2,8 @@
 
 #include <stddef.h>
 
+#include "collections/print.h"
+
 struct Deque;
 
 struct Deque *deque_create_emtpy();
@@ -17,4 +19,6 @@ void *deque_pop_back(struct Deque *deque);
 size_t deque_get_size(const struct Deque *deque);
 
 void deque_print(const struct Deque *deque, void (*print_value)(void *));
+void deque_print_with_indent(const struct Deque *deque, print print_value, size_t indent_size);
 void deque_debug_print(const struct Deque *deque, void (*print_value)(void *));
+void deque_debug_print_with_indent(const struct Deque *deque, print print_value, size_t indent_size);

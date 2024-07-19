@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "debug.h"
+#include "fmt.h"
 #include "math.h"
 #include "mem.h"
 #include "str.h"
@@ -90,46 +90,52 @@ struct Rope *_rope_create_from_string(const char *s, size_t l, size_t r) {
 }
 
 void rope_print(const struct Rope *rope) {
+    rope_print_with_indent(rope, 0);
+}
+
+void _rope_print_with_indent(const struct Rope *rope) {
     if (rope->str != NULL) {
         printf("%s", rope->str);
         return;
     }
 
     if (rope->left != NULL) {
-        rope_print(rope->left);
+        _rope_print_with_indent(rope->left);
     }
     if (rope->right != NULL) {
-        rope_print(rope->right);
+        _rope_print_with_indent(rope->right);
     }
+}
+
+void rope_print_with_indent(const struct Rope *rope, size_t indent_size) {
+    print_indent(indent_size);
+    _rope_print_with_indent(rope);
 }
 
 void rope_debug_print(const struct Rope *rope) {
-    _rope_debug_print(rope, 0);
+    rope_debug_print_with_indent(rope, 0);
 }
 
-void _rope_debug_print(const struct Rope *rope, size_t depth) {
-    print_indent(depth);
+void rope_debug_print_with_indent(const struct Rope *rope, size_t indent_size) {
     if (rope == NULL) {
-        puts("NULL");
+        iprintf(indent_size, "NULL");
         return;
     }
 
-    printf("rope (0x%lx)\n", (size_t)rope);
+    iprintf(indent_size, "Rope (0x%lx)\n", (size_t)rope);
     if (rope->str != NULL) {
-        print_indent(depth);
-        printf("str: %s\n", rope->str);
+        iprintf(indent_size, " str: %s\n", rope->str);
+    } else {
+        iprintf(indent_size, " str: (nil)\n");
     }
 
-    print_indent(depth);
-    printf("length: %zu\n", rope->length);
+    iprintf(indent_size, " length: %zu\n", rope->length);
 
-    print_indent(depth);
-    puts("left:");
-    _rope_debug_print(rope->left, depth + 1);
+    iprintf(indent_size, " left:");
+    rope_debug_print_with_indent(rope->left, indent_size + 1);
 
-    print_indent(depth);
-    puts("right:");
-    _rope_debug_print(rope->right, depth + 1);
+    iprintf(indent_size, " right:");
+    rope_debug_print_with_indent(rope->right, indent_size + 1);
 }
 
 struct Rope *rope_merge(struct Rope *r1, struct Rope *r2) {

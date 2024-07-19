@@ -3,6 +3,8 @@
 #include <malloc.h>
 #include <stddef.h>
 
+#include "collections/print.h"
+#include "fmt.h"
 #include "mem.h"
 
 struct DequeNode {
@@ -51,7 +53,7 @@ struct Deque *deque_create() {
     return deque;
 }
 
-void deque_destroy(struct Deque *deque, void (*destroy_value)(void *)) {
+void deque_destroy(struct Deque *deque, destroy destroy_value) {
     while (deque_get_size(deque) != 0) {
         void *value = deque_pop_front(deque);
         destroy_value(value);
@@ -154,7 +156,11 @@ void *deque_pop_back(struct Deque *deque) {
 }
 
 void deque_print(const struct Deque *deque, void (*print_value)(void *)) {
-    printf("[ <-> ");
+    deque_print_with_indent(deque, print_value, 0);
+}
+
+void deque_print_with_indent(const struct Deque *deque, print print_value, size_t indent_size) {
+    iprintf(indent_size, "[ <-> ");
 
     struct DequeNode *dnode = deque->head;
 
@@ -167,23 +173,27 @@ void deque_print(const struct Deque *deque, void (*print_value)(void *)) {
     printf("]\n");
 }
 
-void deque_debug_print(const struct Deque *deque, void (*print_value)(void *)) {
-    printf("Deque (0x%p)\n", deque);
-    printf(" size: %zu\n", deque_get_size(deque));
-    printf(" head: %p\n", deque->head);
-    printf(" tail: %p\n", deque->tail);
-    printf(" nodes:\n");
+void deque_debug_print(const struct Deque *deque, print print_value) {
+    deque_debug_print_with_indent(deque, print_value, 0);
+}
+
+void deque_debug_print_with_indent(const struct Deque *deque, print print_value, size_t indent_size) {
+    iprintf(indent_size, "Deque (0x%p)\n", deque);
+    iprintf(indent_size, " size: %zu\n", deque_get_size(deque));
+    iprintf(indent_size, " head: %p\n", deque->head);
+    iprintf(indent_size, " tail: %p\n", deque->tail);
+    iprintf(indent_size, " nodes:\n");
 
     struct DequeNode *dnode = deque->head;
     size_t            cntr = 0;
 
     while (dnode != NULL) {
-        printf("  DNode%zu (%p):\n", cntr, dnode);
-        printf("   prev: %p\n", dnode->prev);
-        printf("   next: %p\n", dnode->next);
-        printf("   value: ");
+        iprintf(indent_size + 2, "DNode%zu (%p):\n", cntr, dnode);
+        iprintf(indent_size + 2, " prev: %p\n", dnode->prev);
+        iprintf(indent_size + 2, " next: %p\n", dnode->next);
+        iprintf(indent_size + 2, " value: ");
         print_value(dnode->value);
-        puts("");
+        print_newline();
         dnode = dnode->next;
         cntr++;
     }

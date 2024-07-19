@@ -31,4 +31,6 @@ size_t rope_fill_buffer_from_index(struct Rope *rope, char buffer[], size_t star
 struct Rope *rope_rebalance(struct Rope *rope);
 
 void rope_print(const struct Rope *rope);
+void rope_print_with_indent(const struct Rope *rope, size_t indent_size);
 void rope_debug_print(const struct Rope *rope);
+void rope_debug_print_with_indent(const struct Rope *rope, size_t indent_size);
