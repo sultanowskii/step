@@ -37,6 +37,11 @@ playground-gap-buffer: $(OBJS) playgrounds/playground_gap_buffer.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_gap_buffer.elf $^
 
+.PHONY: playground-deque
+playground-deque: $(OBJS) playgrounds/playground_deque.o
+	echo $^
+	$(CC) $(INCLUDES) $(CFLAGS) -o playground_deque.elf $^
+
 .PHONY: $(TARGET)
 $(TARGET): $(OBJS) $(TUI_OBJS) $(ENTRYPOINT_OBJ)
 	$(CC) $(INCLUDES) $(TUI_LIBS) $(CFLAGS) -o $(TARGET) $^
