@@ -47,7 +47,7 @@ struct Deque *deque_create() {
 }
 
 void deque_destroy(struct Deque *deque, void (*destroy_value)(void *)) {
-    while (deque->size != 0) {
+    while (deque_get_size(deque) != 0) {
         void *value = deque_pop_front(deque);
         destroy_value(value);
     }
@@ -63,10 +63,14 @@ void _deque_size_dec(struct Deque *deque) {
     deque->size--;
 }
 
+size_t deque_get_size(const struct Deque *deque) {
+    return deque->size;
+}
+
 void deque_push_front(struct Deque *deque, void *value) {
     struct DequeNode *dnode = deque_node_create(value);
 
-    if (deque->size == 0) {
+    if (deque_get_size(deque) == 0) {
         deque->head = dnode;
         deque->tail = dnode;
         _deque_size_inc(deque);
@@ -105,7 +109,7 @@ void *deque_pop_front(struct Deque *deque) {
 void deque_push_back(struct Deque *deque, void *value) {
     struct DequeNode *dnode = deque_node_create(value);
 
-    if (deque->size == 0) {
+    if (deque_get_size(deque) == 0) {
         deque->head = dnode;
         deque->tail = dnode;
         _deque_size_inc(deque);
@@ -121,7 +125,7 @@ void deque_push_back(struct Deque *deque, void *value) {
 }
 
 void *deque_pop_back(struct Deque *deque) {
-    if (deque->size == 0) {
+    if (deque_get_size(deque) == 0) {
         return NULL;
     }
 
@@ -141,10 +145,6 @@ void *deque_pop_back(struct Deque *deque) {
     return value;
 }
 
-size_t deque_get_size(const struct Deque *deque) {
-    return deque->size;
-}
-
 void deque_print(const struct Deque *deque, void (*print_value)(void *)) {
     printf("[ <-> ");
 
@@ -161,7 +161,7 @@ void deque_print(const struct Deque *deque, void (*print_value)(void *)) {
 
 void deque_debug_print(const struct Deque *deque, void (*print_value)(void *)) {
     printf("Deque (0x%p)\n", deque);
-    printf(" size: %zu\n", deque->size);
+    printf(" size: %zu\n", deque_get_size(deque));
     printf(" head: %p\n", deque->head);
     printf(" tail: %p\n", deque->tail);
     printf(" nodes:\n");
