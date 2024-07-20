@@ -50,7 +50,6 @@ int main() {
     text = rope_insert(text, 0, "A");
 
     while (1) {
-        puts("text:");
         rope_print(text);
         print_newline();
 

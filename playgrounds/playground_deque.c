@@ -27,7 +27,6 @@ int main() {
     struct Deque *deque = deque_create();
 
     while (1) {
-        puts("text:");
         deque_print(deque, str_print);
         print_newline();
         deque_debug_print(deque, str_print);

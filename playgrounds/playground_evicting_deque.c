@@ -30,7 +30,6 @@ int main() {
     struct EvictingDeque *edeque = evicting_deque_create(max_size);
 
     while (1) {
-        puts("text:");
         evicting_deque_print(edeque, str_print);
         print_newline();
         evicting_deque_debug_print(edeque, str_print);
