@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "collections/print.h"
@@ -13,6 +14,7 @@ void                  evicting_stack_destroy(struct EvictingStack *estack, destr
 
 size_t evicting_stack_get_size(const struct EvictingStack *estack);
 size_t evicting_stack_get_max_size(const struct EvictingStack *estack);
+bool   evicting_stack_is_size_limited(const struct EvictingStack *estack);
 
 void *evicting_stack_push_back(struct EvictingStack *estack, void *value);
 void *evicting_stack_pop_back(struct EvictingStack *estack);

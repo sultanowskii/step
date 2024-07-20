@@ -1,7 +1,7 @@
 #include <malloc.h>
 #include <stdio.h>
 
-#include "collections/evicting_stack.h"
+#include "collections/evicting_deque.h"
 #include "fmt.h"
 #include "playground/io.h"
 
@@ -16,6 +16,8 @@ void str_destroy(void *s) {
 
 void print_help() {
     puts("commands:");
+    puts("p (push front)");
+    puts("o (pop front)");
     puts("P (push back)");
     puts("O (pop back)");
     puts("e (exit)");
@@ -25,28 +27,41 @@ int main() {
     print_prompt_with_message("max_size");
     size_t max_size = read_size_t();
 
-    struct EvictingStack *estack = evicting_stack_create(max_size);
+    struct EvictingDeque *edeque = evicting_deque_create(max_size);
 
     while (1) {
-        evicting_stack_print(estack, str_print);
+        puts("text:");
+        evicting_deque_print(edeque, str_print);
         print_newline();
-        evicting_stack_debug_print(estack, str_print);
+        evicting_deque_debug_print(edeque, str_print);
 
         print_help();
         print_prompt();
         char c = read_char();
 
         switch (c) {
+        case 'p': {
+            print_prompt_with_message("str");
+            char *s = read_str();
+            void *evicted = evicting_deque_push_front(edeque, s);
+            str_destroy(evicted);
+            break;
+        }
+        case 'o': {
+            char *s = evicting_deque_pop_front(edeque);
+            str_destroy(s);
+            break;
+        }
         case 'P': {
             print_prompt_with_message("str");
             char *s = read_str();
-            void *evicted = evicting_stack_push_back(estack, s);
+            void *evicted = evicting_deque_push_back(edeque, s);
             str_destroy(evicted);
             break;
         }
         case 'O': {
-            void *evicted = evicting_stack_pop_back(estack);
-            str_destroy(evicted);
+            char *s = evicting_deque_pop_back(edeque);
+            str_destroy(s);
             break;
         }
         default:
@@ -55,7 +70,7 @@ int main() {
     }
 
 EXIT:
-    evicting_stack_destroy(estack, str_destroy);
+    evicting_deque_destroy(edeque, str_destroy);
 
     return 0;
 }

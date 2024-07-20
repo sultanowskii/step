@@ -1,57 +1,47 @@
 #include "collections/evicting_stack.h"
 
 #include <malloc.h>
+#include <stdbool.h>
 
-#include "collections/deque.h"
+#include "collections/evicting_deque.h"
 #include "collections/print.h"
 #include "fmt.h"
 #include "mem.h"
 
 struct EvictingStack {
-    struct Deque *deque;
-    size_t        max_size;
+    struct EvictingDeque *edeque;
 };
 
-struct EvictingStack *evicting_stack_create_empty() {
-    struct EvictingStack *estack = malloc(sizeof(struct EvictingStack));
-    estack->max_size = 0;
-    estack->deque = deque_create();
-    return estack;
-}
-
 struct EvictingStack *evicting_stack_create(size_t max_size) {
-    struct EvictingStack *estack = evicting_stack_create_empty();
-    estack->max_size = max_size;
+    struct EvictingStack *estack = malloc(sizeof(struct EvictingStack));
+    estack->edeque = evicting_deque_create(max_size);
     return estack;
 }
 
 void evicting_stack_destroy(struct EvictingStack *estack, destroy destroy_value) {
-    deque_destroy(estack->deque, destroy_value);
-    estack->deque = FREED_DUMMY;
-    estack->max_size = 0;
+    evicting_deque_destroy(estack->edeque, destroy_value);
+    estack->edeque = FREED_DUMMY;
     free(estack);
 }
 
 size_t evicting_stack_get_size(const struct EvictingStack *estack) {
-    return deque_get_size(estack->deque);
+    return evicting_deque_get_size(estack->edeque);
 }
 
 size_t evicting_stack_get_max_size(const struct EvictingStack *estack) {
-    return estack->max_size;
+    return evicting_deque_get_max_size(estack->edeque);
+}
+
+bool evicting_stack_is_size_limited(const struct EvictingStack *estack) {
+    return evicting_deque_is_size_limited(estack->edeque);
 }
 
 void *evicting_stack_push_back(struct EvictingStack *estack, void *value) {
-    deque_push_back(estack->deque, value);
-
-    if (deque_get_size(estack->deque) <= estack->max_size) {
-        return NULL;
-    }
-
-    return deque_pop_front(estack->deque);
+    return evicting_deque_push_back(estack->edeque, value);
 }
 
 void *evicting_stack_pop_back(struct EvictingStack *estack) {
-    return deque_pop_back(estack->deque);
+    return evicting_deque_pop_back(estack->edeque);
 }
 
 void evicting_stack_print(const struct EvictingStack *estack, print print_value) {
@@ -59,7 +49,7 @@ void evicting_stack_print(const struct EvictingStack *estack, print print_value)
 }
 
 void evicting_stack_print_with_indent(const struct EvictingStack *estack, print print_value, size_t indent_size) {
-    deque_print_with_indent(estack->deque, print_value, indent_size);
+    evicting_deque_print_with_indent(estack->edeque, print_value, indent_size);
 }
 
 void evicting_stack_debug_print(const struct EvictingStack *estack, print print_value) {
@@ -68,7 +58,6 @@ void evicting_stack_debug_print(const struct EvictingStack *estack, print print_
 
 void evicting_stack_debug_print_with_indent(const struct EvictingStack *estack, print print_value, size_t indent_size) {
     iprintf(indent_size, "EStack (0x%p)\n", estack);
-    iprintf(indent_size, " max_size: %zu\n", estack->max_size);
-    iprintf(indent_size, " deque:\n");
-    deque_debug_print_with_indent(estack->deque, print_value, indent_size + 2);
+    iprintf(indent_size, " edeque:\n");
+    evicting_deque_debug_print_with_indent(estack->edeque, print_value, indent_size + 2);
 }
