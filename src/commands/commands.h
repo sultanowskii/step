@@ -13,8 +13,8 @@ struct Insert {
 };
 
 struct Delete {
-    size_t index;
     size_t n;
+    size_t index;
 };
 
 struct Command {

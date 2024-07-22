@@ -9,7 +9,7 @@ void _exec_insert(struct Insert *insert) {
 }
 
 void _exec_delete(struct Delete *delete) {
-    panic("insert: not implemented");
+    panic("delete: not implemented");
 }
 
 void exec_command(struct Command *command) {

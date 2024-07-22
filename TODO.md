@@ -4,7 +4,6 @@
 
 - read n symbols starting from pos
 - add methods documentation
-- const
 
 ## commands
 
