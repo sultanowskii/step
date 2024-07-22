@@ -9,11 +9,11 @@ enum CommandType {
 
 struct Insert {
     char  *s;
-    size_t pos;
+    size_t index;
 };
 
 struct Delete {
-    size_t pos;
+    size_t index;
     size_t n;
 };
 

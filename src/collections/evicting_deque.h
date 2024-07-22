@@ -13,7 +13,6 @@ void                  evicting_deque_destroy(struct EvictingDeque *edeque, void 
 
 void *evicting_deque_push_front(struct EvictingDeque *edeque, void *value);
 void *evicting_deque_pop_front(struct EvictingDeque *edeque);
-
 void *evicting_deque_push_back(struct EvictingDeque *edeque, void *value);
 void *evicting_deque_pop_back(struct EvictingDeque *edeque);
 

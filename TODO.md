@@ -2,9 +2,7 @@
 
 ## collections
 
-- benchmark (?)
 - read n symbols starting from pos
-- revisit the API
 - add methods documentation
 - const
 
