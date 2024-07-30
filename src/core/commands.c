@@ -2,24 +2,25 @@
 
 #include <stddef.h>
 
+#include "core/context.h"
 #include "runtime.h"
 
-void _exec_insert(struct Insert *insert) {
+void _exec_insert(struct Context *ctx, struct Insert *insert) {
     panic("insert: not implemented");
 }
 
-void _exec_delete(struct Delete *delete) {
+void _exec_delete(struct Context *ctx, struct Delete *delete) {
     panic("delete: not implemented");
 }
 
-void exec_command(struct Command *command) {
+void exec_command(struct Context *ctx, struct Command *command) {
     switch (command->type) {
-    case INSERT: {
-        _exec_insert(command->cmd.insert);
+    case CMD_INSERT: {
+        _exec_insert(ctx, command->cmd.insert);
         break;
     };
-    case DELETE: {
-        _exec_delete(command->cmd.delete);
+    case CMD_DELETE: {
+        _exec_delete(ctx, command->cmd.delete);
         break;
     };
     default: {

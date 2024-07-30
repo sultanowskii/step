@@ -2,9 +2,11 @@
 
 #include <stddef.h>
 
+#include "core/context.h"
+
 enum CommandType {
-    INSERT,
-    DELETE,
+    CMD_INSERT,
+    CMD_DELETE,
 };
 
 struct Insert {
@@ -25,4 +27,4 @@ struct Command {
     } cmd;
 };
 
-void exec_command(struct Command *command);
+void exec_command(struct Context *ctx, struct Command *command);

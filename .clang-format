@@ -4,3 +4,4 @@ AllowShortFunctionsOnASingleLine: None
 ColumnLimit: 0
 ContinuationIndentWidth: 4
 AlignConsecutiveDeclarations: true
+AlignAfterOpenBracket: BlockIndent
