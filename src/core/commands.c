@@ -5,12 +5,20 @@
 #include "core/context.h"
 #include "runtime.h"
 
-void _exec_insert(struct Context *ctx, struct Insert *insert) {
+void _exec_insert(struct Context *ctx, struct CmdInsert *insert) {
     panic("insert: not implemented");
 }
 
-void _exec_delete(struct Context *ctx, struct Delete *delete) {
+void _exec_delete(struct Context *ctx, struct CmdDelete *delete) {
     panic("delete: not implemented");
+}
+
+void _exec_save(struct Context *ctx, struct CmdSave *save) {
+    panic("save: not implemented");
+}
+
+void _exec_exit(struct Context *ctx, struct CmdExit *delete) {
+    panic("exit: not implemented");
 }
 
 void exec_command(struct Context *ctx, struct Command *command) {
@@ -21,6 +29,14 @@ void exec_command(struct Context *ctx, struct Command *command) {
     };
     case CMD_DELETE: {
         _exec_delete(ctx, command->cmd.delete);
+        break;
+    };
+    case CMD_SAVE: {
+        _exec_save(ctx, command->cmd.save);
+        break;
+    };
+    case CMD_EXIT: {
+        _exec_exit(ctx, command->cmd.exit);
         break;
     };
     default: {

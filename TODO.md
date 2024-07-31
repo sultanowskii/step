@@ -5,14 +5,6 @@
 - read n symbols starting from pos
 - add methods documentation
 
-## commands
-
-- make commands able to access data structures somehow (context?)
-- command conversion (?)
-- command stack(s): "done" stack and "undone" stack (and maybe "todo" stack?)
-- "save" command
-- "close" command
-
 ## cli
 
 - compose everything together
@@ -24,7 +16,7 @@
 - basic interface
 - button handlers
 - proper layout
-- long line handling
+- line management
 - compose everything together
 
 ## overall

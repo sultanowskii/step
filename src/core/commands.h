@@ -7,23 +7,33 @@
 enum CommandType {
     CMD_INSERT,
     CMD_DELETE,
+    CMD_SAVE,
+    CMD_EXIT,
 };
 
-struct Insert {
+struct CmdInsert {
     char  *s;
     size_t index;
 };
 
-struct Delete {
+struct CmdDelete {
     size_t n;
     size_t index;
+};
+
+struct CmdSave {
+};
+
+struct CmdExit {
 };
 
 struct Command {
     enum CommandType type;
     union {
-        struct Insert *insert;
-        struct Delete *delete;
+        struct CmdInsert *insert;
+        struct CmdDelete *delete;
+        struct CmdSave *save;
+        struct CmdExit *exit;
     } cmd;
 };
 
