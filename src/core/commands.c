@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+#include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "core/state.h"
 #include "runtime.h"
@@ -11,7 +12,8 @@ void _exec_insert(struct Context *ctx, struct CmdInsert *insert) {
 }
 
 void _exec_delete(struct Context *ctx, struct CmdDelete *delete) {
-    panic("delete: not implemented");
+    struct GapBuffer *gb = context_get_text(ctx);
+    gap_buffer_delete_n(gb, delete->index, delete->n);
 }
 
 void _exec_save(struct Context *ctx, struct CmdSave *save) {
