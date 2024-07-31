@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 #include "core/context.h"
+#include "core/state.h"
 #include "runtime.h"
 
 void _exec_insert(struct Context *ctx, struct CmdInsert *insert) {
@@ -18,7 +19,7 @@ void _exec_save(struct Context *ctx, struct CmdSave *save) {
 }
 
 void _exec_exit(struct Context *ctx, struct CmdExit *delete) {
-    panic("exit: not implemented");
+    context_set_state(ctx, STATE_EXIT);
 }
 
 void exec_command(struct Context *ctx, struct Command *command) {
