@@ -8,7 +8,8 @@
 #include "runtime.h"
 
 void _exec_insert(struct Context *ctx, struct CmdInsert *insert) {
-    panic("insert: not implemented");
+    struct GapBuffer *gb = context_get_text(ctx);
+    gap_buffer_insert(gb, insert->index, insert->s);
 }
 
 void _exec_delete(struct Context *ctx, struct CmdDelete *delete) {
