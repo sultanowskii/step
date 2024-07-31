@@ -15,7 +15,7 @@ struct Context {
 
 struct Context *context_create_empty() {
     struct Context *ctx = malloc(sizeof(struct Context));
-    ctx->state = NULL;
+    ctx->state = STATE_START;
     ctx->done_cmds = NULL;
     ctx->undone_cmds = NULL;
     ctx->text = NULL;
