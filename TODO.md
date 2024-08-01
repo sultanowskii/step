@@ -2,7 +2,6 @@
 
 ## collections
 
-- read n symbols starting from pos
 - add methods documentation
 
 ## cli
@@ -23,3 +22,4 @@
 
 - const
 - consistent naming
+- func_without_parameters(void)

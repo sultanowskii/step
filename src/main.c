@@ -1,4 +1,4 @@
-#include "tui/main_window.h"
+#include "tui/tui.h"
 
 int main() {
     main_window();

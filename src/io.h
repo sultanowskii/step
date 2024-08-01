@@ -1,0 +1,7 @@
+#pragma once
+
+#include <stddef.h>
+#include <stdio.h>
+
+size_t file_size(FILE *f);
+char  *file_read(FILE *f);

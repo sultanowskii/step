@@ -34,7 +34,7 @@ struct GapBuffer *gap_buffer_create_empty() {
 }
 
 struct GapBuffer *gap_buffer_create() {
-    struct GapBuffer *gb = gap_buffer_create_empty();
+    struct GapBuffer *gb = gap_buffer_create_empty(1);
     gb->buffer = calloc(DEFAULT_BUFFER_SIZE + 1, sizeof(char));
     gb->size = DEFAULT_BUFFER_SIZE;
     return gb;
@@ -61,7 +61,6 @@ void _gap_buffer_inrease_size(struct GapBuffer *gb, size_t size) {
 }
 
 void _gap_buffer_grow(struct GapBuffer *gb, size_t index, size_t n) {
-    printf("grow(%zu, %zu)\n", index, n);
     size_t length = gb->length;
     // number of symbols to move forward
     size_t to_move = length - index;
