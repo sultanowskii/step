@@ -7,6 +7,7 @@
 
 #include "collections/gap_buffer.h"
 #include "io.h"
+#include "tui/coords.h"
 #include "tui/text.h"
 
 void setup(void) {
@@ -43,9 +44,11 @@ void text(void) {
     size_t cursor_y = 0;
     size_t cursor_x = 0;
 
+    size_t gb_index = 0;
+
     int c = 0;
     while (TRUE) {
-        gap_buffer_print_to_window(gb, text_window, 0, text_window_height, text_window_width);
+        gap_buffer_print_to_window(gb, text_window, gb_index, text_window_height, text_window_width);
         HIGHLIGHT_ON(text_window, cursor_y, cursor_x);
         wrefresh(text_window);
 
@@ -83,6 +86,10 @@ void text(void) {
         default:
             goto LOOP_END;
         }
+
+        struct Coords actual_coords = gap_buffer_revise_coords(gb, gb_index, text_window_height, text_window_width, cursor_y, cursor_x);
+        cursor_y = actual_coords.y;
+        cursor_x = actual_coords.x;
     }
 
 LOOP_END:
