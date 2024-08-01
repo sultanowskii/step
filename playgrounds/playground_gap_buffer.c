@@ -5,14 +5,14 @@
 #include "fmt.h"
 #include "playground/io.h"
 
-void print_help() {
+void print_help(void) {
     puts("commands:");
     puts("i (insert)");
     puts("d (delete)");
     puts("e (exit)");
 }
 
-int main() {
+int main(void) {
     struct GapBuffer *gb = gap_buffer_create_from_string("Lets go!");
 
     while (1) {

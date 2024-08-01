@@ -22,4 +22,3 @@
 
 - const
 - consistent naming
-- func_without_parameters(void)

@@ -9,18 +9,18 @@
 #include "io.h"
 #include "tui/text.h"
 
-void setup() {
+void setup(void) {
     initscr();
     raw();
     noecho();
     keypad(stdscr, true);
 }
 
-void teardown() {
+void teardown(void) {
     endwin();
 }
 
-void funny() {
+void funny(void) {
     size_t window_height, window_width;
     getmaxyx(stdscr, window_height, window_width);
 
@@ -68,7 +68,7 @@ void funny() {
     delwin(funny_window);
 }
 
-void text() {
+void text(void) {
     size_t window_height, window_width;
     getmaxyx(stdscr, window_height, window_width);
 
@@ -87,7 +87,7 @@ void text() {
     delwin(text_window);
 }
 
-void main_window() {
+void main_window(void) {
     setup();
 
     text();

@@ -1,6 +1,6 @@
 #include "tui/tui.h"
 
-int main() {
+int main(void) {
     main_window();
     return 0;
 }

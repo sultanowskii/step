@@ -14,7 +14,7 @@ void str_destroy(void *s) {
     free(s);
 }
 
-void print_help() {
+void print_help(void) {
     puts("commands:");
     puts("p (push front)");
     puts("o (pop front)");
@@ -23,7 +23,7 @@ void print_help() {
     puts("e (exit)");
 }
 
-int main() {
+int main(void) {
     print_prompt_with_message("max_size");
     size_t max_size = read_size_t();
 

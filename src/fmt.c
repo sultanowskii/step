@@ -20,6 +20,6 @@ void iprintf(size_t indent_size, const char *format, ...) {
     va_end(args);
 }
 
-void print_newline() {
+void print_newline(void) {
     puts("");
 }

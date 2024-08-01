@@ -14,14 +14,14 @@ void str_destroy(void *s) {
     free(s);
 }
 
-void print_help() {
+void print_help(void) {
     puts("commands:");
     puts("P (push back)");
     puts("O (pop back)");
     puts("e (exit)");
 }
 
-int main() {
+int main(void) {
     print_prompt_with_message("max_size");
     size_t max_size = read_size_t();
 

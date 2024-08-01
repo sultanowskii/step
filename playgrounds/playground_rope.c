@@ -5,7 +5,7 @@
 #include "fmt.h"
 #include "playground/io.h"
 
-void print_help() {
+void print_help(void) {
     puts("commands:");
     puts("i (insert)");
     puts("d (delete)");
@@ -13,7 +13,7 @@ void print_help() {
     puts("e (exit)");
 }
 
-int main() {
+int main(void) {
     setvbuf(stdout, NULL, _IONBF, 0);
 
     struct Rope *rope = rope_create_from_string("Hello, world!");
