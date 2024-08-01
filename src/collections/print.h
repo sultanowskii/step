@@ -1,4 +1,4 @@
 #pragma once
 
 // Function type that must print a provided value
-typedef void (*print)(void *);
+typedef void (*print)(const void *);

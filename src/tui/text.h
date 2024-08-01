@@ -6,9 +6,9 @@
 #include "collections/gap_buffer.h"
 
 void gap_buffer_print_to_window(
-    struct GapBuffer *gb,
-    WINDOW           *win,
-    size_t            starting_index,
-    size_t            max_rows,
-    size_t            max_columns
+    const struct GapBuffer *gb,
+    WINDOW                 *win,
+    size_t                  starting_index,
+    size_t                  max_rows,
+    size_t                  max_columns
 );

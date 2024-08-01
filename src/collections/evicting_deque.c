@@ -227,7 +227,7 @@ void *evicting_deque_pop_back(struct EvictingDeque *edeque) {
     return value;
 }
 
-void evicting_deque_print(const struct EvictingDeque *edeque, void (*print_value)(void *)) {
+void evicting_deque_print(const struct EvictingDeque *edeque, print print_value) {
     evicting_deque_print_with_indent(edeque, print_value, 0);
 }
 
