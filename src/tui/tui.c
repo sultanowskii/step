@@ -20,54 +20,6 @@ void teardown(void) {
     endwin();
 }
 
-void funny(void) {
-    size_t window_height, window_width;
-    getmaxyx(stdscr, window_height, window_width);
-
-    WINDOW *funny_window = newwin(window_height, window_width, 0, 0);
-
-    keypad(stdscr, TRUE);
-
-    int    ch;
-    size_t y, x;
-
-    while ((ch = getch()) != KEY_F(1)) {
-        switch (ch) {
-        case KEY_LEFT:
-            if (x == 0) {
-                break;
-            }
-            x--;
-            mvwaddch(funny_window, y, x, 'a');
-            break;
-        case KEY_RIGHT:
-            if (x == window_width - 1) {
-                break;
-            }
-            x++;
-            mvwaddch(funny_window, y, x, 'a');
-            break;
-        case KEY_UP:
-            if (y == 0) {
-                break;
-            }
-            y--;
-            mvwaddch(funny_window, y, x, 'a');
-            break;
-        case KEY_DOWN:
-            if (y == window_height - 1) {
-                break;
-            }
-            y++;
-            mvwaddch(funny_window, y, x, 'a');
-            break;
-        }
-        wrefresh(funny_window);
-    }
-
-    delwin(funny_window);
-}
-
 void text(void) {
     size_t window_height, window_width;
     getmaxyx(stdscr, window_height, window_width);
