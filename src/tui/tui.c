@@ -86,9 +86,9 @@ void text(void) {
             goto LOOP_END;
         }
 
-        struct Coords actual_coords = gap_buffer_revise_coords(gb, gb_index, text_window_height, text_window_width, cursor.y, cursor.x);
-        cursor.y = actual_coords.y;
-        cursor.x = actual_coords.x;
+        struct Coords revised = gap_buffer_revise_coords(gb, gb_index, text_window_height, text_window_width, cursor);
+        cursor.y = revised.y;
+        cursor.x = revised.x;
     }
 
 LOOP_END:

@@ -19,6 +19,5 @@ struct Coords gap_buffer_revise_coords(
     size_t                  starting_index,
     size_t                  max_rows,
     size_t                  max_columns,
-    size_t                  raw_y,
-    size_t                  raw_x
+    struct Coords           raw
 );
