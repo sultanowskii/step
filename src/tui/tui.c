@@ -41,55 +41,54 @@ void text(void) {
     WINDOW *text_window = newwin(text_window_height, text_window_width, 0, 0);
     keypad(text_window, TRUE);
 
-    size_t cursor_y = 0;
-    size_t cursor_x = 0;
+    struct Coords cursor = {.x = 0, .y = 0};
 
     size_t gb_index = 0;
 
     int c = 0;
     while (TRUE) {
         gap_buffer_print_to_window(gb, text_window, gb_index, text_window_height, text_window_width);
-        HIGHLIGHT_ON(text_window, cursor_y, cursor_x);
+        HIGHLIGHT_ON(text_window, cursor.y, cursor.x);
         wrefresh(text_window);
 
         c = wgetch(text_window);
 
         switch (c) {
         case KEY_RIGHT:
-            if (cursor_x == text_window_width - 1) {
+            if (cursor.x == text_window_width - 1) {
                 break;
             }
-            HIGHLIGHT_OFF(text_window, cursor_y, cursor_x);
-            cursor_x++;
+            HIGHLIGHT_OFF(text_window, cursor.y, cursor.x);
+            cursor.x++;
             break;
         case KEY_LEFT:
-            if (cursor_x == 0) {
+            if (cursor.x == 0) {
                 break;
             }
-            HIGHLIGHT_OFF(text_window, cursor_y, cursor_x);
-            cursor_x--;
+            HIGHLIGHT_OFF(text_window, cursor.y, cursor.x);
+            cursor.x--;
             break;
         case KEY_DOWN:
-            if (cursor_y == text_window_height - 1) {
+            if (cursor.y == text_window_height - 1) {
                 break;
             }
-            HIGHLIGHT_OFF(text_window, cursor_y, cursor_x);
-            cursor_y++;
+            HIGHLIGHT_OFF(text_window, cursor.y, cursor.x);
+            cursor.y++;
             break;
         case KEY_UP:
-            if (cursor_y == 0) {
+            if (cursor.y == 0) {
                 break;
             }
-            HIGHLIGHT_OFF(text_window, cursor_y, cursor_x);
-            cursor_y--;
+            HIGHLIGHT_OFF(text_window, cursor.y, cursor.x);
+            cursor.y--;
             break;
         default:
             goto LOOP_END;
         }
 
-        struct Coords actual_coords = gap_buffer_revise_coords(gb, gb_index, text_window_height, text_window_width, cursor_y, cursor_x);
-        cursor_y = actual_coords.y;
-        cursor_x = actual_coords.x;
+        struct Coords actual_coords = gap_buffer_revise_coords(gb, gb_index, text_window_height, text_window_width, cursor.y, cursor.x);
+        cursor.y = actual_coords.y;
+        cursor.x = actual_coords.x;
     }
 
 LOOP_END:

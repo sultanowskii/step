@@ -2,6 +2,8 @@
 
 #include <stddef.h>
 
+#include "tui/coords.h"
+
 const char FILLER = 'a';
 
 void print_info(WINDOW *win, size_t y, size_t x) {
@@ -21,55 +23,54 @@ void funny(void) {
     WINDOW *funny_window = newwin(funny_window_height, funny_window_width, 1, 0);
     keypad(funny_window, true);
 
-    int    ch;
-    size_t y = 0;
-    size_t x = 0;
+    int           ch;
+    struct Coords cursor = {.y = 0, .x = 0};
 
-    print_info(info_window, y, x);
-    wmove(funny_window, y, x);
+    print_info(info_window, cursor.y, cursor.x);
+    wmove(funny_window, cursor.y, cursor.x);
     wrefresh(info_window);
 
     while ((ch = wgetch(funny_window)) != KEY_F(1)) {
         switch (ch) {
         case KEY_LEFT:
-            if (x == 0) {
+            if (cursor.x == 0) {
                 goto REFRESH;
             }
-            x--;
+            cursor.x--;
             break;
         case KEY_RIGHT:
-            if (x == funny_window_width - 1) {
+            if (cursor.x == funny_window_width - 1) {
                 goto REFRESH;
             }
-            x++;
+            cursor.x++;
             break;
         case KEY_UP:
-            if (y == 0) {
+            if (cursor.y == 0) {
                 goto REFRESH;
             }
-            y--;
+            cursor.y--;
             break;
         case KEY_DOWN:
-            if (y == funny_window_height - 1) {
+            if (cursor.y == funny_window_height - 1) {
                 goto REFRESH;
             }
-            y++;
+            cursor.y++;
             break;
         }
 
-        int sym = mvwinch(funny_window, y, x);
+        int sym = mvwinch(funny_window, cursor.y, cursor.x);
         if (sym == FILLER) {
             sym = ' ';
         } else {
             sym = FILLER;
         }
-        mvwaddch(funny_window, y, x, sym);
+        mvwaddch(funny_window, cursor.y, cursor.x, sym);
 
     REFRESH:
-        print_info(info_window, y, x);
+        print_info(info_window, cursor.y, cursor.x);
         wrefresh(info_window);
 
-        wmove(funny_window, y, x);
+        wmove(funny_window, cursor.y, cursor.x);
         wrefresh(funny_window);
     }
 
