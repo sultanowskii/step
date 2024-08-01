@@ -3,6 +3,8 @@
 #include <ncurses.h>
 #include <stddef.h>
 
+#include "collections/gap_buffer.h"
+
 void gap_buffer_print_to_window(
     struct GapBuffer *gb,
     WINDOW           *win,
