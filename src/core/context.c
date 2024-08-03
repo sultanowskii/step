@@ -10,7 +10,7 @@ struct Context {
     enum State            state;
     struct EvictingStack *done_cmds;
     struct EvictingStack *undone_cmds;
-    struct GapBuffer     *text;
+    struct GapBuffer     *gap_buffer;
 };
 
 struct Context *context_create_empty() {
@@ -18,7 +18,7 @@ struct Context *context_create_empty() {
     ctx->state = STATE_START;
     ctx->done_cmds = NULL;
     ctx->undone_cmds = NULL;
-    ctx->text = NULL;
+    ctx->gap_buffer = NULL;
     return ctx;
 }
 
@@ -26,20 +26,20 @@ struct Context *context_create(
     enum State            state,
     struct EvictingStack *done_cmds,
     struct EvictingStack *undone_cmds,
-    struct GapBuffer     *text // ah yes, trailing comma is prohibited with seemingly no explanation
+    struct GapBuffer     *gap_buffer // ah yes, trailing comma is prohibited with seemingly no explanation
 ) {
     struct Context *ctx = context_create_empty();
     ctx->state = state;
     ctx->done_cmds = done_cmds;
     ctx->undone_cmds = undone_cmds;
-    ctx->text = text;
+    ctx->gap_buffer = gap_buffer;
     return ctx;
 }
 
 void context_destroy(struct Context *ctx) {
     ctx->done_cmds = NULL;
     ctx->undone_cmds = NULL;
-    ctx->text = NULL;
+    ctx->gap_buffer = NULL;
     free(ctx);
 }
 
@@ -51,8 +51,8 @@ struct EvictingStack *context_get_undone_cmds(const struct Context *ctx) {
     return ctx->undone_cmds;
 }
 
-struct GapBuffer *context_get_text(const struct Context *ctx) {
-    return ctx->text;
+struct GapBuffer *context_get_gap_buffer(const struct Context *ctx) {
+    return ctx->gap_buffer;
 }
 
 enum State context_get_state(const struct Context *ctx) {

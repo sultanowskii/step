@@ -8,12 +8,12 @@
 #include "runtime.h"
 
 void _exec_insert(struct Context *ctx, struct CmdInsert *insert) {
-    struct GapBuffer *gb = context_get_text(ctx);
+    struct GapBuffer *gb = context_get_gap_buffer(ctx);
     gap_buffer_insert(gb, insert->index, insert->s);
 }
 
 void _exec_delete(struct Context *ctx, struct CmdDelete *delete) {
-    struct GapBuffer *gb = context_get_text(ctx);
+    struct GapBuffer *gb = context_get_gap_buffer(ctx);
     gap_buffer_delete_n(gb, delete->index, delete->n);
 }
 

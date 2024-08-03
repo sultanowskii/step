@@ -39,18 +39,18 @@ int main(void) {
 
     rope_destroy(loba_world);
 
-    struct Rope *long_text = rope_create_from_string("VERY\nVERY...\nVery!\nLong text! It's\nridiculous how long it is!");
+    struct Rope *long_text = rope_create_from_string("VERY\nVERY...\nVery!\nLong gap_buffer! It's\nridiculous how long it is!");
     char         buffer[1024];
     size_t       long_text_symbols_written = rope_fill_buffer_from_index(long_text, buffer, 3, 1000, 6);
     buffer[long_text_symbols_written] = '\0';
     printf("Here: %s\n", buffer);
     rope_destroy(long_text);
 
-    struct Rope *text = rope_create_from_string("pple");
-    text = rope_insert(text, 0, "A");
+    struct Rope *gap_buffer = rope_create_from_string("pple");
+    gap_buffer = rope_insert(gap_buffer, 0, "A");
 
     while (1) {
-        rope_print(text);
+        rope_print(gap_buffer);
         print_newline();
 
         print_help();
@@ -62,7 +62,7 @@ int main(void) {
             size_t index = read_size_t();
             print_prompt_with_message("str");
             char *s = read_str();
-            text = rope_insert(text, index, s);
+            gap_buffer = rope_insert(gap_buffer, index, s);
             free(s);
         } else if (c == 'd') {
             print_prompt_with_message("l");
@@ -70,19 +70,19 @@ int main(void) {
             print_prompt_with_message("r");
             size_t r = read_size_t();
 
-            text = rope_delete(text, l, r);
+            gap_buffer = rope_delete(gap_buffer, l, r);
         } else if (c == 'g') {
             print_prompt_with_message("index");
             size_t index = read_size_t();
 
-            char c = rope_get_at(text, index);
+            char c = rope_get_at(gap_buffer, index);
             printf("%c\n", c);
         } else if (c == 'e') {
             break;
         }
     }
 
-    rope_destroy(text);
+    rope_destroy(gap_buffer);
 
     return 0;
 }
