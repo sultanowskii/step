@@ -11,7 +11,7 @@ TARGET           := $(NAME)
 
 TUI_SRCS         := $(wildcard src/tui/*.c src/tui/**/*.c)
 TUI_OBJS         := $(TUI_SRCS:.c=.o)
-TUI_LIBS         := -lncurses
+TUI_LIBS         := -lpanel -lncurses
 
 PGROUND_SRCS     := $(wildcard playgrounds/playground/*.c)
 PGROUND_OBJS     := $(PGROUND_SRCS:.c=.o)
