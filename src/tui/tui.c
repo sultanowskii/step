@@ -55,12 +55,18 @@ void run(
     size_t            gb_index = 0;
 
     struct Coords cursor = {.x = 0, .y = 0};
+    size_t        line_index = 0;
 
     while (TRUE) {
-        // Line number panel update. TODO: extract into separate function
-        for (size_t i = 0; i < line_number_board->height; i++) {
-            mvwprintw(board_window(line_number_board), i, 0, "%*zu", (int)line_number_board->width, i);
-        }
+        // Line number panel update.
+        print_line_numbers_to_board(
+            gb,
+            line_number_board,
+            gb_index,
+            text_board->height,
+            text_board->width,
+            line_index
+        );
 
         // Text panel update. TODO: extract into separate function
         gap_buffer_print_to_board(gb, text_board, gb_index, text_board->height, text_board->width);
@@ -134,7 +140,7 @@ struct Context *setup_context() {
     struct EvictingStack *done_cmds = evicting_stack_create(UNDO_MAX_COUNT);
     struct EvictingStack *undone_cmds = evicting_stack_create(UNDO_MAX_COUNT);
 
-    FILE *f = fopen("Makefile", "rb");
+    FILE *f = fopen("src/tui/tui.c", "rb");
     char *data = file_read(f);
     fclose(f);
     struct GapBuffer *gb = gap_buffer_create_from_string(data);
