@@ -15,12 +15,14 @@
 #include "math.h"
 #include "mem.h"
 #include "tui/coords.h"
+#include "tui/highlight.h"
+#include "tui/navigation.h"
 #include "tui/text.h"
 
 // TODO: move to other file
 #define UNDO_MAX_COUNT 50
 
-// TODO: custom colors, I guess
+// TODO: custom colors
 void setup_color_pairs() {
     use_default_colors();
     start_color();
@@ -36,9 +38,6 @@ void setup(void) {
     keypad(stdscr, TRUE);
     curs_set(0);
 }
-
-#define HIGHLIGHT_ON(win, y, x) mvwchgat(win, y, x, 1, A_REVERSE, 0, NULL)
-#define HIGHLIGHT_OFF(win, y, x) mvwchgat(win, y, x, 1, A_NORMAL, 0, NULL)
 
 void teardown(void) {
     endwin();
@@ -92,40 +91,12 @@ void text(struct Context *ctx) {
         doupdate();
 
         c = wgetch(text_window);
-
-        // Navigation key handling. TODO: extract into separate function
-        switch (c) {
-        case KEY_RIGHT:
-            if (cursor.x == text_window_width - 1) {
-                break;
-            }
-            HIGHLIGHT_OFF(text_window, cursor.y, cursor.x);
-            cursor.x++;
-            break;
-        case KEY_LEFT:
-            if (cursor.x == 0) {
-                break;
-            }
-            HIGHLIGHT_OFF(text_window, cursor.y, cursor.x);
-            cursor.x--;
-            break;
-        case KEY_DOWN:
-            if (cursor.y == text_window_height - 1) {
-                break;
-            }
-            HIGHLIGHT_OFF(text_window, cursor.y, cursor.x);
-            cursor.y++;
-            break;
-        case KEY_UP:
-            if (cursor.y == 0) {
-                break;
-            }
-            HIGHLIGHT_OFF(text_window, cursor.y, cursor.x);
-            cursor.y--;
-            break;
-        default:
+        if (c == 'q') {
             goto LOOP_END;
         }
+
+        handle_navigation_key(c, &cursor, text_window, text_window_height, text_window_width);
+
         struct Coords revised = gap_buffer_revise_coords(gb, gb_index, text_window_height, text_window_width, cursor);
         cursor.y = revised.y;
         cursor.x = revised.x;
