@@ -2,6 +2,7 @@
 
 #include <malloc.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "fmt.h"
@@ -199,16 +200,15 @@ void gap_buffer_print_with_indent(const struct GapBuffer *gb, size_t indent_size
 }
 
 size_t gap_buffer_next_index(const struct GapBuffer *gb, size_t index) {
-    size_t next;
-    if (index >= gb->left && index <= gb->right) {
+    size_t next = index + 1;
+    if (next >= gb->left && next <= gb->right) {
         next = gb->right + 1;
-    } else {
-        next = index + 1;
     }
 
     if (next >= gb->length) {
-        return INVALID_SIZE_T;
+        next = INVALID_SIZE_T;
     }
+
     return next;
 }
 

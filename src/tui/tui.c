@@ -175,5 +175,7 @@ void main_window(void) {
     printw("Press any key to exit...");
     getch();
 
+    teardown_context(ctx);
+
     teardown();
 }

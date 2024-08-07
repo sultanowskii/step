@@ -60,14 +60,14 @@ playground-evicting-stack: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_evicti
 .PHONY: playground-ncurses
 playground-ncurses: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_ncurses.o
 	echo $^
-	$(CC) $(INCLUDES) $(TUI_LIBS) $(CFLAGS) -o playground_ncurses.elf $^
+	$(CC) $(INCLUDES) $(CFLAGS) -o playground_ncurses.elf $^ $(TUI_LIBS)
 
 .PHONY: playgrounds
 playgrounds: playground-rope playground-gap-buffer playground-deque playground-evicting-stack playground-evicting-deque playground-ncurses
 
 .PHONY: $(TARGET)
 $(TARGET): $(OBJS) $(TUI_OBJS) $(ENTRYPOINT_OBJ)
-	$(CC) $(INCLUDES) $(TUI_LIBS) $(CFLAGS) -o $(TARGET) $^
+	$(CC) $(INCLUDES) $(CFLAGS) -o $(TARGET) $^ $(TUI_LIBS)
 
 %.o: %.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c -o $@ $<

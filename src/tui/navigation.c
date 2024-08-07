@@ -42,5 +42,6 @@ void handle_navigation_key(
         break;
     default:
         // TODO: handle
+        break;
     }
 }
