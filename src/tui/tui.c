@@ -44,14 +44,54 @@ void teardown(void) {
     endwin();
 }
 
+void run(
+    struct Context *ctx,
+    struct Board   *line_number_board,
+    struct Board   *text_board,
+    struct Board   *status_board
+) {
+    struct GapBuffer *gb = context_get_gap_buffer(ctx);
+    size_t            gb_index = 0;
+
+    struct Coords cursor = {.x = 0, .y = 0};
+
+    while (TRUE) {
+        // Line number panel update. TODO: extract into separate function
+        for (size_t i = 0; i < line_number_board->height; i++) {
+            mvwprintw(board_window(line_number_board), i, 0, "%*zu", (int)line_number_board->width, i);
+        }
+
+        // Text panel update. TODO: extract into separate function
+        gap_buffer_print_to_window(gb, board_window(text_board), gb_index, text_board->height, text_board->width);
+        highlight_on(text_board, cursor.y, cursor.x);
+
+        // Status panel update. TODO: extract into separate function
+        wclrtoeol(board_window(status_board));
+        mvwprintw(board_window(status_board), 0, 0, "Cursor position: y=%zu x=%zu", cursor.y, cursor.x);
+
+        update_panels();
+        doupdate();
+
+        int c = wgetch(board_window(text_board));
+        if (c == 'q') {
+            break;
+        }
+
+        handle_navigation_key(c, &cursor, text_board);
+
+        struct Coords revised = gap_buffer_revise_coords(gb, gb_index, text_board->height, text_board->width, cursor);
+        cursor.y = revised.y;
+        cursor.x = revised.x;
+    }
+}
+
+// TODO: rename
 void text(struct Context *ctx) {
     size_t window_height, window_width;
     getmaxyx(stdscr, window_height, window_width);
 
-    struct GapBuffer *gb = context_get_gap_buffer(ctx);
-    size_t            gb_index = 0;
-    size_t            gb_line_count = gap_buffer_count_lines(gb);
-    size_t            gb_line_count_digit_count = count_digits(gb_line_count);
+    size_t gb_line_count = gap_buffer_count_lines(context_get_gap_buffer(ctx));
+    size_t gb_line_count_digit_count = count_digits(gb_line_count);
 
     const size_t line_number_window_height = window_height;
     const size_t line_number_window_width = gb_line_count_digit_count + 1;
@@ -65,8 +105,6 @@ void text(struct Context *ctx) {
     keypad(text_window, TRUE);
     wattrset(text_window, COLOR_PAIR(0));
 
-    struct Coords cursor = {.x = 0, .y = 0};
-
     const size_t status_window_height = 1;
     const size_t status_window_width = window_width;
     struct Board status_board = create_board(status_window_height, status_window_width, window_height - 1, 0);
@@ -74,36 +112,8 @@ void text(struct Context *ctx) {
     // TODO: color doesn't cover whole window
     wattrset(status_window, COLOR_PAIR(1));
 
-    while (TRUE) {
-        // Line number panel update. TODO: extract into separate function
-        for (size_t i = 0; i < line_number_board.height; i++) {
-            mvwprintw(board_window(&line_number_board), i, 0, "%*zu", (int)line_number_board.width, i);
-        }
+    run(ctx, &line_number_board, &text_board, &status_board);
 
-        // Text panel update. TODO: extract into separate function
-        gap_buffer_print_to_window(gb, board_window(&text_board), gb_index, text_window_height, text_window_width);
-        highlight_on(&text_board, cursor.y, cursor.x);
-
-        // Status panel update. TODO: extract into separate function
-        wclrtoeol(board_window(&status_board));
-        mvwprintw(board_window(&status_board), 0, 0, "Cursor position: y=%zu x=%zu", cursor.y, cursor.x);
-
-        update_panels();
-        doupdate();
-
-        int c = wgetch(board_window(&text_board));
-        if (c == 'q') {
-            goto LOOP_END;
-        }
-
-        handle_navigation_key(c, &cursor, &text_board);
-
-        struct Coords revised = gap_buffer_revise_coords(gb, gb_index, text_window_height, text_window_width, cursor);
-        cursor.y = revised.y;
-        cursor.x = revised.x;
-    }
-
-LOOP_END:
     board_destroy(&line_number_board);
     board_destroy(&text_board);
     board_destroy(&status_board);
