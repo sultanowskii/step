@@ -8,9 +8,11 @@
 
 #include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
+#include "collections/gap_buffer_str.h"
 #include "core/context.h"
 #include "core/state.h"
 #include "io.h"
+#include "math.h"
 #include "mem.h"
 #include "tui/coords.h"
 #include "tui/text.h"
@@ -46,20 +48,28 @@ void text(struct Context *ctx) {
     size_t window_height, window_width;
     getmaxyx(stdscr, window_height, window_width);
 
+    struct GapBuffer *gb = context_get_gap_buffer(ctx);
+    size_t            gb_index = 0;
+    size_t            gb_line_count = gap_buffer_count_lines(gb);
+    size_t            gb_line_count_digit_count = count_digits(gb_line_count);
+
     size_t  line_number_window_height = window_height;
-    size_t  line_number_window_width = 3;
+    size_t  line_number_window_width = gb_line_count_digit_count + 1;
     WINDOW *line_number_window = newwin(line_number_window_height, line_number_window_width, 0, 0);
     PANEL  *line_number_panel = new_panel(line_number_window);
     for (size_t i = 0; i < line_number_window_height; i++) {
-        mvwprintw(panel_window(line_number_panel), i, 0, "%zu", i);
+        mvwprintw(panel_window(line_number_panel), i, 0, "%*zu", (int)line_number_window_width, i);
     }
 
+    size_t  text_window_offset_x = line_number_window_width + 1;
     size_t  text_window_height = window_height;
-    size_t  text_window_width = window_width - line_number_window_width;
-    WINDOW *text_window = newwin(text_window_height, text_window_width, 0, line_number_window_width);
+    size_t  text_window_width = window_width - text_window_offset_x;
+    WINDOW *text_window = newwin(text_window_height, text_window_width, 0, text_window_offset_x);
     keypad(text_window, TRUE);
     wattrset(text_window, COLOR_PAIR(0));
     PANEL *text_panel = new_panel(text_window);
+
+    struct Coords cursor = {.x = 0, .y = 0};
 
     size_t  status_window_height = 1;
     size_t  status_window_width = window_width;
@@ -68,14 +78,9 @@ void text(struct Context *ctx) {
     wattrset(status_window, COLOR_PAIR(1));
     PANEL *status_panel = new_panel(status_window);
 
-    struct Coords cursor = {.x = 0, .y = 0};
-
-    size_t gb_index = 0;
-
     int c = 0;
     while (TRUE) {
         // Text panel update. TODO: extract into separate function
-        struct GapBuffer *gb = context_get_gap_buffer(ctx);
         gap_buffer_print_to_window(gb, panel_window(text_panel), gb_index, text_window_height, text_window_width);
         HIGHLIGHT_ON(panel_window(text_panel), cursor.y, cursor.x);
 

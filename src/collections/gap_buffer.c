@@ -162,7 +162,7 @@ size_t _gap_buffer_get_gap_size(const struct GapBuffer *gb) {
     return gb->size;
 }
 
-size_t _gap_buffer_get_real_indexition(const struct GapBuffer *gb, size_t index) {
+size_t _gap_buffer_get_real_index(const struct GapBuffer *gb, size_t index) {
     if (index < gb->left) {
         return index;
     }
@@ -170,11 +170,11 @@ size_t _gap_buffer_get_real_indexition(const struct GapBuffer *gb, size_t index)
 }
 
 char gap_buffer_get_at(const struct GapBuffer *gb, size_t index) {
-    return gb->buffer[_gap_buffer_get_real_indexition(gb, index)];
+    return gb->buffer[_gap_buffer_get_real_index(gb, index)];
 }
 
 void gap_buffer_set_at(struct GapBuffer *gb, size_t index, char c) {
-    gb->buffer[_gap_buffer_get_real_indexition(gb, index)] = c;
+    gb->buffer[_gap_buffer_get_real_index(gb, index)] = c;
 }
 
 void gap_buffer_print(const struct GapBuffer *gb) {
@@ -197,6 +197,25 @@ void gap_buffer_print_with_indent(const struct GapBuffer *gb, size_t indent_size
         index++;
     }
 }
+
+size_t gap_buffer_next_index(const struct GapBuffer *gb, size_t index) {
+    size_t next;
+    if (index >= gb->left && index <= gb->right) {
+        next = gb->right + 1;
+    } else {
+        next = index + 1;
+    }
+
+    if (next >= gb->length) {
+        return INVALID_SIZE_T;
+    }
+    return next;
+}
+
+size_t gap_buffer_first_index(const struct GapBuffer *gb) {
+    return gap_buffer_next_index(gb, 0);
+}
+
 void gap_buffer_debug_print(const struct GapBuffer *gb) {
     gap_buffer_debug_print_with_indent(gb, 0);
 }

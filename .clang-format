@@ -5,3 +5,4 @@ ColumnLimit: 0
 ContinuationIndentWidth: 4
 AlignConsecutiveDeclarations: true
 AlignAfterOpenBracket: BlockIndent
+SpaceAfterCStyleCast: false
