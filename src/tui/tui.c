@@ -11,6 +11,7 @@
 #include "collections/gap_buffer_str.h"
 #include "core/context.h"
 #include "core/state.h"
+#include "human.h"
 #include "io.h"
 #include "math.h"
 #include "mem.h"
@@ -67,7 +68,16 @@ void run(
 
         // Status panel update. TODO: extract into separate function
         wclrtoeol(board_window(status_board));
-        mvwprintw(board_window(status_board), 0, 0, "Cursor position: y=%zu x=%zu", cursor.y, cursor.x);
+        mvwprintw(
+            board_window(status_board),
+            0,
+            0,
+            "Cursor position: Ln %zu, Col %zu (y=%zu, x=%zu)",
+            index_to_human(cursor.y),
+            index_to_human(cursor.x),
+            cursor.y,
+            cursor.x
+        );
 
         update_panels();
         doupdate();
