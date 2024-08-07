@@ -3,12 +3,13 @@
 #include <ncurses.h>
 #include <stddef.h>
 
+#include "board.h"
 #include "collections/gap_buffer.h"
 #include "tui/coords.h"
 
-void gap_buffer_print_to_window(
+void gap_buffer_print_to_board(
     const struct GapBuffer *gb,
-    WINDOW                 *win,
+    struct Board           *board,
     size_t                  starting_index,
     size_t                  max_rows,
     size_t                  max_columns

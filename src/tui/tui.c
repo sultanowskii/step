@@ -63,7 +63,7 @@ void run(
         }
 
         // Text panel update. TODO: extract into separate function
-        gap_buffer_print_to_window(gb, board_window(text_board), gb_index, text_board->height, text_board->width);
+        gap_buffer_print_to_board(gb, text_board, gb_index, text_board->height, text_board->width);
         highlight_on(text_board, cursor.y, cursor.x);
 
         // Status panel update. TODO: extract into separate function

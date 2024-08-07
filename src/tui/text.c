@@ -4,11 +4,12 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
+#include "tui/board.h"
 #include "tui/coords.h"
 
-void gap_buffer_print_to_window(
+void gap_buffer_print_to_board(
     const struct GapBuffer *gb,
-    WINDOW                 *win,
+    struct Board           *board,
     size_t                  starting_index,
     size_t                  max_rows,
     size_t                  max_columns
@@ -19,7 +20,7 @@ void gap_buffer_print_to_window(
     while (true) {
         char sym = gap_buffer_get_at(gb, buffer_index);
 
-        mvwaddch(win, current.y, current.x, sym);
+        mvwaddch(board_window(board), current.y, current.x, sym);
 
         current.x++;
         if (current.x == max_columns || sym == '\n') {
