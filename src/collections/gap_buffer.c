@@ -160,7 +160,7 @@ void gap_buffer_delete_n(struct GapBuffer *gb, size_t index, size_t n) {
 }
 
 size_t _gap_buffer_get_gap_size(const struct GapBuffer *gb) {
-    return gb->size;
+    return gb->right - gb->left + 1;
 }
 
 size_t _gap_buffer_get_real_index(const struct GapBuffer *gb, size_t index) {
@@ -168,6 +168,10 @@ size_t _gap_buffer_get_real_index(const struct GapBuffer *gb, size_t index) {
         return index;
     }
     return index + _gap_buffer_get_gap_size(gb);
+}
+
+size_t gap_buffer_get_length(const struct GapBuffer *gb) {
+    return gb->length - _gap_buffer_get_gap_size(gb);
 }
 
 char gap_buffer_get_at(const struct GapBuffer *gb, size_t index) {
@@ -197,23 +201,6 @@ void gap_buffer_print_with_indent(const struct GapBuffer *gb, size_t indent_size
         putc(gb->buffer[index], stdout);
         index++;
     }
-}
-
-size_t gap_buffer_next_index(const struct GapBuffer *gb, size_t index) {
-    size_t next = index + 1;
-    if (next >= gb->left && next <= gb->right) {
-        next = gb->right + 1;
-    }
-
-    if (next >= gb->length) {
-        next = INVALID_SIZE_T;
-    }
-
-    return next;
-}
-
-size_t gap_buffer_first_index(const struct GapBuffer *gb) {
-    return gap_buffer_next_index(gb, 0);
 }
 
 void gap_buffer_debug_print(const struct GapBuffer *gb) {

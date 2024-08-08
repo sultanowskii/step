@@ -31,3 +31,11 @@ void print_line_numbers_to_board(
     size_t                  max_columns,
     size_t                  starting_line_index
 );
+
+struct FindLineResult {
+    size_t index;
+    bool   found;
+};
+
+struct FindLineResult find_next_line(const struct GapBuffer *gb, size_t starting_index);
+struct FindLineResult find_previous_line(const struct GapBuffer *gb, size_t starting_index);

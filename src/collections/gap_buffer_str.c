@@ -4,11 +4,12 @@
 #include <string.h>
 
 #include "collections/gap_buffer.h"
-#include "math.h"
 
 size_t gap_buffer_count_symbol(const struct GapBuffer *gb, char symbol) {
     size_t counter = 0;
-    for (size_t i = gap_buffer_first_index(gb); i != INVALID_SIZE_T; i = gap_buffer_next_index(gb, i)) {
+
+    size_t gb_length = gap_buffer_get_length(gb);
+    for (size_t i = 0; i < gb_length; i++) {
         if (gap_buffer_get_at(gb, i) == symbol) {
             counter++;
         }

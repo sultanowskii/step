@@ -1,16 +1,19 @@
 #include "tui/navigation.h"
 
 #include <ncurses.h>
+#include <stdbool.h>
 
 #include "tui/board.h"
 #include "tui/coords.h"
 #include "tui/highlight.h"
 
-void handle_navigation_key(
+enum NavigationRequirement handle_navigation_key(
     int            c,
     struct Coords *cursor,
     struct Board  *text_board
 ) {
+    enum NavigationRequirement requirement = NAVREQ_NO;
+
     switch (c) {
     case KEY_RIGHT:
         if (cursor->x == text_board->width - 1) {
@@ -28,6 +31,7 @@ void handle_navigation_key(
         break;
     case KEY_DOWN:
         if (cursor->y == text_board->height - 1) {
+            requirement = NAVREQ_LOWER;
             break;
         }
         highlight_off(text_board, cursor->y, cursor->x);
@@ -35,6 +39,7 @@ void handle_navigation_key(
         break;
     case KEY_UP:
         if (cursor->y == 0) {
+            requirement = NAVREQ_UPPER;
             break;
         }
         highlight_off(text_board, cursor->y, cursor->x);
@@ -44,4 +49,6 @@ void handle_navigation_key(
         // TODO: handle
         break;
     }
+
+    return requirement;
 }

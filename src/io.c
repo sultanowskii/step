@@ -13,7 +13,9 @@ char *file_read(FILE *f) {
     size_t size = file_size(f);
 
     char *buf = malloc(size + 1);
-    fread(buf, size, 1, f);
+    if (size > 0) {
+        fread(buf, size, 1, f);
+    }
     buf[size] = '\0';
 
     return buf;

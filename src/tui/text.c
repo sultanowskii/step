@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
+#include "collections/gap_buffer_str.h"
 #include "human.h"
 #include "tui/board.h"
 #include "tui/coords.h"
@@ -16,10 +17,10 @@ void print_gap_buffer_to_board(
     size_t                  max_columns
 ) {
     struct Coords current = {.y = 0, .x = 0};
-    size_t        buffer_index = starting_index;
 
-    while (true) {
-        char sym = gap_buffer_get_at(gb, buffer_index);
+    size_t gb_length = gap_buffer_get_length(gb);
+    for (size_t i = starting_index; i < gb_length; i++) {
+        char sym = gap_buffer_get_at(gb, i);
 
         mvwaddch(board_window(board), current.y, current.x, sym);
 
@@ -31,8 +32,6 @@ void print_gap_buffer_to_board(
         if (current.y == max_rows) {
             return;
         }
-
-        buffer_index++;
     }
 }
 
@@ -44,11 +43,11 @@ struct Coords revise_coords_with_gap_buffer(
     struct Coords           raw
 ) {
     struct Coords current = {.y = 0, .x = 0};
-    size_t        buffer_index = starting_index;
-
     struct Coords last_valid = {};
+    size_t        gb_length = gap_buffer_get_length(gb);
 
-    while (current.y <= raw.y) {
+    size_t buffer_index = starting_index;
+    while (current.y <= raw.y && buffer_index < gb_length) {
         last_valid.y = current.y;
         last_valid.x = current.x;
 
@@ -114,13 +113,13 @@ void print_line_numbers_to_board(
     size_t                  starting_line_index
 ) {
     struct Coords current = {.y = 0, .x = 0};
-    size_t        buffer_index = starting_index;
     size_t        line_index = starting_line_index;
 
     _print_line_number(line_number_board, &current, &line_index);
 
-    while (true) {
-        char sym = gap_buffer_get_at(gb, buffer_index);
+    size_t gb_length = gap_buffer_get_length(gb);
+    for (size_t i = starting_index; i < gb_length; i++) {
+        char sym = gap_buffer_get_at(gb, i);
 
         current.x++;
         if (current.x == max_columns || sym == '\n') {
@@ -135,7 +134,54 @@ void print_line_numbers_to_board(
         if (current.y == max_rows) {
             return;
         }
-
-        buffer_index++;
     }
+}
+
+struct FindLineResult find_next_line(
+    const struct GapBuffer *gb,
+    size_t                  starting_index
+) {
+    size_t gb_length = gap_buffer_get_length(gb);
+    for (size_t i = starting_index; i < gb_length; i++) {
+        char symbol = gap_buffer_get_at(gb, i);
+        if (symbol == '\n') {
+            return (struct FindLineResult){
+                .found = true,
+                .index = i + 1,
+            };
+        }
+    }
+
+    return (struct FindLineResult){
+        .found = false,
+        .index = 0,
+    };
+}
+
+struct FindLineResult find_previous_line(
+    const struct GapBuffer *gb,
+    size_t                  starting_index
+) {
+    if (starting_index < 2) {
+        return (struct FindLineResult){
+            .found = false,
+            .index = 0,
+        };
+    }
+
+    // we start from [-2] because [0] is the beginning of current line and [-1] is \n
+    for (size_t i = starting_index - 2; i != 0; i--) {
+        char symbol = gap_buffer_get_at(gb, i);
+        if (symbol == '\n') {
+            return (struct FindLineResult){
+                .found = true,
+                .index = i + 1,
+            };
+        }
+    }
+
+    return (struct FindLineResult){
+        .found = true,
+        .index = 0,
+    };
 }

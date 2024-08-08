@@ -1,5 +1,6 @@
 #pragma once
 
+#include "math.h"
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"

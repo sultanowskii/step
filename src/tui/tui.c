@@ -78,11 +78,12 @@ void run(
             board_window(status_board),
             0,
             0,
-            "Cursor position: Ln %zu, Col %zu (y=%zu, x=%zu)",
-            index_to_human(cursor.y),
+            "Cursor position: Ln %zu, Col %zu (y=%zu, x=%zu), idx=%zu",
+            index_to_human(line_index + cursor.y),
             index_to_human(cursor.x),
             cursor.y,
-            cursor.x
+            cursor.x,
+            gb_index
         );
 
         update_panels();
@@ -93,7 +94,26 @@ void run(
             break;
         }
 
-        handle_navigation_key(c, &cursor, text_board);
+        enum NavigationRequirement navigation_requirement = handle_navigation_key(c, &cursor, text_board);
+        switch (navigation_requirement) {
+        case NAVREQ_UPPER:
+            struct FindLineResult find_previous_line_result = find_previous_line(gb, gb_index);
+            if (find_previous_line_result.found) {
+                gb_index = find_previous_line_result.index;
+                line_index--;
+            }
+            break;
+        case NAVREQ_LOWER:
+            struct FindLineResult find_next_line_result = find_next_line(gb, gb_index);
+            if (find_next_line_result.found) {
+                gb_index = find_next_line_result.index;
+                line_index++;
+            }
+            break;
+        case NAVREQ_NO:
+        default:
+            break;
+        }
 
         struct Coords revised = revise_coords_with_gap_buffer(gb, gb_index, text_board->height, text_board->width, cursor);
         cursor.y = revised.y;
@@ -113,20 +133,20 @@ void text(struct Context *ctx) {
     const size_t line_number_window_width = gb_line_count_digit_count + 1;
     struct Board line_number_board = create_board(line_number_window_height, line_number_window_width, 0, 0);
 
-    const size_t text_window_offset_x = line_number_board.width + 1;
-    const size_t text_window_height = window_height;
-    const size_t text_window_width = window_width - text_window_offset_x;
-    struct Board text_board = create_board(text_window_height, text_window_width, 0, text_window_offset_x);
-    WINDOW      *text_window = panel_window(text_board.panel);
-    keypad(text_window, TRUE);
-    wattrset(text_window, COLOR_PAIR(0));
-
     const size_t status_window_height = 1;
     const size_t status_window_width = window_width;
     struct Board status_board = create_board(status_window_height, status_window_width, window_height - 1, 0);
     WINDOW      *status_window = panel_window(status_board.panel);
     // TODO: color doesn't cover whole window
     wattrset(status_window, COLOR_PAIR(1));
+
+    const size_t text_window_offset_x = line_number_board.width + 1;
+    const size_t text_window_height = window_height - status_window_height;
+    const size_t text_window_width = window_width - text_window_offset_x;
+    struct Board text_board = create_board(text_window_height, text_window_width, 0, text_window_offset_x);
+    WINDOW      *text_window = panel_window(text_board.panel);
+    keypad(text_window, TRUE);
+    wattrset(text_window, COLOR_PAIR(0));
 
     run(ctx, &line_number_board, &text_board, &status_board);
 
@@ -166,16 +186,16 @@ void teardown_context(struct Context *ctx) {
 }
 
 void main_window(void) {
-    setup();
-
     struct Context *ctx = setup_context();
+
+    setup();
 
     text(ctx);
 
     printw("Press any key to exit...");
     getch();
 
-    teardown_context(ctx);
-
     teardown();
+
+    teardown_context(ctx);
 }

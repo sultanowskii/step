@@ -6,7 +6,13 @@
 #include "tui/board.h"
 #include "tui/coords.h"
 
-void handle_navigation_key(
+enum NavigationRequirement {
+    NAVREQ_NO,
+    NAVREQ_LOWER,
+    NAVREQ_UPPER,
+};
+
+enum NavigationRequirement handle_navigation_key(
     int            c,
     struct Coords *cursor,
     struct Board  *text_board
