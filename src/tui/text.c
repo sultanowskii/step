@@ -9,6 +9,10 @@
 #include "tui/board.h"
 #include "tui/coords.h"
 
+void _print_filler(struct Board *board, const struct Coords *pos, size_t n) {
+    mvwprintw(board_window(board), pos->y, pos->x, "%*c", (int)n, ' ');
+}
+
 void print_gap_buffer_to_board(
     const struct GapBuffer *gb,
     struct Board           *board,
@@ -26,6 +30,9 @@ void print_gap_buffer_to_board(
 
         current.x++;
         if (current.x == max_columns || sym == '\n') {
+            if (sym == '\n') {
+                _print_filler(board, &current, max_columns - current.x);
+            }
             current.y++;
             current.x = 0;
         }
@@ -33,6 +40,8 @@ void print_gap_buffer_to_board(
             return;
         }
     }
+
+    _print_filler(board, &current, max_columns - current.x);
 }
 
 struct Coords revise_coords_with_gap_buffer(
@@ -48,8 +57,7 @@ struct Coords revise_coords_with_gap_buffer(
 
     size_t buffer_index = starting_index;
     while (current.y <= raw.y && buffer_index < gb_length) {
-        last_valid.y = current.y;
-        last_valid.x = current.x;
+        last_valid = current;
 
         if (current.y == raw.y) {
             if (current.x == raw.x) {

@@ -119,8 +119,7 @@ void run(
         }
 
         struct Coords revised = revise_coords_with_gap_buffer(gb, gb_index, text_board->height, text_board->width, cursor);
-        cursor.y = revised.y;
-        cursor.x = revised.x;
+        cursor = revised;
     }
 }
 
