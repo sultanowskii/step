@@ -1,3 +1,3 @@
 #pragma once
 
-void main_window(void);
+void main_window(const char *filename);

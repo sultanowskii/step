@@ -1,10 +1,12 @@
 #include "tui/tui.h"
 
+#include <errno.h>
 #include <malloc.h>
 #include <ncurses.h>
 #include <panel.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
@@ -15,6 +17,7 @@
 #include "io.h"
 #include "math.h"
 #include "mem.h"
+#include "runtime.h"
 #include "tui/board.h"
 #include "tui/coords.h"
 #include "tui/highlight.h"
@@ -57,7 +60,7 @@ void run(
     struct Coords cursor = {.x = 0, .y = 0};
     size_t        line_index = 0;
 
-    while (TRUE) {
+    while (true) {
         // Line number panel update.
         print_line_numbers_to_board(
             gb,
@@ -155,12 +158,17 @@ void text(struct Context *ctx) {
     board_destroy(&status_board);
 }
 
-struct Context *setup_context() {
+struct Context *setup_context(const char *filename) {
     enum State            state = STATE_START;
     struct EvictingStack *done_cmds = evicting_stack_create(UNDO_MAX_COUNT);
     struct EvictingStack *undone_cmds = evicting_stack_create(UNDO_MAX_COUNT);
 
-    FILE *f = fopen("src/tui/tui.c", "rb");
+    FILE *f = fopen(filename, "rb");
+    // TODO: handle properly
+    if (f == NULL) {
+        fprintf(stderr, "failed to open file '%s': %s\n", filename, strerror(errno));
+        panic("TODO: remove/replace me!");
+    }
     char *data = file_read(f);
     fclose(f);
     struct GapBuffer *gb = gap_buffer_create_from_string(data);
@@ -185,8 +193,8 @@ void teardown_context(struct Context *ctx) {
     context_destroy(ctx);
 }
 
-void main_window(void) {
-    struct Context *ctx = setup_context();
+void main_window(const char *filename) {
+    struct Context *ctx = setup_context(filename);
 
     setup();
 

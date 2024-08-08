@@ -24,6 +24,8 @@ struct GapBuffer {
     size_t right;
 };
 
+void _gap_buffer_grow(struct GapBuffer *gb, size_t index, size_t n);
+
 struct GapBuffer *gap_buffer_create_empty() {
     struct GapBuffer *gb = malloc(sizeof(struct GapBuffer));
     gb->buffer = NULL;
@@ -35,9 +37,12 @@ struct GapBuffer *gap_buffer_create_empty() {
 }
 
 struct GapBuffer *gap_buffer_create() {
-    struct GapBuffer *gb = gap_buffer_create_empty(1);
+    struct GapBuffer *gb = gap_buffer_create_empty();
     gb->buffer = calloc(DEFAULT_BUFFER_SIZE + 1, sizeof(char));
     gb->size = DEFAULT_BUFFER_SIZE;
+
+    // otherwise `gap_buffer_create_from_string("")` would produce partially initialized buffer.
+    _gap_buffer_grow(gb, 0, DEFAULT_BUFFER_SIZE / 2);
     return gb;
 }
 
