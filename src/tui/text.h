@@ -7,7 +7,7 @@
 #include "collections/gap_buffer.h"
 #include "tui/coords.h"
 
-void gap_buffer_print_to_board(
+void print_gap_buffer_to_board(
     const struct GapBuffer *gb,
     struct Board           *board,
     size_t                  starting_index,
@@ -15,7 +15,7 @@ void gap_buffer_print_to_board(
     size_t                  max_columns
 );
 
-struct Coords gap_buffer_revise_coords(
+struct Coords revise_coords_with_gap_buffer(
     const struct GapBuffer *gb,
     size_t                  starting_index,
     size_t                  max_rows,

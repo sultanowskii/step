@@ -69,7 +69,7 @@ void run(
         );
 
         // Text panel update. TODO: extract into separate function
-        gap_buffer_print_to_board(gb, text_board, gb_index, text_board->height, text_board->width);
+        print_gap_buffer_to_board(gb, text_board, gb_index, text_board->height, text_board->width);
         highlight_on(text_board, cursor.y, cursor.x);
 
         // Status panel update. TODO: extract into separate function
@@ -95,7 +95,7 @@ void run(
 
         handle_navigation_key(c, &cursor, text_board);
 
-        struct Coords revised = gap_buffer_revise_coords(gb, gb_index, text_board->height, text_board->width, cursor);
+        struct Coords revised = revise_coords_with_gap_buffer(gb, gb_index, text_board->height, text_board->width, cursor);
         cursor.y = revised.y;
         cursor.x = revised.x;
     }
