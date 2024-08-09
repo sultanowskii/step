@@ -1,3 +1,3 @@
 #pragma once
 
-void main_window(const char *filename);
+void tui_main(const char *filename);

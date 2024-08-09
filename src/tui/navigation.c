@@ -3,16 +3,17 @@
 #include <ncurses.h>
 #include <stdbool.h>
 
+#include "text.h"
 #include "tui/board.h"
 #include "tui/coords.h"
 #include "tui/highlight.h"
 
-enum NavigationRequirement handle_navigation_key(
+enum NavigationRequest handle_navigation_key(
     int            c,
     struct Coords *cursor,
     struct Board  *text_board
 ) {
-    enum NavigationRequirement requirement = NAVREQ_NO;
+    enum NavigationRequest requirement = NAVREQ_NO;
 
     switch (c) {
     case KEY_RIGHT:
@@ -51,4 +52,32 @@ enum NavigationRequirement handle_navigation_key(
     }
 
     return requirement;
+}
+
+// TODO: improve arguments
+void fulfill_navigation_request(
+    enum NavigationRequest  request,
+    const struct GapBuffer *gb,
+    size_t                 *starting_index,
+    size_t                 *starting_line_index
+) {
+    switch (request) {
+    case NAVREQ_UPPER:
+        struct FindLineResult find_previous_line_result = find_previous_line(gb, *starting_index);
+        if (find_previous_line_result.found) {
+            *starting_index = find_previous_line_result.index;
+            (*starting_line_index)--;
+        }
+        break;
+    case NAVREQ_LOWER:
+        struct FindLineResult find_next_line_result = find_next_line(gb, *starting_index);
+        if (find_next_line_result.found) {
+            *starting_index = find_next_line_result.index;
+            (*starting_line_index)++;
+        }
+        break;
+    case NAVREQ_NO:
+    default:
+        break;
+    }
 }

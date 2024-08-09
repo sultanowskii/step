@@ -9,6 +9,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    main_window(argv[1]);
+    tui_main(argv[1]);
     return 0;
 }

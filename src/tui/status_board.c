@@ -8,6 +8,7 @@
 #include "tui/coords.h"
 #include "tui/tui.h"
 
+// TODO: improve arguments
 void update_status_board(
     struct Board        *status_board,
     size_t               line_index,

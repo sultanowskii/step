@@ -6,11 +6,20 @@
 #include "collections/gap_buffer.h"
 #include "tui/board.h"
 #include "tui/coords.h"
+#include "tui/highlight.h"
 #include "tui/tui.h"
 
+// TODO: improve arguments
+void update_text_board(struct Board *text_board, const struct GapBuffer *gb, size_t starting_index, const struct Coords *cursor) {
+    print_gap_buffer_to_board(text_board, gb, starting_index, text_board->height, text_board->width);
+
+    highlight_on(text_board, cursor->y, cursor->x);
+}
+
+// TODO: improve arguments
 void print_gap_buffer_to_board(
-    const struct GapBuffer *gb,
     struct Board           *text_board,
+    const struct GapBuffer *gb,
     size_t                  starting_index,
     size_t                  max_rows,
     size_t                  max_columns

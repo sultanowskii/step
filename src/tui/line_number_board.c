@@ -38,6 +38,7 @@ static inline void _print_line_number_blank(
     );
 }
 
+// TODO: improve arguments
 void update_line_number_board(
     struct Board           *line_number_board,
     const struct GapBuffer *gb,

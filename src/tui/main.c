@@ -50,34 +50,33 @@ void teardown(void) {
     endwin();
 }
 
-void run(
+void loop(
     struct Context *ctx,
     struct Board   *line_number_board,
     struct Board   *text_board,
     struct Board   *status_board
 ) {
     struct GapBuffer *gb = context_get_gap_buffer(ctx);
-    size_t            gb_index = 0;
+    // TODO: rename?
+    size_t gb_first_line_first_symbol_index = 0;
 
-    struct Coords cursor = {.x = 0, .y = 0};
-    size_t        line_index = 0;
+    struct Coords cursor = {.y = 0, .x = 0};
+    // TODO: rename?
+    size_t gb_first_line_index = 0;
 
     while (true) {
         update_line_number_board(
             line_number_board,
             gb,
-            gb_index,
+            gb_first_line_first_symbol_index,
             text_board->height,
             text_board->width,
-            line_index
+            gb_first_line_index
         );
 
-        // Text panel update. TODO: extract into separate function
-        print_gap_buffer_to_board(gb, text_board, gb_index, text_board->height, text_board->width);
-        highlight_on(text_board, cursor.y, cursor.x);
+        update_text_board(text_board, gb, gb_first_line_first_symbol_index, &cursor);
 
-        // Status panel update. TODO: extract into separate function
-        update_status_board(status_board, line_index, &cursor);
+        update_status_board(status_board, gb_first_line_index, &cursor);
 
         update_panels();
         doupdate();
@@ -87,39 +86,23 @@ void run(
             break;
         }
 
-        enum NavigationRequirement navigation_requirement = handle_navigation_key(c, &cursor, text_board);
-        switch (navigation_requirement) {
-        case NAVREQ_UPPER:
-            struct FindLineResult find_previous_line_result = find_previous_line(gb, gb_index);
-            if (find_previous_line_result.found) {
-                gb_index = find_previous_line_result.index;
-                line_index--;
-            }
-            break;
-        case NAVREQ_LOWER:
-            struct FindLineResult find_next_line_result = find_next_line(gb, gb_index);
-            if (find_next_line_result.found) {
-                gb_index = find_next_line_result.index;
-                line_index++;
-            }
-            break;
-        case NAVREQ_NO:
-        default:
-            break;
+        enum NavigationRequest request = handle_navigation_key(c, &cursor, text_board);
+        if (request != NAVREQ_NO) {
+            fulfill_navigation_request(request, gb, &gb_first_line_first_symbol_index, &gb_first_line_index);
         }
 
-        struct Coords revised = revise_coords_with_gap_buffer(gb, gb_index, text_board->height, text_board->width, cursor);
+        struct Coords revised = revise_coords_with_gap_buffer(gb, gb_first_line_first_symbol_index, text_board->height, text_board->width, cursor);
         cursor = revised;
     }
 }
 
 // TODO: rename
-void text(struct Context *ctx) {
+void run(struct Context *ctx) {
     size_t window_height, window_width;
     getmaxyx(stdscr, window_height, window_width);
 
-    size_t gb_line_count = gap_buffer_count_lines(context_get_gap_buffer(ctx));
-    size_t gb_line_count_digit_count = count_digits(gb_line_count);
+    const size_t gb_line_count = gap_buffer_count_lines(context_get_gap_buffer(ctx));
+    const size_t gb_line_count_digit_count = count_digits(gb_line_count);
 
     const size_t line_number_window_height = window_height;
     const size_t line_number_window_width = gb_line_count_digit_count + 1;
@@ -129,7 +112,6 @@ void text(struct Context *ctx) {
     const size_t status_window_width = window_width;
     struct Board status_board = create_board(status_window_height, status_window_width, window_height - 1, 0);
     WINDOW      *status_window = panel_window(status_board.panel);
-    // TODO: color doesn't cover whole window
     wattrset(status_window, COLOR_PAIR(1));
 
     const size_t text_window_offset_x = line_number_board.width + 1;
@@ -140,7 +122,7 @@ void text(struct Context *ctx) {
     keypad(text_window, TRUE);
     wattrset(text_window, COLOR_PAIR(0));
 
-    run(ctx, &line_number_board, &text_board, &status_board);
+    loop(ctx, &line_number_board, &text_board, &status_board);
 
     board_destroy(&line_number_board);
     board_destroy(&text_board);
@@ -182,12 +164,12 @@ void teardown_context(struct Context *ctx) {
     context_destroy(ctx);
 }
 
-void main_window(const char *filename) {
+void tui_main(const char *filename) {
     struct Context *ctx = setup_context(filename);
 
     setup();
 
-    text(ctx);
+    run(ctx);
 
     printw("Press any key to exit...");
     getch();
