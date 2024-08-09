@@ -61,7 +61,7 @@ void fulfill_navigation_request(
     struct TuiContext     *tctx,
     enum NavigationRequest request
 ) {
-    struct GapBuffer *gb = context_get_gap_buffer(tctx->ctx);
+    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
 
     switch (request) {
     case NAVREQ_UPPER:

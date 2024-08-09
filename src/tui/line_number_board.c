@@ -4,7 +4,6 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
-#include "core/context.h"
 #include "human.h"
 #include "tui/board.h"
 #include "tui/context.h"
@@ -51,7 +50,7 @@ void update_line_number_board(
 
     _print_line_number(line_number_board, &current, &line_index);
 
-    struct GapBuffer *gb = context_get_gap_buffer(tctx->ctx);
+    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
 
     size_t gb_length = gap_buffer_get_length(gb);
     for (size_t i = tctx->buf_starting_symbol_index; i < gb_length; i++) {

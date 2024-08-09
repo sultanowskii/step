@@ -18,6 +18,7 @@
 #include "mem.h"
 #include "runtime.h"
 #include "tui/board.h"
+#include "tui/context.h"
 #include "tui/coords.h"
 #include "tui/highlight.h"
 #include "tui/line_number_board.h"
@@ -57,20 +58,17 @@ void loop(
     struct Board   *text_board,
     struct Board   *status_board
 ) {
-    struct Coords     cursor = {.y = 0, .x = 0};
-    struct TuiContext tctx = {
-        .ctx = ctx,
-        .buf_starting_symbol_index = 0,
-        .buf_starting_line_index = 0,
-        .cursor = &cursor,
-    };
+    struct Coords      cursor = {.y = 0, .x = 0};
+    const size_t       buf_starting_symbol_index = 0;
+    const size_t       buf_starting_line_index = 0;
+    struct TuiContext *tctx = tui_context_create(ctx, buf_starting_symbol_index, buf_starting_line_index, &cursor);
 
     while (true) {
-        update_line_number_board(&tctx, line_number_board, text_board->height, text_board->width);
+        update_line_number_board(tctx, line_number_board, text_board->height, text_board->width);
 
-        update_text_board(&tctx, text_board);
+        update_text_board(tctx, text_board);
 
-        update_status_board(&tctx, status_board);
+        update_status_board(tctx, status_board);
 
         update_panels();
         doupdate();
@@ -80,13 +78,15 @@ void loop(
             break;
         }
 
-        enum NavigationRequest request = handle_navigation_key(&tctx, text_board, c);
+        enum NavigationRequest request = handle_navigation_key(tctx, text_board, c);
         if (request != NAVREQ_NO) {
-            fulfill_navigation_request(&tctx, request);
+            fulfill_navigation_request(tctx, request);
         }
 
-        revise_cursor(&tctx, text_board->height, text_board->width);
+        revise_cursor(tctx, text_board->height, text_board->width);
     }
+
+    tui_context_destroy(tctx);
 }
 
 // TODO: rename

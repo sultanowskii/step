@@ -4,7 +4,6 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
-#include "core/context.h"
 #include "tui/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
@@ -12,7 +11,7 @@
 #include "tui/tui.h"
 
 void update_text_board(struct TuiContext *tctx, struct Board *text_board) {
-    struct GapBuffer *gb = context_get_gap_buffer(tctx->ctx);
+    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
     struct Coords    *cursor = tctx->cursor;
 
     print_gap_buffer_to_board(text_board, gb, tctx->buf_starting_symbol_index, text_board->height, text_board->width);
