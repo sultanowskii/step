@@ -4,7 +4,18 @@
 
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
+#include "core/context.h"
+#include "tui/context.h"
 #include "tui/coords.h"
+
+void revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns) {
+    struct GapBuffer *gb = context_get_gap_buffer(tctx->ctx);
+
+    struct Coords revised = revise_coords_with_gap_buffer(gb, tctx->buf_starting_symbol_index, max_rows, max_columns, *tctx->cursor);
+
+    tctx->cursor->y = revised.y;
+    tctx->cursor->x = revised.x;
+}
 
 struct Coords revise_coords_with_gap_buffer(
     const struct GapBuffer *gb,

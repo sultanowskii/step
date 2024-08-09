@@ -5,6 +5,7 @@
 
 #include "collections/gap_buffer.h"
 #include "tui/board.h"
+#include "tui/context.h"
 #include "tui/coords.h"
 
 enum NavigationRequest {
@@ -14,14 +15,12 @@ enum NavigationRequest {
 };
 
 enum NavigationRequest handle_navigation_key(
-    int            c,
-    struct Coords *cursor,
-    struct Board  *text_board
+    struct TuiContext *tctx,
+    struct Board      *text_board,
+    int                c
 );
 
 void fulfill_navigation_request(
-    enum NavigationRequest  request,
-    const struct GapBuffer *gb,
-    size_t                 *starting_index,
-    size_t                 *starting_line_index
+    struct TuiContext     *tctx,
+    enum NavigationRequest request
 );

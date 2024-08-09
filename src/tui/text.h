@@ -5,7 +5,10 @@
 
 #include "board.h"
 #include "collections/gap_buffer.h"
+#include "tui/context.h"
 #include "tui/coords.h"
+
+void revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns);
 
 struct Coords revise_coords_with_gap_buffer(
     const struct GapBuffer *gb,

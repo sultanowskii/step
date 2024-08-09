@@ -25,6 +25,7 @@
 #include "tui/status_board.h"
 #include "tui/text.h"
 #include "tui/text_board.h"
+#include "tui/tui.h"
 
 // TODO: move to other file
 #define UNDO_MAX_COUNT 50
@@ -56,27 +57,20 @@ void loop(
     struct Board   *text_board,
     struct Board   *status_board
 ) {
-    struct GapBuffer *gb = context_get_gap_buffer(ctx);
-    // TODO: rename?
-    size_t gb_first_line_first_symbol_index = 0;
-
-    struct Coords cursor = {.y = 0, .x = 0};
-    // TODO: rename?
-    size_t gb_first_line_index = 0;
+    struct Coords     cursor = {.y = 0, .x = 0};
+    struct TuiContext tctx = {
+        .ctx = ctx,
+        .buf_starting_symbol_index = 0,
+        .buf_starting_line_index = 0,
+        .cursor = &cursor,
+    };
 
     while (true) {
-        update_line_number_board(
-            line_number_board,
-            gb,
-            gb_first_line_first_symbol_index,
-            text_board->height,
-            text_board->width,
-            gb_first_line_index
-        );
+        update_line_number_board(&tctx, line_number_board, text_board->height, text_board->width);
 
-        update_text_board(text_board, gb, gb_first_line_first_symbol_index, &cursor);
+        update_text_board(&tctx, text_board);
 
-        update_status_board(status_board, gb_first_line_index, &cursor);
+        update_status_board(&tctx, status_board);
 
         update_panels();
         doupdate();
@@ -86,13 +80,12 @@ void loop(
             break;
         }
 
-        enum NavigationRequest request = handle_navigation_key(c, &cursor, text_board);
+        enum NavigationRequest request = handle_navigation_key(&tctx, text_board, c);
         if (request != NAVREQ_NO) {
-            fulfill_navigation_request(request, gb, &gb_first_line_first_symbol_index, &gb_first_line_index);
+            fulfill_navigation_request(&tctx, request);
         }
 
-        struct Coords revised = revise_coords_with_gap_buffer(gb, gb_first_line_first_symbol_index, text_board->height, text_board->width, cursor);
-        cursor = revised;
+        revise_cursor(&tctx, text_board->height, text_board->width);
     }
 }
 

@@ -4,14 +4,18 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
+#include "core/context.h"
 #include "tui/board.h"
+#include "tui/context.h"
 #include "tui/coords.h"
 #include "tui/highlight.h"
 #include "tui/tui.h"
 
-// TODO: improve arguments
-void update_text_board(struct Board *text_board, const struct GapBuffer *gb, size_t starting_index, const struct Coords *cursor) {
-    print_gap_buffer_to_board(text_board, gb, starting_index, text_board->height, text_board->width);
+void update_text_board(struct TuiContext *tctx, struct Board *text_board) {
+    struct GapBuffer *gb = context_get_gap_buffer(tctx->ctx);
+    struct Coords    *cursor = tctx->cursor;
+
+    print_gap_buffer_to_board(text_board, gb, tctx->buf_starting_symbol_index, text_board->height, text_board->width);
 
     highlight_on(text_board, cursor->y, cursor->x);
 }

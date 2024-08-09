@@ -5,15 +5,12 @@
 
 #include "human.h"
 #include "tui/board.h"
+#include "tui/context.h"
 #include "tui/coords.h"
 #include "tui/tui.h"
 
-// TODO: improve arguments
-void update_status_board(
-    struct Board        *status_board,
-    size_t               line_index,
-    const struct Coords *cursor
-) {
+void update_status_board(struct TuiContext *tctx, struct Board *status_board) {
+    struct Coords *cursor = tctx->cursor;
 
     wclrtoeol(board_window(status_board));
     mvwprintw(
@@ -21,7 +18,7 @@ void update_status_board(
         0,
         0,
         "Cursor position: Ln %zu, Col %zu (y=%zu, x=%zu)",
-        index_to_human(line_index + cursor->y),
+        index_to_human(tctx->buf_starting_line_index + cursor->y),
         index_to_human(cursor->x),
         cursor->y,
         cursor->x
