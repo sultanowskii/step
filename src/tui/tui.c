@@ -21,8 +21,10 @@
 #include "tui/board.h"
 #include "tui/coords.h"
 #include "tui/highlight.h"
+#include "tui/line_number_board.h"
 #include "tui/navigation.h"
 #include "tui/text.h"
+#include "tui/text_board.h"
 
 // TODO: move to other file
 #define UNDO_MAX_COUNT 50
