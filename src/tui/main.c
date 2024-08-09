@@ -20,7 +20,6 @@
 #include "tui/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
-#include "tui/highlight.h"
 #include "tui/line_number_board.h"
 #include "tui/navigation.h"
 #include "tui/status_board.h"
