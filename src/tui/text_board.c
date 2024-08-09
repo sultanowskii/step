@@ -6,10 +6,7 @@
 #include "collections/gap_buffer.h"
 #include "tui/board.h"
 #include "tui/coords.h"
-
-void _print_filler(struct Board *text_board, const struct Coords *pos, size_t n) {
-    mvwprintw(board_window(text_board), pos->y, pos->x, "%*c", (int)n, ' ');
-}
+#include "tui/tui.h"
 
 void print_gap_buffer_to_board(
     const struct GapBuffer *gb,
@@ -29,7 +26,7 @@ void print_gap_buffer_to_board(
         current.x++;
         if (current.x == max_columns || sym == '\n') {
             if (sym == '\n') {
-                _print_filler(text_board, &current, max_columns - current.x);
+                print_filler_to_eol(text_board, &current);
             }
             current.y++;
             current.x = 0;
@@ -39,5 +36,5 @@ void print_gap_buffer_to_board(
         }
     }
 
-    _print_filler(text_board, &current, max_columns - current.x);
+    print_filler_to_eol(text_board, &current);
 }

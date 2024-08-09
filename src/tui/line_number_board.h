@@ -5,9 +5,9 @@
 #include "collections/gap_buffer.h"
 #include "tui/board.h"
 
-void print_line_numbers_to_board(
-    const struct GapBuffer *gb,
+void update_line_number_board(
     struct Board           *line_number_board,
+    const struct GapBuffer *gb,
     size_t                  starting_index,
     size_t                  max_rows,
     size_t                  max_columns,

@@ -1,4 +1,4 @@
-#include "tui/tui.h"
+#include "tui/main.h"
 
 #include <stdio.h>
 
