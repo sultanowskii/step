@@ -30,6 +30,13 @@
 // TODO: move to other file
 #define UNDO_MAX_COUNT 50
 
+void recreate_boards(
+    struct Context *ctx,
+    struct Board   *line_number_board,
+    struct Board   *status_board,
+    struct Board   *text_board
+);
+
 // TODO: custom colors
 void setup_color_pairs() {
     use_default_colors();
@@ -77,6 +84,10 @@ void loop(
             break;
         }
 
+        if (c == KEY_RESIZE) {
+            recreate_boards(tctx->ctx, line_number_board, status_board, text_board);
+        }
+
         enum NavigationRequest request = handle_navigation_key(tctx, text_board, c);
         if (request != NAVREQ_NO) {
             fulfill_navigation_request(tctx, request);
@@ -89,7 +100,12 @@ void loop(
 }
 
 // TODO: rename
-void run(struct Context *ctx) {
+void recreate_boards(
+    struct Context *ctx,
+    struct Board   *line_number_board,
+    struct Board   *status_board,
+    struct Board   *text_board
+) {
     size_t window_height, window_width;
     getmaxyx(stdscr, window_height, window_width);
 
@@ -98,27 +114,36 @@ void run(struct Context *ctx) {
 
     const size_t line_number_window_height = window_height;
     const size_t line_number_window_width = gb_line_count_digit_count + 1;
-    struct Board line_number_board = create_board(line_number_window_height, line_number_window_width, 0, 0);
+    board_resize(line_number_board, line_number_window_height, line_number_window_width, 0, 0);
 
     const size_t status_window_height = 1;
     const size_t status_window_width = window_width;
-    struct Board status_board = create_board(status_window_height, status_window_width, window_height - 1, 0);
-    WINDOW      *status_window = panel_window(status_board.panel);
+    board_resize(status_board, status_window_height, status_window_width, window_height - 1, 0);
+    WINDOW *status_window = board_window(status_board);
     wattrset(status_window, COLOR_PAIR(1));
 
-    const size_t text_window_offset_x = line_number_board.width + 1;
+    const size_t text_window_offset_x = line_number_board->width + 1;
     const size_t text_window_height = window_height - status_window_height;
     const size_t text_window_width = window_width - text_window_offset_x;
-    struct Board text_board = create_board(text_window_height, text_window_width, 0, text_window_offset_x);
-    WINDOW      *text_window = panel_window(text_board.panel);
+    board_resize(text_board, text_window_height, text_window_width, 0, text_window_offset_x);
+    WINDOW *text_window = board_window(text_board);
     keypad(text_window, TRUE);
     wattrset(text_window, COLOR_PAIR(0));
+}
 
-    loop(ctx, &line_number_board, &text_board, &status_board);
+// TODO: rename
+void run(struct Context *ctx) {
+    struct Board *line_number_board = board_create_dummy();
+    struct Board *status_board = board_create_dummy();
+    struct Board *text_board = board_create_dummy();
 
-    board_destroy(&line_number_board);
-    board_destroy(&text_board);
-    board_destroy(&status_board);
+    recreate_boards(ctx, line_number_board, status_board, text_board);
+
+    loop(ctx, line_number_board, text_board, status_board);
+
+    board_destroy(line_number_board);
+    board_destroy(text_board);
+    board_destroy(status_board);
 }
 
 struct Context *setup_context(const char *filename) {
