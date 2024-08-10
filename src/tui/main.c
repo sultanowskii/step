@@ -80,22 +80,33 @@ void loop(
         doupdate();
 
         int c = wgetch(board_window(text_board));
-        if (c == 'q') {
-            break;
-        }
-
-        if (c == KEY_RESIZE) {
-            recreate_boards(tctx->ctx, line_number_board, status_board, text_board);
-        }
-
-        enum NavigationRequest request = handle_navigation_key(tctx, text_board, c);
-        if (request != NAVREQ_NO) {
-            fulfill_navigation_request(tctx, request);
+        switch (c) {
+            case 'q': {
+                goto LOOP_END;
+            }
+            case KEY_RESIZE: {
+                recreate_boards(tctx->ctx, line_number_board, status_board, text_board);
+                break;
+            }
+            case KEY_DOWN:
+            case KEY_UP:
+            case KEY_LEFT:
+            case KEY_RIGHT: {
+                enum NavigationRequest request = handle_navigation_key(tctx, text_board, c);
+                if (request != NAVREQ_NO) {
+                    fulfill_navigation_request(tctx, request);
+                }
+                break;
+            }
+            default: {
+                break;
+            }
         }
 
         revise_cursor(tctx, text_board->height, text_board->width);
     }
 
+LOOP_END:
     tui_context_destroy(tctx);
 }
 

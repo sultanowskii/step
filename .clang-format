@@ -6,3 +6,4 @@ ContinuationIndentWidth: 4
 AlignConsecutiveDeclarations: true
 AlignAfterOpenBracket: BlockIndent
 SpaceAfterCStyleCast: false
+IndentCaseLabels: true
