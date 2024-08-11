@@ -2,7 +2,7 @@
 
 #include <ncurses.h>
 
-#include "tui/board.h"
+#include "tui/boards/board.h"
 
 // TODO: color
 void highlight_on(struct Board *board, size_t y, size_t x) {

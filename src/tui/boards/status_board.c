@@ -1,10 +1,10 @@
-#include "tui/status_board.h"
+#include "tui/boards/status_board.h"
 
 #include <ncurses.h>
 #include <stddef.h>
 
 #include "human.h"
-#include "tui/board.h"
+#include "tui/boards/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
 #include "tui/tui.h"

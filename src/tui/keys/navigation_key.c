@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "collections/gap_buffer.h"
-#include "tui/board.h"
+#include "tui/boards/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
 #include "tui/highlight.h"

@@ -1,4 +1,4 @@
-#include "tui/board.h"
+#include "tui/boards/board.h"
 
 #include <malloc.h>
 #include <ncurses.h>

@@ -5,7 +5,7 @@
 #include "collections/gap_buffer_str.h"
 #include "core/context.h"
 #include "math.h"
-#include "tui/board.h"
+#include "tui/boards/board.h"
 
 // TODO: rename
 void recreate_boards(

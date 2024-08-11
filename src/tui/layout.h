@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/context.h"
-#include "tui/board.h"
+#include "tui/boards/board.h"
 
 void recreate_boards(
     struct Context *ctx,

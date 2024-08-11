@@ -1,11 +1,11 @@
-#include "tui/line_number_board.h"
+#include "tui/boards/line_number_board.h"
 
 #include <ncurses.h>
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
 #include "human.h"
-#include "tui/board.h"
+#include "tui/boards/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
 

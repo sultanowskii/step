@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
-#include "tui/board.h"
+#include "tui/boards/board.h"
 #include "tui/context.h"
 
 void update_line_number_board(

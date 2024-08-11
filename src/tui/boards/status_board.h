@@ -3,7 +3,7 @@
 #include <ncurses.h>
 #include <stddef.h>
 
-#include "tui/board.h"
+#include "tui/boards/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
 
