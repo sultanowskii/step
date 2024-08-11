@@ -1,14 +1,14 @@
-#include "tui/navigation.h"
+#include "tui/keys/navigation_key.h"
 
 #include <ncurses.h>
 #include <stdbool.h>
 
 #include "collections/gap_buffer.h"
-#include "text.h"
 #include "tui/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
 #include "tui/highlight.h"
+#include "tui/text.h"
 
 enum NavigationRequest handle_navigation_key(
     struct TuiContext *tctx,

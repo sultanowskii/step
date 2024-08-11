@@ -21,30 +21,30 @@ void _exec_save(struct Context *ctx, struct CmdSave *save) {
     panic("save: not implemented");
 }
 
-void _exec_exit(struct Context *ctx, struct CmdExit *delete) {
+void _exec_exit(struct Context *ctx, struct CmdExit *exit) {
     context_set_state(ctx, STATE_EXIT);
 }
 
 void exec_command(struct Context *ctx, struct Command *command) {
     switch (command->type) {
-    case CMD_INSERT: {
-        _exec_insert(ctx, command->cmd.insert);
-        break;
-    };
-    case CMD_DELETE: {
-        _exec_delete(ctx, command->cmd.delete);
-        break;
-    };
-    case CMD_SAVE: {
-        _exec_save(ctx, command->cmd.save);
-        break;
-    };
-    case CMD_EXIT: {
-        _exec_exit(ctx, command->cmd.exit);
-        break;
-    };
-    default: {
-        panic("runtime error: unexpected command type");
-    };
+        case CMD_INSERT: {
+            _exec_insert(ctx, command->cmd.insert);
+            break;
+        };
+        case CMD_DELETE: {
+            _exec_delete(ctx, command->cmd.delete);
+            break;
+        };
+        case CMD_SAVE: {
+            _exec_save(ctx, command->cmd.save);
+            break;
+        };
+        case CMD_EXIT: {
+            _exec_exit(ctx, command->cmd.exit);
+            break;
+        };
+        default: {
+            panic("runtime error: unexpected command type");
+        };
     }
 }

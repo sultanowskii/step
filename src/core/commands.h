@@ -16,6 +16,11 @@ struct CmdInsert {
     size_t index;
 };
 
+struct CmdInsertSymbol {
+    char   symbol;
+    size_t index;
+};
+
 struct CmdDelete {
     size_t n;
     size_t index;
@@ -27,6 +32,7 @@ struct CmdSave {
 struct CmdExit {
 };
 
+// TODO: proper creation/destruction
 struct Command {
     enum CommandType type;
     union {

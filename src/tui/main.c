@@ -20,8 +20,9 @@
 #include "tui/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
+#include "tui/keys/key.h"
+#include "tui/layout.h"
 #include "tui/line_number_board.h"
-#include "tui/navigation.h"
 #include "tui/status_board.h"
 #include "tui/text.h"
 #include "tui/text_board.h"
@@ -29,13 +30,6 @@
 
 // TODO: move to other file
 #define UNDO_MAX_COUNT 50
-
-void recreate_boards(
-    struct Context *ctx,
-    struct Board   *line_number_board,
-    struct Board   *status_board,
-    struct Board   *text_board
-);
 
 // TODO: custom colors
 void setup_color_pairs() {
@@ -79,67 +73,17 @@ void loop(
         update_panels();
         doupdate();
 
-        int c = wgetch(board_window(text_board));
-        switch (c) {
-            case 'q': {
-                goto LOOP_END;
-            }
-            case KEY_RESIZE: {
-                recreate_boards(tctx->ctx, line_number_board, status_board, text_board);
-                break;
-            }
-            case KEY_DOWN:
-            case KEY_UP:
-            case KEY_LEFT:
-            case KEY_RIGHT: {
-                enum NavigationRequest request = handle_navigation_key(tctx, text_board, c);
-                if (request != NAVREQ_NO) {
-                    fulfill_navigation_request(tctx, request);
-                }
-                break;
-            }
-            default: {
-                break;
-            }
+        int sym = wgetch(board_window(text_board));
+        if (sym == 'q') {
+            goto LOOP_END;
         }
+        handle_key(tctx, line_number_board, status_board, text_board, sym);
 
         revise_cursor(tctx, text_board->height, text_board->width);
     }
 
 LOOP_END:
     tui_context_destroy(tctx);
-}
-
-// TODO: rename
-void recreate_boards(
-    struct Context *ctx,
-    struct Board   *line_number_board,
-    struct Board   *status_board,
-    struct Board   *text_board
-) {
-    size_t window_height, window_width;
-    getmaxyx(stdscr, window_height, window_width);
-
-    const size_t gb_line_count = gap_buffer_count_lines(context_get_gap_buffer(ctx));
-    const size_t gb_line_count_digit_count = count_digits(gb_line_count);
-
-    const size_t line_number_window_height = window_height;
-    const size_t line_number_window_width = gb_line_count_digit_count + 1;
-    board_resize(line_number_board, line_number_window_height, line_number_window_width, 0, 0);
-
-    const size_t status_window_height = 1;
-    const size_t status_window_width = window_width;
-    board_resize(status_board, status_window_height, status_window_width, window_height - 1, 0);
-    WINDOW *status_window = board_window(status_board);
-    wattrset(status_window, COLOR_PAIR(1));
-
-    const size_t text_window_offset_x = line_number_board->width + 1;
-    const size_t text_window_height = window_height - status_window_height;
-    const size_t text_window_width = window_width - text_window_offset_x;
-    board_resize(text_board, text_window_height, text_window_width, 0, text_window_offset_x);
-    WINDOW *text_window = board_window(text_board);
-    keypad(text_window, TRUE);
-    wattrset(text_window, COLOR_PAIR(0));
 }
 
 // TODO: rename

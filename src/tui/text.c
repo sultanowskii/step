@@ -1,11 +1,13 @@
 #include "tui/text.h"
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
 #include "tui/context.h"
 #include "tui/coords.h"
+#include "tui/optionals.h"
 
 void revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns) {
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
@@ -101,4 +103,91 @@ struct FindLineResult find_previous_line(
         .found = true,
         .index = 0,
     };
+}
+
+optional_size_t get_index_from_cursor_position(const struct TuiContext *tctx, size_t max_rows, size_t max_columns) {
+    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
+    return get_index_from_position(gb, tctx->buf_starting_symbol_index, max_rows, max_columns, tctx->cursor);
+}
+
+optional_size_t get_index_from_position(
+    const struct GapBuffer *gb,
+    size_t                  starting_index,
+    size_t                  max_rows,
+    size_t                  max_columns,
+    const struct Coords    *position
+) {
+    struct Coords current = {.y = 0, .x = 0};
+    size_t        gb_length = gap_buffer_get_length(gb);
+
+    size_t buffer_index = starting_index;
+    while (buffer_index < gb_length) {
+        if (current.y == position->y) {
+            if (current.x == position->x) {
+                return size_t_some(buffer_index);
+            }
+        }
+
+        char sym = gap_buffer_get_at(gb, buffer_index);
+
+        current.x++;
+        if (current.x == max_columns || sym == '\n') {
+            current.x = 0;
+            current.y++;
+        }
+        if (current.y == max_rows) {
+            return size_t_none();
+        }
+
+        buffer_index++;
+    }
+
+    return size_t_none();
+}
+
+bool move_cursor_to_index(const struct TuiContext *tctx, size_t max_rows, size_t max_columns, size_t target_index) {
+    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
+    optional_coords   maybe_pos = get_position_from_index(gb, tctx->buf_starting_symbol_index, max_rows, max_columns, target_index);
+
+    if (coords_is_none(maybe_pos)) {
+        return false;
+    }
+
+    struct Coords pos = coords_get_val(maybe_pos);
+    tctx->cursor->y = pos.y;
+    tctx->cursor->x = pos.x;
+    return true;
+}
+
+optional_coords get_position_from_index(
+    const struct GapBuffer *gb,
+    size_t                  starting_index,
+    size_t                  max_rows,
+    size_t                  max_columns,
+    size_t                  target_index
+) {
+    struct Coords current = {.y = 0, .x = 0};
+    size_t        gb_length = gap_buffer_get_length(gb);
+
+    size_t buffer_index = starting_index;
+    while (buffer_index < gb_length) {
+        if (buffer_index == target_index) {
+            return coords_some(current);
+        }
+
+        char sym = gap_buffer_get_at(gb, buffer_index);
+
+        current.x++;
+        if (current.x == max_columns || sym == '\n') {
+            current.x = 0;
+            current.y++;
+        }
+        if (current.y == max_rows) {
+            return coords_none();
+        }
+
+        buffer_index++;
+    }
+
+    return coords_none();
 }
