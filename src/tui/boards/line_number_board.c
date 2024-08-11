@@ -70,4 +70,9 @@ void update_line_number_board(
             return;
         }
     }
+
+    while (current.y < max_rows) {
+        _print_line_number_blank(line_number_board, &current);
+        current.y++;
+    }
 }
