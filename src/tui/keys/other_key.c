@@ -19,6 +19,17 @@ optional_char convert_key_to_symbol(int key) {
     if (is_key_printable(key)) {
         return char_some(key);
     }
+
+    switch (key) {
+        case '\n':
+        case KEY_ENTER: {
+            return char_some('\n');
+        }
+        default: {
+            break;
+        }
+    }
+
     return char_none();
 }
 
