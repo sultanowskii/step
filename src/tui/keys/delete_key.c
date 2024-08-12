@@ -34,15 +34,9 @@ void handle_delete_key(struct TuiContext *tctx, struct Board *text_board, int ke
             return;
     }
 
-    struct CmdDelete cmd_delete = {
-        .index = index,
-        .n = 1,
-    };
-    struct Command cmd = {
-        .cmd.delete = &cmd_delete,
-        .type = CMD_DELETE,
-    };
-    exec_command(tctx->ctx, &cmd);
+    struct Command *cmd_delete = command_create_delete(index, 1);
+
+    command_exec(tctx->ctx, cmd_delete);
 
     move_cursor_to_index(tctx, text_board->height, text_board->width, index);
 }

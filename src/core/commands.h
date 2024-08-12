@@ -4,43 +4,10 @@
 
 #include "core/context.h"
 
-enum CommandType {
-    CMD_INSERT,
-    CMD_DELETE,
-    CMD_SAVE,
-    CMD_EXIT,
-};
+struct Command;
 
-struct CmdInsert {
-    char  *s;
-    size_t index;
-};
+struct Command *command_create_insert(size_t index, const char *s);
+struct Command *command_create_delete(size_t index, size_t n);
+void            command_destroy(struct Command *cmd);
 
-struct CmdInsertSymbol {
-    char   symbol;
-    size_t index;
-};
-
-struct CmdDelete {
-    size_t n;
-    size_t index;
-};
-
-struct CmdSave {
-};
-
-struct CmdExit {
-};
-
-// TODO: proper creation/destruction
-struct Command {
-    enum CommandType type;
-    union {
-        struct CmdInsert *insert;
-        struct CmdDelete *delete;
-        struct CmdSave *save;
-        struct CmdExit *exit;
-    } cmd;
-};
-
-void exec_command(struct Context *ctx, struct Command *command);
+void command_exec(struct Context *ctx, struct Command *command);
