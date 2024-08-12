@@ -9,6 +9,7 @@ struct GapBuffer *gap_buffer_create_from_string(const char *s);
 void              gap_buffer_destroy(struct GapBuffer *gb);
 
 void gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s);
+void gap_buffer_insert_symbol(struct GapBuffer *gb, size_t index, char symbol);
 void gap_buffer_delete(struct GapBuffer *gb, size_t index);
 void gap_buffer_delete_n(struct GapBuffer *gb, size_t index, size_t n);
 

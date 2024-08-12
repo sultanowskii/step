@@ -1,10 +1,12 @@
 #include "tui/keys/key.h"
 
 #include <ncurses.h>
+#include <stdbool.h>
 
 #include "tui/context.h"
 #include "tui/keys/delete_key.h"
 #include "tui/keys/navigation_key.h"
+#include "tui/keys/other_key.h"
 #include "tui/layout.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
@@ -37,6 +39,7 @@ void handle_key(
             break;
         }
         default: {
+            handle_other(tctx, text_board, key);
             break;
         }
     }

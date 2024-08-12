@@ -6,7 +6,8 @@
 
 struct Command;
 
-struct Command *command_create_insert(size_t index, const char *s);
+struct Command *command_create_insert_string(size_t index, const char *s);
+struct Command *command_create_insert_symbol(size_t index, char symbol);
 struct Command *command_create_delete(size_t index, size_t n);
 void            command_destroy(struct Command *cmd);
 

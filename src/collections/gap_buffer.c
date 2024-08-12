@@ -145,6 +145,11 @@ void gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s) {
     }
 }
 
+void gap_buffer_insert_symbol(struct GapBuffer *gb, size_t index, char symbol) {
+    char buf[] = {symbol, '\0'};
+    gap_buffer_insert(gb, index, buf);
+}
+
 void gap_buffer_delete(struct GapBuffer *gb, size_t index) {
     if (index + 1 == gb->size) {
         gap_buffer_move_gap(gb, index);
