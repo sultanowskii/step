@@ -21,13 +21,20 @@ SRCS             := $(filter-out $(ENTRYPOINT_SRC), $(SRCS))
 SRCS             := $(filter-out $(TUI_SRCS), $(SRCS))
 OBJS             := $(SRCS:.c=.o)
 
+# this is a PEAK Makefile'ing
+# TODO: switch to `find`
+TO_CLEANUP       := $(TARGET) $(wildcard *.o playgrounds/*.o *.elf)
+TO_CLEANUP       += $(wildcard src/*.o)
+TO_CLEANUP       += $(wildcard src/*/*.o)
+TO_CLEANUP       += $(wildcard src/*/*/*.o)
 
 .PHONY: default
 default: clean build
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET) *.o src/*.o src/**/*.o playgrounds/*.o *.elf
+	echo $(TO_CLEANUP)
+	rm -f $(TO_CLEANUP)
 
 .PHONY: build
 build: $(TARGET)
