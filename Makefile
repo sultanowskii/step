@@ -33,7 +33,6 @@ default: clean build
 
 .PHONY: clean
 clean:
-	echo $(TO_CLEANUP)
 	rm -f $(TO_CLEANUP)
 
 .PHONY: build

@@ -64,7 +64,7 @@ void loop(
     const size_t       buf_starting_line_index = 0;
     struct TuiContext *tctx = tui_context_create(ctx, buf_starting_symbol_index, buf_starting_line_index, &cursor);
 
-    while (true) {
+    while (context_get_state(ctx) != STATE_EXIT) {
         update_line_number_board(tctx, line_number_board, text_board->height, text_board->width);
 
         update_text_board(tctx, text_board);
@@ -75,15 +75,16 @@ void loop(
         doupdate();
 
         int sym = wgetch(board_window(text_board));
+        // TODO: move to an appropriate place
         if (sym == 'q') {
-            goto LOOP_END;
+            context_set_state(ctx, STATE_EXIT);
+            break;
         }
         handle_key(tctx, line_number_board, status_board, text_board, sym);
 
         revise_cursor(tctx, text_board->height, text_board->width);
     }
 
-LOOP_END:
     tui_context_destroy(tctx);
 }
 
