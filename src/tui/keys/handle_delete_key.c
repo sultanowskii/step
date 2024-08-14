@@ -1,4 +1,4 @@
-#include "tui/keys/delete_key.h"
+#include "tui/keys/handle_delete_key.h"
 
 #include <ncurses.h>
 

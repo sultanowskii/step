@@ -1,4 +1,4 @@
-#include "tui/keys/navigation_key.h"
+#include "tui/keys/handle_navigation_key.h"
 
 #include <ncurses.h>
 #include <stdbool.h>

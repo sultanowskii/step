@@ -5,3 +5,4 @@
 
 size_t file_size(FILE *f);
 char  *file_read(FILE *f);
+void   file_write(FILE *f, const char *s);

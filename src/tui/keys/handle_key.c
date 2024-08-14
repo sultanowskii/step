@@ -1,12 +1,15 @@
-#include "tui/keys/key.h"
+#include "tui/keys/handle_key.h"
 
+#include <errno.h>
 #include <ncurses.h>
 #include <stdbool.h>
 
+#include "io.h"
 #include "tui/context.h"
-#include "tui/keys/delete_key.h"
-#include "tui/keys/navigation_key.h"
-#include "tui/keys/other_key.h"
+#include "tui/keys/handle_delete_key.h"
+#include "tui/keys/handle_navigation_key.h"
+#include "tui/keys/handle_other_key.h"
+#include "tui/keys/key.h"
 #include "tui/layout.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
@@ -21,6 +24,10 @@ void handle_key(
     switch (key) {
         case KEY_RESIZE: {
             recreate_boards(tctx->ctx, line_number_board, status_board, text_board);
+            break;
+        }
+        case CTRL('s'): {
+            // TODO: implement
             break;
         }
         case KEY_DOWN:

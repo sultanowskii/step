@@ -24,7 +24,7 @@
 #include "tui/boards/text_board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
-#include "tui/keys/key.h"
+#include "tui/keys/handle_key.h"
 #include "tui/layout.h"
 #include "tui/text.h"
 #include "tui/tui.h"
