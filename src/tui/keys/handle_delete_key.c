@@ -30,8 +30,9 @@ void handle_delete_key(struct TuiContext *tctx, struct Board *text_board, int ke
             index--;
             break;
         }
-        default:
+        default: {
             return;
+        }
     }
 
     struct Command *cmd_delete = command_create_delete(index, 1);

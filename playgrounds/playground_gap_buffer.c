@@ -9,6 +9,7 @@ void print_help(void) {
     puts("commands:");
     puts("i (insert)");
     puts("d (delete)");
+    puts("s (save to text.txt)");
     puts("e (exit)");
 }
 
@@ -25,26 +26,33 @@ int main(void) {
         char c = read_char();
 
         switch (c) {
-        case 'i': {
-            print_prompt_with_message("index");
-            size_t index = read_size_t();
-            print_prompt_with_message("str");
-            char *s = read_str();
-            gap_buffer_insert(gb, index, s);
-            free(s);
-            break;
-        }
-        case 'd': {
-            print_prompt_with_message("index");
-            size_t index = read_size_t();
-            print_prompt_with_message("n");
-            size_t n = read_size_t();
+            case 'i': {
+                print_prompt_with_message("index");
+                size_t index = read_size_t();
+                print_prompt_with_message("str");
+                char *s = read_str();
+                gap_buffer_insert(gb, index, s);
+                free(s);
+                break;
+            }
+            case 'd': {
+                print_prompt_with_message("index");
+                size_t index = read_size_t();
+                print_prompt_with_message("n");
+                size_t n = read_size_t();
 
-            gap_buffer_delete_n(gb, index, n);
-            break;
-        }
-        default:
-            goto EXIT;
+                gap_buffer_delete_n(gb, index, n);
+                break;
+            }
+            case 's': {
+                const char *filepath = "text.txt";
+                FILE       *file = fopen(filepath, "w+");
+                gap_buffer_write_to_file(gb, file);
+                fclose(file);
+                break;
+            }
+            default:
+                goto EXIT;
         }
     }
 

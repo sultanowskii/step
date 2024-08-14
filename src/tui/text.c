@@ -12,7 +12,7 @@
 void revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns) {
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
 
-    struct Coords revised = revise_coords_with_gap_buffer(gb, tctx->buf_starting_symbol_index, max_rows, max_columns, *tctx->cursor);
+    struct Coords revised = revise_coords_with_gap_buffer(gb, tctx->starting_symbol_index, max_rows, max_columns, *tctx->cursor);
 
     tctx->cursor->y = revised.y;
     tctx->cursor->x = revised.x;
@@ -107,7 +107,7 @@ struct FindLineResult find_previous_line(
 
 optional_size_t get_index_from_cursor_position(const struct TuiContext *tctx, size_t max_rows, size_t max_columns) {
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
-    return get_index_from_position(gb, tctx->buf_starting_symbol_index, max_rows, max_columns, tctx->cursor);
+    return get_index_from_position(gb, tctx->starting_symbol_index, max_rows, max_columns, tctx->cursor);
 }
 
 optional_size_t get_index_from_position(
@@ -121,7 +121,7 @@ optional_size_t get_index_from_position(
     size_t        gb_length = gap_buffer_get_length(gb);
 
     size_t buffer_index = starting_index;
-    while (buffer_index < gb_length) {
+    do {
         if (current.y == position->y) {
             if (current.x == position->x) {
                 return size_t_some(buffer_index);
@@ -140,14 +140,14 @@ optional_size_t get_index_from_position(
         }
 
         buffer_index++;
-    }
+    } while (buffer_index < gb_length);
 
     return size_t_none();
 }
 
 bool move_cursor_to_index(const struct TuiContext *tctx, size_t max_rows, size_t max_columns, size_t target_index) {
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
-    optional_coords   maybe_pos = get_position_from_index(gb, tctx->buf_starting_symbol_index, max_rows, max_columns, target_index);
+    optional_coords   maybe_pos = get_position_from_index(gb, tctx->starting_symbol_index, max_rows, max_columns, target_index);
 
     if (coords_is_none(maybe_pos)) {
         return false;

@@ -3,7 +3,9 @@
 #include <errno.h>
 #include <ncurses.h>
 #include <stdbool.h>
+#include <stdio.h>
 
+#include "collections/gap_buffer.h"
 #include "io.h"
 #include "tui/context.h"
 #include "tui/keys/handle_delete_key.h"
@@ -27,7 +29,10 @@ void handle_key(
             break;
         }
         case CTRL('s'): {
-            // TODO: implement
+            const char *filepath = tui_context_get_filepath(tctx);
+            FILE       *file = fopen(filepath, "w+");
+            gap_buffer_write_to_file(tui_context_get_gap_buffer(tctx), file);
+            fclose(file);
             break;
         }
         case KEY_DOWN:

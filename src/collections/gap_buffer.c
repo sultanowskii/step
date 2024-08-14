@@ -119,10 +119,8 @@ void gap_buffer_move_gap(struct GapBuffer *gb, size_t index) {
     }
 }
 
-void gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s) {
-    size_t n = strlen(s);
-
-    if (n == 0) {
+void _gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s, size_t length) {
+    if (length == 0) {
         return;
     }
 
@@ -133,7 +131,7 @@ void gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s) {
     size_t i = 0;
     size_t current_index = index; // TODO: just use gb->left?
 
-    while (i < n) {
+    while (i < length) {
         if (gb->left > gb->right) {
             _gap_buffer_grow(gb, current_index, DEFAULT_GAP_SIZE);
         }
@@ -145,9 +143,13 @@ void gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s) {
     }
 }
 
+void gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s) {
+    _gap_buffer_insert(gb, index, s, strlen(s));
+}
+
 void gap_buffer_insert_symbol(struct GapBuffer *gb, size_t index, char symbol) {
     char buf[] = {symbol, '\0'};
-    gap_buffer_insert(gb, index, buf);
+    _gap_buffer_insert(gb, index, buf, 1);
 }
 
 void gap_buffer_delete(struct GapBuffer *gb, size_t index) {
@@ -190,6 +192,22 @@ char gap_buffer_get_at(const struct GapBuffer *gb, size_t index) {
 
 void gap_buffer_set_at(struct GapBuffer *gb, size_t index, char c) {
     gb->buffer[_gap_buffer_get_real_index(gb, index)] = c;
+}
+
+void gap_buffer_write_to_file(const struct GapBuffer *gb, FILE *f) {
+    char  *left_part_start = gb->buffer;
+    size_t left_part_length = gb->left;
+    if (left_part_length > 0) {
+        // TODO: handle fail
+        fwrite(left_part_start, sizeof(char), left_part_length, f);
+    }
+
+    char  *right_part_start = gb->buffer + gb->right + 1;
+    size_t right_part_length = gb->length - gb->right - 1;
+    if (right_part_length > 0) {
+        // TODO: handle fail
+        fwrite(right_part_start, sizeof(char), right_part_length, f);
+    }
 }
 
 void gap_buffer_print(const struct GapBuffer *gb) {

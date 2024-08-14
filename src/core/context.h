@@ -13,10 +13,14 @@ struct Context *context_create(
     enum State            state,
     struct EvictingStack *done_cmds,
     struct EvictingStack *undone_cmds,
-    struct GapBuffer     *gap_buffer // ah yes, trailing comma is prohibited with seemingly no explanation
+    struct GapBuffer     *gap_buffer,
+    const char           *filepath
 );
 
-// Destroys context. Only destroys the structure itself - all fields must be destroyed manually beforehand.
+// Destroys context. Some fields must be destroyed manually beforehand:
+// - done_cmds
+// - undone_cmds
+// - gap_buffer
 void context_destroy(struct Context *ctx);
 
 struct EvictingStack *context_get_done_cmds(const struct Context *ctx);
@@ -24,3 +28,5 @@ struct EvictingStack *context_get_undone_cmds(const struct Context *ctx);
 struct GapBuffer     *context_get_gap_buffer(const struct Context *ctx);
 enum State            context_get_state(const struct Context *ctx);
 void                  context_set_state(struct Context *ctx, enum State new_state);
+const char           *context_get_filepath(const struct Context *ctx);
+void                  context_set_filepath(struct Context *ctx, const char *new_filepath);

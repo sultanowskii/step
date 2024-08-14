@@ -14,7 +14,7 @@ void update_text_board(struct TuiContext *tctx, struct Board *text_board) {
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
     struct Coords    *cursor = tctx->cursor;
 
-    print_gap_buffer_to_board(text_board, gb, tctx->buf_starting_symbol_index, text_board->height, text_board->width);
+    print_gap_buffer_to_board(text_board, gb, tctx->starting_symbol_index, text_board->height, text_board->width);
 
     highlight_on(text_board, cursor->y, cursor->x);
 }

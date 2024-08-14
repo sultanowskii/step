@@ -49,8 +49,9 @@ enum NavigationRequest handle_navigation_key(
             highlight_off(text_board, cursor->y, cursor->x);
             cursor->y--;
             break;
-        default:
+        default: {
             break;
+        }
     }
 
     return requirement;
@@ -64,17 +65,17 @@ void fulfill_navigation_request(
 
     switch (request) {
         case NAVREQ_UPPER:
-            struct FindLineResult find_previous_line_result = find_previous_line(gb, tctx->buf_starting_symbol_index);
+            struct FindLineResult find_previous_line_result = find_previous_line(gb, tctx->starting_symbol_index);
             if (find_previous_line_result.found) {
-                tctx->buf_starting_symbol_index = find_previous_line_result.index;
-                tctx->buf_starting_line_index--;
+                tctx->starting_symbol_index = find_previous_line_result.index;
+                tctx->starting_line_index--;
             }
             break;
         case NAVREQ_LOWER:
-            struct FindLineResult find_next_line_result = find_next_line(gb, tctx->buf_starting_symbol_index);
+            struct FindLineResult find_next_line_result = find_next_line(gb, tctx->starting_symbol_index);
             if (find_next_line_result.found) {
-                tctx->buf_starting_symbol_index = find_next_line_result.index;
-                tctx->buf_starting_line_index++;
+                tctx->starting_symbol_index = find_next_line_result.index;
+                tctx->starting_line_index++;
             }
             break;
         case NAVREQ_NO:

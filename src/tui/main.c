@@ -60,16 +60,16 @@ void loop(
     struct Board   *status_board
 ) {
     struct Coords      cursor = {.y = 0, .x = 0};
-    const size_t       buf_starting_symbol_index = 0;
-    const size_t       buf_starting_line_index = 0;
-    struct TuiContext *tctx = tui_context_create(ctx, buf_starting_symbol_index, buf_starting_line_index, &cursor);
+    const size_t       starting_symbol_index = 0;
+    const size_t       starting_line_index = 0;
+    struct TuiContext *tctx = tui_context_create(ctx, starting_symbol_index, starting_line_index, &cursor);
 
     while (context_get_state(ctx) != STATE_EXIT) {
         update_line_number_board(tctx, line_number_board, text_board->height, text_board->width);
 
         update_text_board(tctx, text_board);
 
-        update_status_board(tctx, status_board);
+        update_status_board(tctx, text_board, status_board);
 
         update_panels();
         doupdate();
@@ -119,7 +119,7 @@ struct Context *setup_context(const char *filename) {
     struct GapBuffer *gb = gap_buffer_create_from_string(data);
     free(data);
 
-    struct Context *ctx = context_create(state, done_cmds, undone_cmds, gb);
+    struct Context *ctx = context_create(state, done_cmds, undone_cmds, gb, filename);
     return ctx;
 }
 
