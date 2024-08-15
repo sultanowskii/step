@@ -44,6 +44,8 @@ struct GapBuffer *gap_buffer_create() {
 
     // otherwise `gap_buffer_create_from_string("")` would produce partially initialized buffer.
     _gap_buffer_grow(gb, 0, DEFAULT_BUFFER_SIZE / 2);
+    // initial right index fix - to make it inclusive
+    gb->right--;
     return gb;
 }
 
