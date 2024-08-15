@@ -1,5 +1,6 @@
 #include "collections/gap_buffer.h"
 
+#include <assert.h>
 #include <malloc.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -90,7 +91,7 @@ void _gap_buffer_grow(struct GapBuffer *gb, size_t index, size_t n) {
 
     gb->length += n;
     gb->left = index;
-    gb->right = gb->left + n - 1;
+    gb->right = gb->left + n;
 }
 
 void _gap_buffer_move_left(struct GapBuffer *gb, size_t index) {
@@ -112,6 +113,7 @@ void _gap_buffer_move_right(struct GapBuffer *gb, size_t index) {
 }
 
 void gap_buffer_move_gap(struct GapBuffer *gb, size_t index) {
+    assert(gb->left <= gb->right);
     if (index < gb->left) {
         _gap_buffer_move_left(gb, index);
     } else {
@@ -120,6 +122,7 @@ void gap_buffer_move_gap(struct GapBuffer *gb, size_t index) {
 }
 
 void _gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s, size_t length) {
+    assert(gb->left <= gb->right);
     if (length == 0) {
         return;
     }
@@ -132,7 +135,7 @@ void _gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s, size_
     size_t current_index = index; // TODO: just use gb->left?
 
     while (i < length) {
-        if (gb->left > gb->right) {
+        if (gb->left == gb->right) {
             _gap_buffer_grow(gb, current_index, DEFAULT_GAP_SIZE);
         }
 
