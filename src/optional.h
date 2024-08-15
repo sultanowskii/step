@@ -11,6 +11,7 @@
 
 #define DECLARE_OPTIONAL(type, name)                \
     DECLARE_OPTIONAL_STRUCT(type, name)             \
+                                                    \
     static optional_##name name##_some(type val) {  \
         return (optional_##name){                   \
             .val = val,                             \
