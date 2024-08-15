@@ -43,5 +43,5 @@ void update_status_board(struct TuiContext *tctx, struct Board *text_board, stru
         .x = getcurx(status_board_window),
     };
 
-    print_filler_to_eol(status_board, &current);
+    print_filler_to_end_of_board(status_board, &current);
 }
