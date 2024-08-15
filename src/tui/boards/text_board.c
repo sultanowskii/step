@@ -44,7 +44,7 @@ void print_gap_buffer_to_board(
             current.x = 0;
         }
         if (current.y == max_rows) {
-            return;
+            break;
         }
     }
 

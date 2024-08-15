@@ -11,11 +11,11 @@ void print_filler(struct Board *board, const struct Coords *pos, size_t n) {
 
 void print_filler_to_end_of_row(struct Board *board, const struct Coords *pos) {
     size_t width = board->width;
-    if (pos >= width - 1) {
+    if (pos->x >= width - 1) {
         return;
     }
 
-    size_t n = width - pos->x - 1;
+    size_t n = width - pos->x;
 
     print_filler(board, pos, n);
 }

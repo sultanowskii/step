@@ -8,6 +8,7 @@
 #include "tui/boards/board.h"
 #include "tui/context.h"
 #include "tui/coords.h"
+#include "tui/tui.h"
 
 static inline void _print_line_number(
     struct Board        *line_number_board,
@@ -42,14 +43,15 @@ static inline void _print_line_number_blank(
 void update_line_number_board(
     struct TuiContext *tctx,
     struct Board      *line_number_board,
-    size_t             max_rows,
-    size_t             max_columns
+    size_t             text_board_max_rows,
+    size_t             text_board_max_columns
 ) {
-    struct Coords current = {.y = 0, .x = 0};
+    struct Coords current_text_board_pos = {.y = 0, .x = 0};
     size_t        line_index = tctx->starting_line_index;
-    size_t        last_handled_row = 0;
+    // TODO: rename
+    size_t last_handled_row = 0;
 
-    _print_line_number(line_number_board, &current, &line_index);
+    _print_line_number(line_number_board, &current_text_board_pos, &line_index);
     last_handled_row = 0;
 
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
@@ -58,29 +60,28 @@ void update_line_number_board(
     for (size_t i = tctx->starting_symbol_index; i < gb_length; i++) {
         char sym = gap_buffer_get_at(gb, i);
 
-        current.x++;
-        if (current.x == max_columns || sym == '\n') {
-            if (current.y != last_handled_row) {
+        current_text_board_pos.x++;
+        if (current_text_board_pos.x == text_board_max_columns || sym == '\n') {
+            if (current_text_board_pos.y != last_handled_row) {
                 if (sym == '\n') {
-                    _print_line_number(line_number_board, &current, &line_index);
+                    _print_line_number(line_number_board, &current_text_board_pos, &line_index);
                 } else {
-                    _print_line_number_blank(line_number_board, &current);
+                    _print_line_number_blank(line_number_board, &current_text_board_pos);
                 }
-                last_handled_row = current.y;
+                last_handled_row = current_text_board_pos.y;
             }
-            current.y++;
-            current.x = 0;
+            current_text_board_pos.y++;
+            current_text_board_pos.x = 0;
         }
-        if (current.y == max_rows) {
-            return;
+        if (current_text_board_pos.y == text_board_max_rows) {
+            break;
         }
     }
 
-    struct Coords tmp = {
+    // TODO: rename
+    struct Coords wild = {
         .y = last_handled_row + 1,
+        .x = 0,
     };
-    while (tmp.y < max_rows) {
-        _print_line_number_blank(line_number_board, &tmp);
-        tmp.y++;
-    }
+    print_filler_to_end_of_board(line_number_board, &wild);
 }
