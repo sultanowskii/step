@@ -8,6 +8,14 @@
 #include "tui/context.h"
 #include "tui/coords.h"
 #include "tui/optionals.h"
+#include "tui/tui.h"
+
+// TODO: change to work with states (View [no] vs Insert [yes])
+size_t gap_buffer_get_max_valid_index(const struct GapBuffer *gb) {
+    size_t gb_length = gap_buffer_get_length(gb);
+    size_t max_valid_index = ALLOW_CURSOR_AFTER_LAST_SYMBOL ? gb_length : gb_length - 1;
+    return max_valid_index;
+}
 
 void revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns) {
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
@@ -27,16 +35,14 @@ struct Coords revise_coords_with_gap_buffer(
 ) {
     struct Coords current = {.y = 0, .x = 0};
     struct Coords last_valid = current;
-    size_t        gb_length = gap_buffer_get_length(gb);
+    size_t        max_valid_index = gap_buffer_get_max_valid_index(gb);
 
     size_t buffer_index = starting_index;
-    while (current.y <= raw.y && buffer_index < gb_length) {
+    while (current.y <= raw.y && buffer_index <= max_valid_index) {
         last_valid = current;
 
-        if (current.y == raw.y) {
-            if (current.x == raw.x) {
-                return last_valid;
-            }
+        if (current.y == raw.y && current.x == raw.x) {
+            return last_valid;
         }
 
         char sym = gap_buffer_get_at(gb, buffer_index);
@@ -119,6 +125,7 @@ optional_size_t get_index_from_position(
 ) {
     struct Coords current = {.y = 0, .x = 0};
     size_t        gb_length = gap_buffer_get_length(gb);
+    size_t        max_valid_index = gap_buffer_get_max_valid_index(gb);
 
     size_t buffer_index = starting_index;
     do {
@@ -138,7 +145,7 @@ optional_size_t get_index_from_position(
         }
 
         buffer_index++;
-    } while (buffer_index < gb_length);
+    } while (buffer_index <= max_valid_index);
 
     return size_t_none();
 }
@@ -165,9 +172,10 @@ optional_coords get_position_from_index(
 ) {
     struct Coords current = {.y = 0, .x = 0};
     size_t        gb_length = gap_buffer_get_length(gb);
+    size_t        max_valid_index = gap_buffer_get_max_valid_index(gb);
 
     size_t buffer_index = starting_index;
-    while (buffer_index < gb_length) {
+    while (buffer_index <= max_valid_index) {
         if (buffer_index == target_index) {
             return coords_some(current);
         }

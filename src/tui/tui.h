@@ -1,7 +1,12 @@
 #pragma once
 
+#include <stdbool.h>
+
 #include "tui/boards/board.h"
 #include "tui/coords.h"
+
+// TODO: remove and replace with state handling (View [no] vs Insert [yes])
+#define ALLOW_CURSOR_AFTER_LAST_SYMBOL (true)
 
 void print_filler(struct Board *board, const struct Coords *pos, size_t n);
 void print_filler_till_end_of_row(struct Board *board, const struct Coords *pos);
