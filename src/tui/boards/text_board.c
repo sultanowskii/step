@@ -38,7 +38,7 @@ void print_gap_buffer_to_board(
         current.x++;
         if (current.x == max_columns || sym == '\n') {
             if (sym == '\n') {
-                print_filler_to_end_of_row(text_board, &current);
+                print_filler_till_end_of_row(text_board, &current);
             }
             current.y++;
             current.x = 0;
@@ -48,5 +48,5 @@ void print_gap_buffer_to_board(
         }
     }
 
-    print_filler_to_end_of_board(text_board, &current);
+    print_filler_till_end_of_board(text_board, &current);
 }

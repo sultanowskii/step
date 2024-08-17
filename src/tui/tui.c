@@ -9,7 +9,7 @@ void print_filler(struct Board *board, const struct Coords *pos, size_t n) {
     mvwprintw(board_window(board), pos->y, pos->x, "%*c", (int)n, ' ');
 }
 
-void print_filler_to_end_of_row(struct Board *board, const struct Coords *pos) {
+void print_filler_till_end_of_row(struct Board *board, const struct Coords *pos) {
     size_t width = board->width;
     if (pos->x >= width - 1) {
         return;
@@ -20,8 +20,8 @@ void print_filler_to_end_of_row(struct Board *board, const struct Coords *pos) {
     print_filler(board, pos, n);
 }
 
-void print_filler_to_end_of_board(struct Board *board, const struct Coords *pos) {
-    print_filler_to_end_of_row(board, pos);
+void print_filler_till_end_of_board(struct Board *board, const struct Coords *pos) {
+    print_filler_till_end_of_row(board, pos);
 
     struct Coords crd = {
         .y = pos->y + 1,

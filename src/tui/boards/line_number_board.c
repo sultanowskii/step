@@ -10,7 +10,7 @@
 #include "tui/coords.h"
 #include "tui/tui.h"
 
-static inline void _print_line_number(
+static inline void _print_row_line_number(
     struct Board        *line_number_board,
     const struct Coords *current,
     size_t              *line_index
@@ -26,7 +26,7 @@ static inline void _print_line_number(
     (*line_index)++;
 }
 
-static inline void _print_line_number_blank(
+static inline void _print_row_blank(
     struct Board        *line_number_board,
     const struct Coords *current
 ) {
@@ -40,18 +40,30 @@ static inline void _print_line_number_blank(
     );
 }
 
+static inline void _print_row(
+    struct Board  *line_number_board,
+    struct Coords *text_board_pos,
+    size_t        *line_index,
+    bool           is_newline
+) {
+    if (is_newline) {
+        _print_row_line_number(line_number_board, text_board_pos, line_index);
+        return;
+    }
+    _print_row_blank(line_number_board, text_board_pos);
+}
+
 void update_line_number_board(
     struct TuiContext *tctx,
     struct Board      *line_number_board,
     size_t             text_board_max_rows,
     size_t             text_board_max_columns
 ) {
-    struct Coords current_text_board_pos = {.y = 0, .x = 0};
+    struct Coords text_board_pos = {.y = 0, .x = 0};
     size_t        line_index = tctx->starting_line_index;
-    // TODO: rename
-    size_t last_handled_row = 0;
+    size_t        last_handled_row = 0;
 
-    _print_line_number(line_number_board, &current_text_board_pos, &line_index);
+    _print_row_line_number(line_number_board, &text_board_pos, &line_index);
     last_handled_row = 0;
 
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
@@ -60,20 +72,20 @@ void update_line_number_board(
     for (size_t i = tctx->starting_symbol_index; i < gb_length; i++) {
         char sym = gap_buffer_get_at(gb, i);
 
-        current_text_board_pos.x++;
-        if (current_text_board_pos.x == text_board_max_columns || sym == '\n') {
-            if (current_text_board_pos.y != last_handled_row) {
-                if (sym == '\n') {
-                    _print_line_number(line_number_board, &current_text_board_pos, &line_index);
-                } else {
-                    _print_line_number_blank(line_number_board, &current_text_board_pos);
-                }
-                last_handled_row = current_text_board_pos.y;
+        text_board_pos.x++;
+        bool x_reached_end_of_row = (text_board_pos.x == (text_board_max_columns));
+        bool is_newline = (sym == '\n');
+        if (x_reached_end_of_row || is_newline) {
+            text_board_pos.y++;
+            text_board_pos.x = 0;
+
+            bool row_already_handled = (text_board_pos.y == last_handled_row);
+            if (!row_already_handled) {
+                _print_row(line_number_board, &text_board_pos, &line_index, is_newline);
+                last_handled_row = text_board_pos.y;
             }
-            current_text_board_pos.y++;
-            current_text_board_pos.x = 0;
         }
-        if (current_text_board_pos.y == text_board_max_rows) {
+        if (text_board_pos.y == text_board_max_rows) {
             break;
         }
     }
@@ -83,5 +95,5 @@ void update_line_number_board(
         .y = last_handled_row + 1,
         .x = 0,
     };
-    print_filler_to_end_of_board(line_number_board, &wild);
+    print_filler_till_end_of_board(line_number_board, &wild);
 }
