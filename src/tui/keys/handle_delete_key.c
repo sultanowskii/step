@@ -18,7 +18,7 @@ void handle_delete_key(struct TuiContext *tctx, struct Board *text_board, int ke
     switch (key) {
         case KEY_DC: {
             size_t gb_length = gap_buffer_get_length(tui_context_get_gap_buffer(tctx));
-            if (index == gb_length - 1) {
+            if (index >= gb_length) {
                 return;
             }
             break;

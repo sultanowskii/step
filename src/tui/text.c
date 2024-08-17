@@ -26,7 +26,7 @@ struct Coords revise_coords_with_gap_buffer(
     struct Coords           raw
 ) {
     struct Coords current = {.y = 0, .x = 0};
-    struct Coords last_valid = {};
+    struct Coords last_valid = current;
     size_t        gb_length = gap_buffer_get_length(gb);
 
     size_t buffer_index = starting_index;
