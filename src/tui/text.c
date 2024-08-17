@@ -122,10 +122,8 @@ optional_size_t get_index_from_position(
 
     size_t buffer_index = starting_index;
     do {
-        if (current.y == position->y) {
-            if (current.x == position->x) {
-                return size_t_some(buffer_index);
-            }
+        if (current.y == position->y && current.x == position->x) {
+            return size_t_some(buffer_index);
         }
 
         char sym = gap_buffer_get_at(gb, buffer_index);
@@ -154,8 +152,7 @@ bool move_cursor_to_index(const struct TuiContext *tctx, size_t max_rows, size_t
     }
 
     struct Coords pos = coords_get_val(maybe_pos);
-    tctx->cursor->y = pos.y;
-    tctx->cursor->x = pos.x;
+    (*tctx->cursor) = pos;
     return true;
 }
 
