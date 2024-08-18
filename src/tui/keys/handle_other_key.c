@@ -51,9 +51,13 @@ void handle_other(
     }
     size_t index = size_t_get_val(maybe_index);
 
-    struct Command *cmd_insert_symbol = command_create_insert_symbol(index, symbol);
-
-    command_exec(tctx->ctx, cmd_insert_symbol);
+    // TODO: extract it all into separate function
+    struct Command       *cmd = command_create_insert_symbol(index, symbol);
+    struct CommandResult *result = command_exec(tctx->ctx, cmd);
+    command_destroy(cmd);
+    struct EvictingStack *done = tui_context_get_done_cmds(tctx);
+    struct CommandResult *evicted_result = evicting_stack_push_back(done, result);
+    command_result_destroy(evicted_result);
 
     index++;
     move_cursor_to_index(tctx, text_board->height, text_board->width, index);

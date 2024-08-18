@@ -2,6 +2,7 @@
 
 #include <ncurses.h>
 
+#include "collections/evicting_stack.h"
 #include "core/commands.h"
 #include "tui/context.h"
 #include "tui/optionals.h"
@@ -35,9 +36,13 @@ void handle_delete_key(struct TuiContext *tctx, struct Board *text_board, int ke
         }
     }
 
-    struct Command *cmd_delete = command_create_delete(index, 1);
-
-    command_exec(tctx->ctx, cmd_delete);
+    // TODO: extract it all into separate function
+    struct Command       *cmd = command_create_delete_symbol(index);
+    struct CommandResult *result = command_exec(tctx->ctx, cmd);
+    command_destroy(cmd);
+    struct EvictingStack *done = tui_context_get_done_cmds(tctx);
+    struct CommandResult *evicted_result = evicting_stack_push_back(done, result);
+    command_result_destroy(evicted_result);
 
     move_cursor_to_index(tctx, text_board->height, text_board->width, index);
 }

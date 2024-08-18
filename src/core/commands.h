@@ -5,10 +5,13 @@
 #include "core/context.h"
 
 struct Command;
+struct CommandResult;
 
-struct Command *command_create_insert_string(size_t index, const char *s);
 struct Command *command_create_insert_symbol(size_t index, char symbol);
-struct Command *command_create_delete(size_t index, size_t n);
+struct Command *command_create_delete_symbol(size_t index);
+struct Command *command_create_from_opposing_result(struct CommandResult *result);
 void            command_destroy(struct Command *cmd);
 
-void command_exec(struct Context *ctx, struct Command *command);
+void command_result_destroy(struct CommandResult *result);
+
+struct CommandResult *command_exec(struct Context *ctx, struct Command *command);

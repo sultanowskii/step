@@ -8,7 +8,8 @@
 #include "str.h"
 
 struct Context {
-    enum State            state;
+    enum State state;
+    // TODO: remove _cmds suffix? - because we store results, not commands.
     struct EvictingStack *done_cmds;
     struct EvictingStack *undone_cmds;
     struct GapBuffer     *gap_buffer;

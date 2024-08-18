@@ -124,7 +124,6 @@ optional_size_t get_index_from_position(
     const struct Coords    *position
 ) {
     struct Coords current = {.y = 0, .x = 0};
-    size_t        gb_length = gap_buffer_get_length(gb);
     size_t        max_valid_index = gap_buffer_get_max_valid_index(gb);
 
     size_t buffer_index = starting_index;
@@ -171,7 +170,6 @@ optional_coords get_position_from_index(
     size_t                  target_index
 ) {
     struct Coords current = {.y = 0, .x = 0};
-    size_t        gb_length = gap_buffer_get_length(gb);
     size_t        max_valid_index = gap_buffer_get_max_valid_index(gb);
 
     size_t buffer_index = starting_index;

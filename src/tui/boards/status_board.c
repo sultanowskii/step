@@ -22,7 +22,7 @@ void update_status_board(struct TuiContext *tctx, struct Board *text_board, stru
         status_board_window,
         0,
         0,
-        "Cursor position: Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu, i=",
+        "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu, i=",
         index_to_human(tctx->starting_line_index + cursor->y),
         index_to_human(cursor->x),
         cursor->y,

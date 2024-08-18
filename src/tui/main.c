@@ -126,11 +126,11 @@ struct Context *setup_context(const char *filename) {
 void teardown_context(struct Context *ctx) {
     struct EvictingStack *done_cmds = context_get_done_cmds(ctx);
     // TODO: replace destroy_dummy with appropriate destroyer
-    evicting_stack_destroy(done_cmds, command_destroy);
+    evicting_stack_destroy(done_cmds, command_result_destroy);
 
     struct EvictingStack *undone_cmds = context_get_undone_cmds(ctx);
     // TODO: replace destroy_dummy with appropriate destroyer
-    evicting_stack_destroy(undone_cmds, command_destroy);
+    evicting_stack_destroy(undone_cmds, command_result_destroy);
 
     struct GapBuffer *gb = context_get_gap_buffer(ctx);
     gap_buffer_destroy(gb);
