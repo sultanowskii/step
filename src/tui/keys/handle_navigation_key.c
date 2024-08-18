@@ -64,22 +64,25 @@ void fulfill_navigation_request(
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
 
     switch (request) {
-        case NAVREQ_UPPER:
+        case NAVREQ_UPPER: {
             struct FindLineResult find_previous_line_result = find_previous_line(gb, tctx->starting_symbol_index);
             if (find_previous_line_result.found) {
                 tctx->starting_symbol_index = find_previous_line_result.index;
                 tctx->starting_line_index--;
             }
             break;
-        case NAVREQ_LOWER:
+        }
+        case NAVREQ_LOWER: {
             struct FindLineResult find_next_line_result = find_next_line(gb, tctx->starting_symbol_index);
             if (find_next_line_result.found) {
                 tctx->starting_symbol_index = find_next_line_result.index;
                 tctx->starting_line_index++;
             }
             break;
+        }
         case NAVREQ_NO:
-        default:
+        default: {
             break;
+        }
     }
 }

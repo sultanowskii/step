@@ -43,6 +43,8 @@ struct Context *context_create(
 }
 
 void context_destroy(struct Context *ctx) {
+    free(ctx->filepath);
+    ctx->filepath = NULL;
     ctx->done_cmds = NULL;
     ctx->undone_cmds = NULL;
     ctx->gap_buffer = NULL;

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 EXE=${EXE:-./ste}
+EXE_ARGS=${EXE_ARGS:-}
 MAKE_TARGET=${MAKE_TARGET:-default}
 
 # It just works!
@@ -10,4 +11,4 @@ MAKE_TARGET=${MAKE_TARGET:-default}
 docker run --rm -ti \
     -v ./:/valgrind \
     ste-valgrind:latest \
-    "ulimit -n 1024; EXE=${EXE} MAKE_TARGET=${MAKE_TARGET} ./scripts/valgrind_run.sh"
+    "ulimit -n 1024; EXE=${EXE} EXE_ARGS=${EXE_ARGS} MAKE_TARGET=${MAKE_TARGET} ./scripts/valgrind_run.sh"

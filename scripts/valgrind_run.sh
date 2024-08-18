@@ -1,6 +1,7 @@
 #!/bin/bash
 
 EXE=${EXE:-ste}
+EXE_ARGS=${EXE_ARGS:-}
 MAKE_TARGET=${MAKE_TARGET:-default}
 
 make "${MAKE_TARGET}"
@@ -10,4 +11,4 @@ valgrind --leak-check=full \
          --track-origins=yes \
          --verbose \
          --leak-resolution=high \
-         "./${EXE}"
+         ./${EXE} ${EXE_ARGS}
