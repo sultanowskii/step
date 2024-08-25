@@ -19,7 +19,6 @@ size_t gap_buffer_get_length(const struct GapBuffer *gb);
 char gap_buffer_get_at(const struct GapBuffer *gb, size_t index);
 void gap_buffer_set_at(struct GapBuffer *gb, size_t index, char c);
 
-// TODO: move to gap_buffer_str.h?
 void gap_buffer_write_to_file(const struct GapBuffer *gb, FILE *f);
 
 void gap_buffer_print(const struct GapBuffer *gb);

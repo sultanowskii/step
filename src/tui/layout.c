@@ -7,8 +7,7 @@
 #include "math.h"
 #include "tui/boards/board.h"
 
-// TODO: rename
-void recreate_boards(
+void recompose_boards(
     struct Context *ctx,
     struct Board   *line_number_board,
     struct Board   *status_board,

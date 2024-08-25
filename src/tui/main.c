@@ -75,11 +75,6 @@ void loop(
         doupdate();
 
         int sym = wgetch(board_window(text_board));
-        // TODO: move to an appropriate place
-        if (sym == 'q') {
-            context_set_state(ctx, STATE_EXIT);
-            break;
-        }
         handle_key(tctx, line_number_board, status_board, text_board, sym);
 
         revise_cursor(tctx, text_board->height, text_board->width);
@@ -94,7 +89,7 @@ void run(struct Context *ctx) {
     struct Board *status_board = board_create_dummy();
     struct Board *text_board = board_create_dummy();
 
-    recreate_boards(ctx, line_number_board, status_board, text_board);
+    recompose_boards(ctx, line_number_board, status_board, text_board);
 
     loop(ctx, line_number_board, text_board, status_board);
 
@@ -125,11 +120,9 @@ struct Context *setup_context(const char *filename) {
 
 void teardown_context(struct Context *ctx) {
     struct EvictingStack *done_cmds = context_get_done_cmds(ctx);
-    // TODO: replace destroy_dummy with appropriate destroyer
     evicting_stack_destroy(done_cmds, command_result_destroy);
 
     struct EvictingStack *undone_cmds = context_get_undone_cmds(ctx);
-    // TODO: replace destroy_dummy with appropriate destroyer
     evicting_stack_destroy(undone_cmds, command_result_destroy);
 
     struct GapBuffer *gb = context_get_gap_buffer(ctx);

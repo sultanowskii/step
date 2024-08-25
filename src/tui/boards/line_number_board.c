@@ -90,10 +90,10 @@ void update_line_number_board(
         }
     }
 
-    // TODO: rename
-    struct Coords wild = {
+    // filling out the rest of the board
+    struct Coords first_unhandled_row_pos = {
         .y = last_handled_row + 1,
         .x = 0,
     };
-    print_filler_till_end_of_board(line_number_board, &wild);
+    print_filler_till_end_of_board(line_number_board, &first_unhandled_row_pos);
 }

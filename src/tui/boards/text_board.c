@@ -19,7 +19,7 @@ void update_text_board(struct TuiContext *tctx, struct Board *text_board) {
     highlight_on(text_board, cursor->y, cursor->x);
 }
 
-// TODO: improve arguments
+// TODO: improve arguments?
 void print_gap_buffer_to_board(
     struct Board           *text_board,
     const struct GapBuffer *gb,

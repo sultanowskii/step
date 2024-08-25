@@ -27,7 +27,7 @@ void handle_key(
     // TODO: handle in separate functions
     switch (key) {
         case KEY_RESIZE: {
-            recreate_boards(tctx->ctx, line_number_board, status_board, text_board);
+            recompose_boards(tctx->ctx, line_number_board, status_board, text_board);
             break;
         }
         case CTRL('s'): {
@@ -52,6 +52,10 @@ void handle_key(
             command_destroy(inverse_command);
             struct CommandResult *evicted_result = evicting_stack_push_back(undone, result);
             command_result_destroy(evicted_result);
+            break;
+        }
+        case CTRL('q'): {
+            context_set_state(tctx->ctx, STATE_EXIT);
             break;
         }
         case CTRL('y'): {
