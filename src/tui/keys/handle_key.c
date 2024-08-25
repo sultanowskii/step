@@ -79,10 +79,7 @@ void handle_key(
         case KEY_UP:
         case KEY_LEFT:
         case KEY_RIGHT: {
-            enum NavigationRequest request = handle_navigation_key(tctx, text_board, key);
-            if (request != NAVREQ_NO) {
-                fulfill_navigation_request(tctx, request);
-            }
+            handle_navigation_key(tctx, text_board, key);
             break;
         }
         case KEY_DC:

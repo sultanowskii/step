@@ -8,19 +8,8 @@
 #include "tui/context.h"
 #include "tui/coords.h"
 
-enum NavigationRequest {
-    NAVREQ_NO,
-    NAVREQ_LOWER,
-    NAVREQ_UPPER,
-};
-
-enum NavigationRequest handle_navigation_key(
+void handle_navigation_key(
     struct TuiContext *tctx,
     struct Board      *text_board,
     int                c
-);
-
-void fulfill_navigation_request(
-    struct TuiContext     *tctx,
-    enum NavigationRequest request
 );

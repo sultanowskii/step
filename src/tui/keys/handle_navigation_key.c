@@ -10,52 +10,11 @@
 #include "tui/highlight.h"
 #include "tui/text.h"
 
-enum NavigationRequest handle_navigation_key(
-    struct TuiContext *tctx,
-    struct Board      *text_board,
-    int                c
-) {
-    struct Coords         *cursor = tctx->cursor;
-    enum NavigationRequest requirement = NAVREQ_NO;
-
-    switch (c) {
-        case KEY_RIGHT:
-            if (cursor->x == text_board->width - 1) {
-                break;
-            }
-            highlight_off(text_board, cursor->y, cursor->x);
-            cursor->x++;
-            break;
-        case KEY_LEFT:
-            if (cursor->x == 0) {
-                break;
-            }
-            highlight_off(text_board, cursor->y, cursor->x);
-            cursor->x--;
-            break;
-        case KEY_DOWN:
-            if (cursor->y == text_board->height - 1) {
-                requirement = NAVREQ_LOWER;
-                break;
-            }
-            highlight_off(text_board, cursor->y, cursor->x);
-            cursor->y++;
-            break;
-        case KEY_UP:
-            if (cursor->y == 0) {
-                requirement = NAVREQ_UPPER;
-                break;
-            }
-            highlight_off(text_board, cursor->y, cursor->x);
-            cursor->y--;
-            break;
-        default: {
-            break;
-        }
-    }
-
-    return requirement;
-}
+enum NavigationRequest {
+    NAVREQ_NO,
+    NAVREQ_LOWER,
+    NAVREQ_UPPER,
+};
 
 void fulfill_navigation_request(
     struct TuiContext     *tctx,
@@ -85,4 +44,49 @@ void fulfill_navigation_request(
             break;
         }
     }
+}
+
+void handle_navigation_key(
+    struct TuiContext *tctx,
+    struct Board      *text_board,
+    int                c
+) {
+    struct Coords         *cursor = tctx->cursor;
+    enum NavigationRequest request = NAVREQ_NO;
+
+    highlight_off(text_board, cursor->y, cursor->x);
+
+    switch (c) {
+        case KEY_RIGHT:
+            if (cursor->x == text_board->width - 1) {
+                break;
+            }
+            cursor->x++;
+            break;
+        case KEY_LEFT:
+            if (cursor->x == 0) {
+                break;
+            }
+            cursor->x--;
+            break;
+        case KEY_DOWN:
+            if (cursor->y == text_board->height - 1) {
+                request = NAVREQ_LOWER;
+                break;
+            }
+            cursor->y++;
+            break;
+        case KEY_UP:
+            if (cursor->y == 0) {
+                request = NAVREQ_UPPER;
+                break;
+            }
+            cursor->y--;
+            break;
+        default: {
+            break;
+        }
+    }
+
+    fulfill_navigation_request(tctx, request);
 }
