@@ -138,9 +138,6 @@ void tui_main(const char *filename) {
 
     run(ctx);
 
-    printw("Press any key to exit...");
-    getch();
-
     teardown();
 
     teardown_context(ctx);
