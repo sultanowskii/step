@@ -4,7 +4,7 @@
 
 #include "collections/gap_buffer.h"
 #include "tui/boards/board.h"
-#include "tui/context.h"
+#include "tui/core/context.h"
 
 void print_gap_buffer_to_board(
     struct Board           *text_board,

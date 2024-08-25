@@ -5,8 +5,8 @@
 
 #include "human.h"
 #include "tui/boards/board.h"
-#include "tui/context.h"
 #include "tui/coords.h"
+#include "tui/core/context.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
 #include "tui/tui.h"

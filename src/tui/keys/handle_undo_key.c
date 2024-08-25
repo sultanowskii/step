@@ -1,7 +1,7 @@
 #include "tui/keys/handle_undo_key.h"
 
 #include "core/commands.h"
-#include "tui/context.h"
+#include "tui/core/context.h"
 
 void handle_undo_key(struct TuiContext *tctx) {
     struct EvictingStack *done = tui_context_get_done_cmds(tctx);

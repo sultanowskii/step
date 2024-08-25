@@ -5,8 +5,8 @@
 
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
-#include "tui/context.h"
 #include "tui/coords.h"
+#include "tui/core/context.h"
 #include "tui/optionals.h"
 #include "tui/tui.h"
 

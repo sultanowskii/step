@@ -6,8 +6,8 @@
 
 #include "collections/gap_buffer.h"
 #include "tui/boards/board.h"
-#include "tui/context.h"
 #include "tui/coords.h"
+#include "tui/core/context.h"
 #include "tui/optionals.h"
 
 void          revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns);

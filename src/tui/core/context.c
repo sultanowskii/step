@@ -1,4 +1,4 @@
-#include "tui/context.h"
+#include "tui/core/context.h"
 
 #include <malloc.h>
 #include <stddef.h>

@@ -4,7 +4,7 @@
 
 #include "collections/evicting_stack.h"
 #include "core/commands.h"
-#include "tui/context.h"
+#include "tui/core/context.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
 
