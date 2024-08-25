@@ -5,7 +5,7 @@
 #include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
 #include "core/state.h"
-#include "str.h"
+#include "nonstd/str.h"
 
 struct Context {
     enum State state;

@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
-#include "human.h"
+#include "nonstd/human.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
 #include "tui/core/context.h"

@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "collections/evicting_stack.h"
-#include "fmt.h"
+#include "nonstd/fmt.h"
 #include "playground/io.h"
 
 void str_print(void *value) {
@@ -37,20 +37,20 @@ int main(void) {
         char c = read_char();
 
         switch (c) {
-        case 'P': {
-            print_prompt_with_message("str");
-            char *s = read_str();
-            void *evicted = evicting_stack_push_back(estack, s);
-            str_destroy(evicted);
-            break;
-        }
-        case 'O': {
-            void *evicted = evicting_stack_pop_back(estack);
-            str_destroy(evicted);
-            break;
-        }
-        default:
-            goto EXIT;
+            case 'P': {
+                print_prompt_with_message("str");
+                char *s = read_str();
+                void *evicted = evicting_stack_push_back(estack, s);
+                str_destroy(evicted);
+                break;
+            }
+            case 'O': {
+                void *evicted = evicting_stack_pop_back(estack);
+                str_destroy(evicted);
+                break;
+            }
+            default:
+                goto EXIT;
         }
     }
 

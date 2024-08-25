@@ -5,10 +5,10 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "fmt.h"
-#include "math.h"
-#include "mem.h"
-#include "str.h"
+#include "nonstd/fmt.h"
+#include "nonstd/math.h"
+#include "nonstd/mem.h"
+#include "nonstd/str.h"
 
 struct Rope {
     struct Rope *left;

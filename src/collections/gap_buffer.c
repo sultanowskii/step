@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "fmt.h"
-#include "math.h"
-#include "mem.h"
+#include "nonstd/fmt.h"
+#include "nonstd/math.h"
+#include "nonstd/mem.h"
 
 #define DEFAULT_BUFFER_SIZE 64
 #define DEFAULT_GAP_SIZE 16

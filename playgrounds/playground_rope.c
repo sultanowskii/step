@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "collections/rope.h"
-#include "fmt.h"
+#include "nonstd/fmt.h"
 #include "playground/io.h"
 
 void print_help(void) {

@@ -6,8 +6,8 @@
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "core/state.h"
-#include "runtime.h"
-#include "str.h"
+#include "nonstd/runtime.h"
+#include "nonstd/str.h"
 
 enum CommandType {
     CMD_INSERT_SYMBOL,

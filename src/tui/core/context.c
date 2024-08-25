@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 #include "core/context.h"
-#include "str.h"
+#include "nonstd/str.h"
 #include "tui/coords.h"
 
 struct TuiContext *tui_context_create_empty() {

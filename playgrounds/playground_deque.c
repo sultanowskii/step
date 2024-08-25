@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "collections/deque.h"
-#include "fmt.h"
+#include "nonstd/fmt.h"
 #include "playground/io.h"
 
 void str_print(void *value) {
@@ -36,30 +36,30 @@ int main(void) {
         char c = read_char();
 
         switch (c) {
-        case 'p': {
-            print_prompt_with_message("str");
-            char *s = read_str();
-            deque_push_front(deque, s);
-            break;
-        }
-        case 'o': {
-            char *s = deque_pop_front(deque);
-            str_destroy(s);
-            break;
-        }
-        case 'P': {
-            print_prompt_with_message("str");
-            char *s = read_str();
-            deque_push_back(deque, s);
-            break;
-        }
-        case 'O': {
-            char *s = deque_pop_back(deque);
-            str_destroy(s);
-            break;
-        }
-        default:
-            goto EXIT;
+            case 'p': {
+                print_prompt_with_message("str");
+                char *s = read_str();
+                deque_push_front(deque, s);
+                break;
+            }
+            case 'o': {
+                char *s = deque_pop_front(deque);
+                str_destroy(s);
+                break;
+            }
+            case 'P': {
+                print_prompt_with_message("str");
+                char *s = read_str();
+                deque_push_back(deque, s);
+                break;
+            }
+            case 'O': {
+                char *s = deque_pop_back(deque);
+                str_destroy(s);
+                break;
+            }
+            default:
+                goto EXIT;
         }
     }
 

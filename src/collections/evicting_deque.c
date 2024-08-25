@@ -5,9 +5,9 @@
 #include <stddef.h>
 
 #include "collections/print.h"
-#include "fmt.h"
-#include "mem.h"
-#include "runtime.h"
+#include "nonstd/fmt.h"
+#include "nonstd/mem.h"
+#include "nonstd/runtime.h"
 
 struct DequeNode;
 

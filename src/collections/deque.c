@@ -5,8 +5,8 @@
 
 #include "collections/evicting_deque.h"
 #include "collections/print.h"
-#include "fmt.h"
-#include "mem.h"
+#include "nonstd/fmt.h"
+#include "nonstd/mem.h"
 
 struct Deque {
     struct EvictingDeque *edeque;

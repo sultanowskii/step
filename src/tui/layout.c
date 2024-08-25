@@ -4,7 +4,7 @@
 
 #include "collections/gap_buffer_str.h"
 #include "core/context.h"
-#include "math.h"
+#include "nonstd/math.h"
 #include "tui/boards/board.h"
 
 void recompose_boards(
