@@ -3,7 +3,7 @@
 #include <ncurses.h>
 
 #include "collections/evicting_stack.h"
-#include "core/commands.h"
+#include "core/commands/commands.h"
 #include "tui/core/context.h"
 #include "tui/optionals.h"
 #include "tui/text.h"

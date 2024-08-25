@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "core/commands.h"
+#include "core/commands/commands.h"
 #include "optional.h"
 #include "tui/boards/board.h"
 #include "tui/core/context.h"

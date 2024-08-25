@@ -2,11 +2,12 @@
 
 #include <stdbool.h>
 
+#include "compile.h"
 #include "optional.h"
 #include "tui/coords.h"
 
-#pragma GCC diagnostic ignored "-Wunused-function"
+IGNORE_UNUSED()
 DECLARE_OPTIONAL(struct Coords, coords)
 
-#pragma GCC diagnostic ignored "-Wunused-function"
+IGNORE_UNUSED()
 DECLARE_OPTIONAL(size_t, size_t)

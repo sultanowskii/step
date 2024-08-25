@@ -11,7 +11,7 @@
 #include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
-#include "core/commands.h"
+#include "core/commands/commands.h"
 #include "core/context.h"
 #include "core/state.h"
 #include "io.h"

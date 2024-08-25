@@ -1,4 +1,4 @@
-#include "core/commands.h"
+#include "core/commands/commands.h"
 
 #include <malloc.h>
 #include <stddef.h>
@@ -12,6 +12,8 @@
 enum CommandType {
     CMD_INSERT_SYMBOL,
     CMD_DELETE_SYMBOL,
+    CMD_UNDO,
+    CMD_REDO,
 };
 
 struct CmdInsertSymbol {

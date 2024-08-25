@@ -9,14 +9,14 @@ ENTRYPOINT_OBJ   := src/main.o
 NAME             := ste
 TARGET           := $(NAME)
 
-TUI_SRCS         := $(wildcard src/tui/*.c src/tui/**/*.c)
+TUI_SRCS         := $(wildcard src/tui/*.c src/tui/*/*.c src/tui/*/*/*.c)
 TUI_OBJS         := $(TUI_SRCS:.c=.o)
 TUI_LIBS         := -lpanel -lncurses
 
 PGROUND_SRCS     := $(wildcard playgrounds/playground/*.c)
 PGROUND_OBJS     := $(PGROUND_SRCS:.c=.o)
 
-SRCS             := $(wildcard src/*.c src/**/*.c)
+SRCS             := $(wildcard src/*.c src/*/*.c src/*/*/*.c)
 SRCS             := $(filter-out $(ENTRYPOINT_SRC), $(SRCS))
 SRCS             := $(filter-out $(TUI_SRCS), $(SRCS))
 OBJS             := $(SRCS:.c=.o)
