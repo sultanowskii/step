@@ -51,7 +51,6 @@ void handle_other(
     }
     size_t index = size_t_get_val(maybe_index);
 
-    // TODO: extract it all into separate function
     struct Command       *cmd = command_create_insert_symbol(index, symbol);
     struct CommandResult *result = command_exec(tctx->ctx, cmd);
     command_destroy(cmd);

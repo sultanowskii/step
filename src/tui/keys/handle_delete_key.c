@@ -36,7 +36,6 @@ void handle_delete_key(struct TuiContext *tctx, struct Board *text_board, int ke
         }
     }
 
-    // TODO: extract it all into separate function
     struct Command       *cmd = command_create_delete_symbol(index);
     struct CommandResult *result = command_exec(tctx->ctx, cmd);
     command_destroy(cmd);

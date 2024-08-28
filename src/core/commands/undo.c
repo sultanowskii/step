@@ -61,6 +61,7 @@ struct CommandResult *_undo_facade_pop_undone(struct UndoFacade *undo_facade) {
     return evicting_stack_pop_back(undo_facade->undone);
 }
 
+// TODO: return index (optional_size_t) so that we can move the cursor to an appropriate position
 bool undo_facade_undo(struct UndoFacade *undo_facade) {
     if (undo_facade_is_done_empty(undo_facade)) {
         return false;
@@ -77,6 +78,7 @@ bool undo_facade_undo(struct UndoFacade *undo_facade) {
     return true;
 }
 
+// TODO: return index (optional_size_t) so that we can move the cursor to an appropriate position
 bool undo_facade_redo(struct UndoFacade *undo_facade) {
     if (undo_facade_is_undone_empty(undo_facade)) {
         return false;
