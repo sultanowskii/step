@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+#include "core/commands/undo.h"
 #include "core/context.h"
 #include "core/state.h"
 #include "tui/coords.h"
@@ -28,10 +29,9 @@ struct TuiContext *tui_context_create(
 );
 void tui_context_destroy(struct TuiContext *tctx);
 
-struct EvictingStack *tui_context_get_done_cmds(const struct TuiContext *tctx);
-struct EvictingStack *tui_context_get_undone_cmds(const struct TuiContext *tctx);
-struct GapBuffer     *tui_context_get_gap_buffer(const struct TuiContext *tctx);
-enum State            tui_context_get_state(const struct TuiContext *tctx);
-void                  tui_context_set_state(struct TuiContext *tctx, enum State new_state);
-const char           *tui_context_get_filepath(const struct TuiContext *tctx);
-void                  tui_context_set_filepath(struct TuiContext *tctx, const char *new_filepath);
+struct UndoFacade *tui_context_get_undo_facade(const struct TuiContext *tctx);
+struct GapBuffer  *tui_context_get_gap_buffer(const struct TuiContext *tctx);
+enum State         tui_context_get_state(const struct TuiContext *tctx);
+void               tui_context_set_state(struct TuiContext *tctx, enum State new_state);
+const char        *tui_context_get_filepath(const struct TuiContext *tctx);
+void               tui_context_set_filepath(struct TuiContext *tctx, const char *new_filepath);

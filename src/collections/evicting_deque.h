@@ -13,8 +13,10 @@ void                  evicting_deque_destroy(struct EvictingDeque *edeque, void 
 
 void *evicting_deque_push_front(struct EvictingDeque *edeque, void *value);
 void *evicting_deque_pop_front(struct EvictingDeque *edeque);
+void *evicting_deque_peek_front(struct EvictingDeque *edeque);
 void *evicting_deque_push_back(struct EvictingDeque *edeque, void *value);
 void *evicting_deque_pop_back(struct EvictingDeque *edeque);
+void *evicting_deque_peek_back(struct EvictingDeque *edeque);
 
 size_t evicting_deque_get_size(const struct EvictingDeque *edeque);
 size_t evicting_deque_get_max_size(const struct EvictingDeque *edeque);

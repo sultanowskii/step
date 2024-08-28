@@ -49,12 +49,20 @@ void *deque_pop_front(struct Deque *deque) {
     return evicting_deque_pop_front(deque->edeque);
 }
 
+void *deque_peek_front(struct Deque *deque) {
+    return evicting_deque_peek_front(deque->edeque);
+}
+
 void deque_push_back(struct Deque *deque, void *value) {
     evicting_deque_push_back(deque->edeque, value);
 }
 
 void *deque_pop_back(struct Deque *deque) {
     return evicting_deque_pop_back(deque->edeque);
+}
+
+void *deque_peek_back(struct Deque *deque) {
+    return evicting_deque_peek_back(deque->edeque);
 }
 
 void deque_print(const struct Deque *deque, print print_value) {

@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-#include "core/context.h"
+#include "core/_context.h"
 
 struct Command;
 struct CommandResult;

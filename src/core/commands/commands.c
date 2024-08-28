@@ -2,7 +2,9 @@
 
 #include <malloc.h>
 #include <stddef.h>
+#include <time.h>
 
+#include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "core/state.h"
@@ -45,6 +47,7 @@ struct Command {
 
 struct CommandResult {
     enum CommandType type;
+    time_t           time;
     union {
         struct CmdResultInsertSymbol insert_symbol;
         struct CmdResultDeleteSymbol delete_symbol;
@@ -163,5 +166,8 @@ struct CommandResult *command_exec(struct Context *ctx, struct Command *command)
             panic("runtime error: unexpected command type while executing command");
         };
     }
+
+    result->time = time(NULL);
+
     return result;
 }

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <stdbool.h>
+
 #include "tui/core/context.h"
 
-void handle_undo_key(struct TuiContext *tctx);
-void handle_redo_key(struct TuiContext *tctx);
+bool handle_undo_key(struct TuiContext *tctx);
+bool handle_redo_key(struct TuiContext *tctx);

@@ -4,39 +4,34 @@
 
 #include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
+#include "core/commands/undo.h"
 #include "core/state.h"
 #include "nonstd/str.h"
 
 struct Context {
-    enum State state;
-    // TODO: remove _cmds suffix? - because we store results, not commands.
-    struct EvictingStack *done_cmds;
-    struct EvictingStack *undone_cmds;
-    struct GapBuffer     *gap_buffer;
-    char                 *filepath;
+    enum State         state;
+    struct UndoFacade *undo_facade;
+    struct GapBuffer  *gap_buffer;
+    char              *filepath;
 };
 
-struct Context *context_create_empty() {
+struct Context *_context_create_empty(void) {
     struct Context *ctx = malloc(sizeof(struct Context));
     ctx->state = STATE_START;
-    ctx->done_cmds = NULL;
-    ctx->undone_cmds = NULL;
     ctx->gap_buffer = NULL;
     ctx->filepath = NULL;
     return ctx;
 }
 
 struct Context *context_create(
-    enum State            state,
-    struct EvictingStack *done_cmds,
-    struct EvictingStack *undone_cmds,
-    struct GapBuffer     *gap_buffer,
-    const char           *filepath // ah yes, trailing comma is prohibited with seemingly no explanation
+    enum State         state,
+    struct UndoFacade *undo_facade,
+    struct GapBuffer  *gap_buffer,
+    const char        *filepath // ah yes, trailing comma is prohibited with seemingly no explanation
 ) {
-    struct Context *ctx = context_create_empty();
+    struct Context *ctx = _context_create_empty();
+    ctx->undo_facade = undo_facade;
     ctx->state = state;
-    ctx->done_cmds = done_cmds;
-    ctx->undone_cmds = undone_cmds;
     ctx->gap_buffer = gap_buffer;
     ctx->filepath = str_dup(filepath);
     return ctx;
@@ -44,19 +39,14 @@ struct Context *context_create(
 
 void context_destroy(struct Context *ctx) {
     free(ctx->filepath);
+    ctx->undo_facade = NULL;
     ctx->filepath = NULL;
-    ctx->done_cmds = NULL;
-    ctx->undone_cmds = NULL;
     ctx->gap_buffer = NULL;
     free(ctx);
 }
 
-struct EvictingStack *context_get_done_cmds(const struct Context *ctx) {
-    return ctx->done_cmds;
-}
-
-struct EvictingStack *context_get_undone_cmds(const struct Context *ctx) {
-    return ctx->undone_cmds;
+struct UndoFacade *context_get_undo_facade(const struct Context *ctx) {
+    return ctx->undo_facade;
 }
 
 struct GapBuffer *context_get_gap_buffer(const struct Context *ctx) {

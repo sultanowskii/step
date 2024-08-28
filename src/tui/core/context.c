@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include <stddef.h>
 
+#include "core/commands/undo.h"
 #include "core/context.h"
 #include "nonstd/str.h"
 #include "tui/coords.h"
@@ -36,12 +37,8 @@ void tui_context_destroy(struct TuiContext *tctx) {
     free(tctx);
 }
 
-struct EvictingStack *tui_context_get_done_cmds(const struct TuiContext *tctx) {
-    return context_get_done_cmds(tctx->ctx);
-}
-
-struct EvictingStack *tui_context_get_undone_cmds(const struct TuiContext *tctx) {
-    return context_get_undone_cmds(tctx->ctx);
+struct UndoFacade *tui_context_get_undo_facade(const struct TuiContext *tctx) {
+    return context_get_undo_facade(tctx->ctx);
 }
 
 struct GapBuffer *tui_context_get_gap_buffer(const struct TuiContext *tctx) {

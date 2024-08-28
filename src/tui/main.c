@@ -11,12 +11,11 @@
 #include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
-#include "core/commands/commands.h"
+#include "core/commands/undo.h"
 #include "core/context.h"
 #include "core/state.h"
 #include "nonstd/io.h"
 #include "nonstd/math.h"
-#include "nonstd/mem.h"
 #include "nonstd/runtime.h"
 #include "tui/boards/board.h"
 #include "tui/boards/line_number_board.h"
@@ -28,9 +27,6 @@
 #include "tui/layout.h"
 #include "tui/text.h"
 #include "tui/tui.h"
-
-// TODO: move to other file
-#define UNDO_MAX_COUNT 50
 
 // TODO: custom colors
 void setup_color_pairs() {
@@ -99,9 +95,9 @@ void run(struct Context *ctx) {
 }
 
 struct Context *setup_context(const char *filename) {
-    enum State            state = STATE_START;
-    struct EvictingStack *done_cmds = evicting_stack_create(UNDO_MAX_COUNT);
-    struct EvictingStack *undone_cmds = evicting_stack_create(UNDO_MAX_COUNT);
+    enum State state = STATE_START;
+
+    struct UndoFacade *undo_facade = undo_facade_create();
 
     FILE *f = fopen(filename, "rb");
     // TODO: handle properly
@@ -114,16 +110,16 @@ struct Context *setup_context(const char *filename) {
     struct GapBuffer *gb = gap_buffer_create_from_string(data);
     free(data);
 
-    struct Context *ctx = context_create(state, done_cmds, undone_cmds, gb, filename);
+    struct Context *ctx = context_create(state, undo_facade, gb, filename);
+
+    undo_facade_set_ctx(undo_facade, ctx);
+
     return ctx;
 }
 
 void teardown_context(struct Context *ctx) {
-    struct EvictingStack *done_cmds = context_get_done_cmds(ctx);
-    evicting_stack_destroy(done_cmds, command_result_destroy);
-
-    struct EvictingStack *undone_cmds = context_get_undone_cmds(ctx);
-    evicting_stack_destroy(undone_cmds, command_result_destroy);
+    struct UndoFacade *undo_facade = context_get_undo_facade(ctx);
+    undo_facade_destroy(undo_facade);
 
     struct GapBuffer *gb = context_get_gap_buffer(ctx);
     gap_buffer_destroy(gb);

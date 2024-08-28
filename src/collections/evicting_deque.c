@@ -162,6 +162,14 @@ void *evicting_deque_pop_front(struct EvictingDeque *edeque) {
     return value;
 }
 
+void *evicting_deque_peek_front(struct EvictingDeque *edeque) {
+    if (evicting_deque_get_size(edeque) == 0) {
+        return NULL;
+    }
+
+    return edeque->head->value;
+}
+
 void _evicting_deque_push_back(struct EvictingDeque *edeque, struct DequeNode *dnode) {
     if (evicting_deque_get_size(edeque) == 0) {
         edeque->head = dnode;
@@ -225,6 +233,14 @@ void *evicting_deque_pop_back(struct EvictingDeque *edeque) {
     deque_node_destroy(dnode);
 
     return value;
+}
+
+void *evicting_deque_peek_back(struct EvictingDeque *edeque) {
+    if (evicting_deque_get_size(edeque) == 0) {
+        return NULL;
+    }
+
+    return edeque->tail->value;
 }
 
 void evicting_deque_print(const struct EvictingDeque *edeque, print print_value) {

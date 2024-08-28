@@ -40,9 +40,7 @@ void handle_delete_key(struct TuiContext *tctx, struct Board *text_board, int ke
     struct Command       *cmd = command_create_delete_symbol(index);
     struct CommandResult *result = command_exec(tctx->ctx, cmd);
     command_destroy(cmd);
-    struct EvictingStack *done = tui_context_get_done_cmds(tctx);
-    struct CommandResult *evicted_result = evicting_stack_push_back(done, result);
-    command_result_destroy(evicted_result);
+    undo_facade_add_done(tui_context_get_undo_facade(tctx), result);
 
     move_cursor_to_index(tctx, text_board->height, text_board->width, index);
 }
