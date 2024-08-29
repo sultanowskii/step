@@ -23,6 +23,7 @@ struct Board *board_create(size_t height, size_t width, size_t y, size_t x);
 void board_destroy(struct Board *board);
 
 void board_resize(struct Board *board, size_t height, size_t width, size_t y, size_t x);
+void board_set_color_pair(struct Board *board, int color_pair);
 
 PANEL  *board_panel(const struct Board *board);
 WINDOW *board_window(const struct Board *board);

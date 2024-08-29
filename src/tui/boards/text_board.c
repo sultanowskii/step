@@ -5,10 +5,15 @@
 
 #include "collections/gap_buffer.h"
 #include "tui/boards/board.h"
+#include "tui/color.h"
 #include "tui/coords.h"
 #include "tui/core/context.h"
 #include "tui/highlight.h"
 #include "tui/tui.h"
+
+void text_board_highlight_line(struct Board *text_board, size_t y) {
+    highlight_line(text_board, y, COLOR_PAIR_TEXT_HIGHLIGHTED);
+}
 
 void update_text_board(struct TuiContext *tctx, struct Board *text_board) {
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
@@ -16,7 +21,8 @@ void update_text_board(struct TuiContext *tctx, struct Board *text_board) {
 
     print_gap_buffer_to_board(text_board, gb, tctx->starting_symbol_index, text_board->height, text_board->width);
 
-    highlight_on(text_board, cursor->y, cursor->x);
+    text_board_highlight_line(text_board, cursor->y);
+    highlight_cursor(text_board, cursor->y, cursor->x);
 }
 
 // TODO: improve arguments?
@@ -29,8 +35,7 @@ void print_gap_buffer_to_board(
 ) {
     struct Coords current = {.y = 0, .x = 0};
 
-    size_t gb_length = gap_buffer_get_length(gb);
-    for (size_t i = starting_index; i < gb_length; i++) {
+    for (size_t i = starting_index; i < gap_buffer_get_length(gb); i++) {
         char sym = gap_buffer_get_at(gb, i);
 
         mvwaddch(board_window(text_board), current.y, current.x, sym);

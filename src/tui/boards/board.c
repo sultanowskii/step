@@ -64,6 +64,10 @@ void board_resize(struct Board *board, size_t height, size_t width, size_t y, si
     }
 }
 
+void board_set_color_pair(struct Board *board, int color_pair) {
+    wattrset(board_window(board), COLOR_PAIR(color_pair));
+}
+
 PANEL *board_panel(const struct Board *board) {
     return board->panel;
 }

@@ -21,6 +21,7 @@
 #include "tui/boards/line_number_board.h"
 #include "tui/boards/status_board.h"
 #include "tui/boards/text_board.h"
+#include "tui/color.h"
 #include "tui/coords.h"
 #include "tui/core/context.h"
 #include "tui/keys/handle_key.h"
@@ -28,17 +29,9 @@
 #include "tui/text.h"
 #include "tui/tui.h"
 
-// TODO: custom colors
-void setup_color_pairs() {
-    use_default_colors();
-    start_color();
-
-    init_pair(1, COLOR_BLACK, COLOR_WHITE);
-}
-
 void setup(void) {
     initscr();
-    setup_color_pairs();
+    setup_colors();
     raw();
     noecho();
     keypad(stdscr, TRUE);
@@ -129,12 +122,10 @@ void teardown_context(struct Context *ctx) {
 
 void tui_main(const char *filename) {
     struct Context *ctx = setup_context(filename);
-
     setup();
 
     run(ctx);
 
     teardown();
-
     teardown_context(ctx);
 }

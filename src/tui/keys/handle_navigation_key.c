@@ -54,7 +54,8 @@ void handle_navigation_key(
     struct Coords         *cursor = tctx->cursor;
     enum NavigationRequest request = NAVREQ_NO;
 
-    highlight_off(text_board, cursor->y, cursor->x);
+    // TODO: move outta here?
+    unhighlight_cursor(text_board, cursor->y, cursor->x);
 
     switch (c) {
         case KEY_RIGHT:
