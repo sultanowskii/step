@@ -7,4 +7,4 @@
 #include "tui/coords.h"
 #include "tui/core/context.h"
 
-void update_status_board(struct TuiContext *tctx, struct Board *text_board, struct Board *status_board);
+void update_status_board(struct TuiContext *tctx);

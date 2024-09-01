@@ -19,12 +19,18 @@ struct TuiContext *tui_context_create_empty() {
 
 struct TuiContext *tui_context_create(
     struct Context *ctx,
+    struct Board   *line_number_board,
+    struct Board   *status_board,
+    struct Board   *text_board,
     size_t          starting_symbol_index,
     size_t          starting_line_index,
     struct Coords  *cursor
 ) {
     struct TuiContext *tctx = tui_context_create_empty();
     tctx->ctx = ctx;
+    tctx->line_number_board = line_number_board;
+    tctx->status_board = status_board;
+    tctx->text_board = text_board;
     tctx->starting_symbol_index = starting_symbol_index;
     tctx->starting_line_index = starting_line_index;
     tctx->cursor = cursor;
@@ -33,6 +39,9 @@ struct TuiContext *tui_context_create(
 
 void tui_context_destroy(struct TuiContext *tctx) {
     tctx->ctx = NULL;
+    tctx->line_number_board = NULL;
+    tctx->status_board = NULL;
+    tctx->text_board = NULL;
     tctx->cursor = NULL;
     free(tctx);
 }

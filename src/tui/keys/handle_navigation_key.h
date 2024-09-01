@@ -10,6 +10,5 @@
 
 void handle_navigation_key(
     struct TuiContext *tctx,
-    struct Board      *text_board,
     int                c
 );

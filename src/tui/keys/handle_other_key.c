@@ -35,9 +35,10 @@ optional_char convert_key_to_symbol(int key) {
 // TODO: other -> insert/input?
 optional_char handle_other(
     struct TuiContext *tctx,
-    struct Board      *text_board,
     int                key
 ) {
+    struct Board *text_board = tctx->text_board;
+
     optional_char maybe_symbol = convert_key_to_symbol(key);
     if (char_is_none(maybe_symbol)) {
         return char_none();

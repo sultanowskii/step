@@ -11,8 +11,10 @@
 #include "tui/text.h"
 #include "tui/tui.h"
 
-void update_status_board(struct TuiContext *tctx, struct Board *text_board, struct Board *status_board) {
-    WINDOW *status_board_window = board_window(status_board);
+void update_status_board(struct TuiContext *tctx) {
+    struct Board *text_board = tctx->text_board;
+    struct Board *status_board = tctx->status_board;
+    WINDOW       *status_board_window = board_window(status_board);
 
     struct Coords *cursor = tctx->cursor;
     size_t         gb_length = gap_buffer_get_length(tui_context_get_gap_buffer(tctx));

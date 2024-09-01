@@ -8,6 +8,5 @@
 
 optional_char handle_other(
     struct TuiContext *tctx,
-    struct Board      *text_board,
     int                key
 );

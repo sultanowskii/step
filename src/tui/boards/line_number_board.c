@@ -143,10 +143,10 @@ size_t _get_row_from_position(
 
 void update_line_number_board(
     struct TuiContext *tctx,
-    struct Board      *line_number_board,
     size_t             text_board_max_rows,
     size_t             text_board_max_columns
 ) {
+    struct Board     *line_number_board = tctx->line_number_board;
     struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
 
     _print_line_number_board_with_gap_buffer(

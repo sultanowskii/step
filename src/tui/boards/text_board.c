@@ -15,19 +15,9 @@ void text_board_highlight_line(struct Board *text_board, size_t y) {
     highlight_line(text_board, y, COLOR_PAIR_TEXT_HIGHLIGHTED);
 }
 
-void update_text_board(struct TuiContext *tctx, struct Board *text_board) {
-    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
-    struct Coords    *cursor = tctx->cursor;
-
-    print_gap_buffer_to_board(text_board, gb, tctx->starting_symbol_index, text_board->height, text_board->width);
-
-    text_board_highlight_line(text_board, cursor->y);
-    highlight_cursor(text_board, cursor->y, cursor->x);
-}
-
 // TODO: improve arguments?
 void print_gap_buffer_to_board(
-    struct Board           *text_board,
+    struct Board           *board,
     const struct GapBuffer *gb,
     size_t                  starting_index,
     size_t                  max_rows,
@@ -38,13 +28,13 @@ void print_gap_buffer_to_board(
     for (size_t i = starting_index; i < gap_buffer_get_length(gb); i++) {
         char sym = gap_buffer_get_at(gb, i);
 
-        mvwaddch(board_window(text_board), current.y, current.x, sym);
+        mvwaddch(board_window(board), current.y, current.x, sym);
 
         current.x++;
+        if (sym == '\n') {
+            print_filler_till_end_of_row(board, &current);
+        }
         if (current.x == max_columns || sym == '\n') {
-            if (sym == '\n') {
-                print_filler_till_end_of_row(text_board, &current);
-            }
             current.y++;
             current.x = 0;
         }
@@ -53,5 +43,16 @@ void print_gap_buffer_to_board(
         }
     }
 
-    print_filler_till_end_of_board(text_board, &current);
+    print_filler_till_end_of_board(board, &current);
+}
+
+void update_text_board(struct TuiContext *tctx) {
+    struct Board     *text_board = tctx->text_board;
+    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
+    struct Coords    *cursor = tctx->cursor;
+
+    print_gap_buffer_to_board(text_board, gb, tctx->starting_symbol_index, text_board->height, text_board->width);
+
+    text_board_highlight_line(text_board, cursor->y);
+    highlight_cursor(text_board, cursor->y, cursor->x);
 }

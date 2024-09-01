@@ -48,9 +48,9 @@ void fulfill_navigation_request(
 
 void handle_navigation_key(
     struct TuiContext *tctx,
-    struct Board      *text_board,
     int                c
 ) {
+    struct Board          *text_board = tctx->text_board;
     struct Coords         *cursor = tctx->cursor;
     enum NavigationRequest request = NAVREQ_NO;
 

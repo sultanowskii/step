@@ -18,11 +18,12 @@
 
 void handle_key(
     struct TuiContext *tctx,
-    struct Board      *line_number_board,
-    struct Board      *status_board,
-    struct Board      *text_board,
     int                key
 ) {
+    struct Board *line_number_board = tctx->line_number_board;
+    struct Board *status_board = tctx->status_board;
+    struct Board *text_board = tctx->text_board;
+
     // TODO: handle in separate functions
     switch (key) {
         case KEY_RESIZE: {
@@ -52,12 +53,12 @@ void handle_key(
         case KEY_UP:
         case KEY_LEFT:
         case KEY_RIGHT: {
-            handle_navigation_key(tctx, text_board, key);
+            handle_navigation_key(tctx, key);
             break;
         }
         case KEY_DC:
         case KEY_BACKSPACE: {
-            optional_char maybe_deleted_symbol = handle_delete_key(tctx, text_board, key);
+            optional_char maybe_deleted_symbol = handle_delete_key(tctx, key);
             // TODO: improve
             if (char_is_some(maybe_deleted_symbol) && char_get_val(maybe_deleted_symbol) == '\n') {
                 recompose_boards(tctx->ctx, line_number_board, status_board, text_board);
@@ -65,7 +66,7 @@ void handle_key(
             break;
         }
         default: {
-            optional_char maybe_inserted_symbol = handle_other(tctx, text_board, key);
+            optional_char maybe_inserted_symbol = handle_other(tctx, key);
             // TODO: improve
             if (char_is_some(maybe_inserted_symbol) && char_get_val(maybe_inserted_symbol) == '\n') {
                 recompose_boards(tctx->ctx, line_number_board, status_board, text_board);
