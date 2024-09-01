@@ -10,6 +10,13 @@
 #include "tui/core/context.h"
 #include "tui/optionals.h"
 
+optional_coords next_valid_coords(
+    const struct Coords *coords,
+    size_t               max_rows,
+    size_t               max_columns,
+    char                 symbol
+);
+
 void          revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns);
 struct Coords revise_coords_with_gap_buffer(
     const struct GapBuffer *gb,

@@ -9,6 +9,7 @@
 #include "tui/coords.h"
 #include "tui/core/context.h"
 #include "tui/highlight.h"
+#include "tui/text.h" // TODO: once next_valid_coords() moves, change it
 #include "tui/tui.h"
 
 void text_board_highlight_line(struct Board *text_board, size_t y) {
@@ -30,17 +31,15 @@ void print_gap_buffer_to_board(
 
         mvwaddch(board_window(board), current.y, current.x, sym);
 
-        current.x++;
         if (sym == '\n') {
             print_filler_till_end_of_row(board, &current);
         }
-        if (current.x == max_columns || sym == '\n') {
-            current.y++;
-            current.x = 0;
-        }
-        if (current.y == max_rows) {
+
+        optional_coords maybe_next = next_valid_coords(&current, max_rows, max_columns, sym);
+        if (coords_is_none(maybe_next)) {
             break;
         }
+        current = coords_get_val(maybe_next);
     }
 
     print_filler_till_end_of_board(board, &current);

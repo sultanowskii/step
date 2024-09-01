@@ -26,6 +26,27 @@ void revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns)
     tctx->cursor->x = revised.x;
 }
 
+// TODO: move to other file
+optional_coords next_valid_coords(
+    const struct Coords *coords,
+    size_t               max_rows,
+    size_t               max_columns,
+    char                 symbol
+) {
+    struct Coords next = *coords;
+
+    next.x++;
+    if (next.x == max_columns || symbol == '\n') {
+        next.x = 0;
+        next.y++;
+    }
+    if (next.y == max_rows) {
+        return coords_none();
+    }
+
+    return coords_some(next);
+}
+
 struct Coords revise_coords_with_gap_buffer(
     const struct GapBuffer *gb,
     size_t                  starting_index,
@@ -47,15 +68,11 @@ struct Coords revise_coords_with_gap_buffer(
 
         char sym = gap_buffer_get_at(gb, buffer_index);
 
-        current.x++;
-        if (current.x == max_columns || sym == '\n') {
-            current.x = 0;
-            current.y++;
-        }
-        if (current.y == max_rows) {
+        optional_coords maybe_next = next_valid_coords(&current, max_rows, max_columns, sym);
+        if (coords_is_none(maybe_next)) {
             return last_valid;
         }
-
+        current = coords_get_val(maybe_next);
         buffer_index++;
     }
 
@@ -134,15 +151,11 @@ optional_size_t get_index_from_position(
 
         char sym = gap_buffer_get_at(gb, buffer_index);
 
-        current.x++;
-        if (current.x == max_columns || sym == '\n') {
-            current.x = 0;
-            current.y++;
-        }
-        if (current.y == max_rows) {
+        optional_coords maybe_next = next_valid_coords(&current, max_rows, max_columns, sym);
+        if (coords_is_none(maybe_next)) {
             return size_t_none();
         }
-
+        current = coords_get_val(maybe_next);
         buffer_index++;
     } while (buffer_index <= max_valid_index);
 
@@ -180,15 +193,11 @@ optional_coords get_position_from_index(
 
         char sym = gap_buffer_get_at(gb, buffer_index);
 
-        current.x++;
-        if (current.x == max_columns || sym == '\n') {
-            current.x = 0;
-            current.y++;
-        }
-        if (current.y == max_rows) {
+        optional_coords maybe_next = next_valid_coords(&current, max_rows, max_columns, sym);
+        if (coords_is_none(maybe_next)) {
             return coords_none();
         }
-
+        current = coords_get_val(maybe_next);
         buffer_index++;
     }
 

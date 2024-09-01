@@ -10,6 +10,7 @@
 #include "tui/coords.h"
 #include "tui/core/context.h"
 #include "tui/highlight.h"
+#include "tui/text.h" // TODO: once next_valid_coords() moves, change it
 #include "tui/tui.h"
 
 static inline void _print_row_line_number(
@@ -78,21 +79,21 @@ void _print_line_number_board_with_gap_buffer(
     for (size_t i = starting_symbol_index; i < gb_length; i++) {
         char sym = gap_buffer_get_at(gb, i);
 
-        text_board_pos.x++;
-        bool x_reached_end_of_row = (text_board_pos.x == text_board_max_columns);
+        bool x_reached_end_of_row = (text_board_pos.x + 1 == text_board_max_columns);
         bool is_newline = (sym == '\n');
-        if (x_reached_end_of_row || is_newline) {
-            text_board_pos.y++;
-            text_board_pos.x = 0;
 
+        optional_coords maybe_next = next_valid_coords(&text_board_pos, text_board_max_rows, text_board_max_columns, sym);
+        if (coords_is_none(maybe_next)) {
+            break;
+        }
+        text_board_pos = coords_get_val(maybe_next);
+
+        if (x_reached_end_of_row || is_newline) {
             bool row_already_handled = (text_board_pos.y == last_handled_row);
             if (!row_already_handled) {
                 _print_row(line_number_board, &text_board_pos, &line_index, is_newline);
                 last_handled_row = text_board_pos.y;
             }
-        }
-        if (text_board_pos.y == text_board_max_rows) {
-            break;
         }
     }
 
@@ -104,8 +105,6 @@ void _print_line_number_board_with_gap_buffer(
     print_filler_till_end_of_board(line_number_board, &first_unhandled_row_pos);
 }
 
-// TODO: refactor?
-// TODO: make a template for function like this?
 size_t _get_row_from_position(
     struct GapBuffer *gb,
     size_t            starting_symbol_index,
@@ -123,18 +122,16 @@ size_t _get_row_from_position(
             return row_index;
         }
 
-        text_board_pos.x++;
-        bool x_reached_end_of_row = (text_board_pos.x == text_board_max_columns);
-        bool is_newline = (sym == '\n');
-        if (x_reached_end_of_row || is_newline) {
-            text_board_pos.y++;
-            text_board_pos.x = 0;
-        }
-        if (is_newline) {
-            row_index = text_board_pos.y;
-        }
-        if (text_board_pos.y == text_board_max_rows) {
+        optional_coords maybe_next = next_valid_coords(&text_board_pos, text_board_max_rows, text_board_max_columns, sym);
+        if (coords_is_none(maybe_next)) {
             break;
+        }
+
+        text_board_pos = coords_get_val(maybe_next);
+
+        // TODO: is that correct? Shouldn't it go before text_board_pos updating?
+        if (sym == '\n') {
+            row_index = text_board_pos.y;
         }
     }
 
