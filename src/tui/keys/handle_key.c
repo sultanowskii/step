@@ -57,11 +57,19 @@ void handle_key(
         }
         case KEY_DC:
         case KEY_BACKSPACE: {
-            handle_delete_key(tctx, text_board, key);
+            optional_char maybe_deleted_symbol = handle_delete_key(tctx, text_board, key);
+            // TODO: improve
+            if (char_is_some(maybe_deleted_symbol) && char_get_val(maybe_deleted_symbol) == '\n') {
+                recompose_boards(tctx->ctx, line_number_board, status_board, text_board);
+            }
             break;
         }
         default: {
-            handle_other(tctx, text_board, key);
+            optional_char maybe_inserted_symbol = handle_other(tctx, text_board, key);
+            // TODO: improve
+            if (char_is_some(maybe_inserted_symbol) && char_get_val(maybe_inserted_symbol) == '\n') {
+                recompose_boards(tctx->ctx, line_number_board, status_board, text_board);
+            }
             break;
         }
     }

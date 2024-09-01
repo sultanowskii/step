@@ -11,3 +11,6 @@ DECLARE_OPTIONAL(struct Coords, coords)
 
 IGNORE_UNUSED()
 DECLARE_OPTIONAL(size_t, size_t)
+
+IGNORE_UNUSED()
+DECLARE_OPTIONAL(char, char)

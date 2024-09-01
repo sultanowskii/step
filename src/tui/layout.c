@@ -8,6 +8,10 @@
 #include "tui/boards/board.h"
 #include "tui/color.h"
 
+// TODO: make configurable
+#define MIN_LINE_NUMBER_BOARD_DIGIT_COUNT 3
+
+// TODO: extract?
 void recompose_boards(
     struct Context *ctx,
     struct Board   *line_number_board,
@@ -21,7 +25,7 @@ void recompose_boards(
     const size_t gb_line_count_digit_count = count_digits(gb_line_count);
 
     const size_t line_number_window_height = window_height;
-    const size_t line_number_window_width = gb_line_count_digit_count + 1;
+    const size_t line_number_window_width = MAX(gb_line_count_digit_count, MIN_LINE_NUMBER_BOARD_DIGIT_COUNT) + 1;
     board_resize(line_number_board, line_number_window_height, line_number_window_width, 0, 0);
     board_set_color_pair(line_number_board, COLOR_PAIR_LINE_NUMBER);
 
