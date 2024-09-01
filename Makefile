@@ -9,24 +9,20 @@ ENTRYPOINT_OBJ   := src/main.o
 NAME             := ste
 TARGET           := $(NAME)
 
-TUI_SRCS         := $(wildcard src/tui/*.c src/tui/*/*.c src/tui/*/*/*.c)
+TUI_SRCS         := $(shell find src/tui/ -type f -name '*.c')
 TUI_OBJS         := $(TUI_SRCS:.c=.o)
 TUI_LIBS         := -lpanel -lncurses
 
 PGROUND_SRCS     := $(wildcard playgrounds/playground/*.c)
 PGROUND_OBJS     := $(PGROUND_SRCS:.c=.o)
 
-SRCS             := $(wildcard src/*.c src/*/*.c src/*/*/*.c)
+SRCS             := $(shell find src/ -type f -name '*.c')
 SRCS             := $(filter-out $(ENTRYPOINT_SRC), $(SRCS))
 SRCS             := $(filter-out $(TUI_SRCS), $(SRCS))
 OBJS             := $(SRCS:.c=.o)
 
-# this is a PEAK Makefile'ing
-# TODO: switch to `find`
-TO_CLEANUP       := $(TARGET) $(wildcard *.o playgrounds/*.o *.elf)
-TO_CLEANUP       += $(wildcard src/*.o)
-TO_CLEANUP       += $(wildcard src/*/*.o)
-TO_CLEANUP       += $(wildcard src/*/*/*.o)
+# good ol' make wildcard doesnt support nested search aka double star
+TO_CLEANUP       := $(TARGET) $(shell find . -type f -name '*.o' -o -name '*.elf')
 
 .PHONY: default
 default: clean build
