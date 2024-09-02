@@ -8,6 +8,7 @@
 #include "nonstd/fmt.h"
 #include "nonstd/mem.h"
 
+// TODO: independent implementation?
 struct Deque {
     struct EvictingDeque *edeque;
 };
