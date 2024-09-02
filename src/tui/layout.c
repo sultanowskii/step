@@ -21,8 +21,7 @@ void recompose_boards(
     size_t window_height, window_width;
     getmaxyx(stdscr, window_height, window_width);
 
-    const size_t gb_line_count = gap_buffer_count_lines(context_get_gap_buffer(ctx));
-    const size_t gb_line_count_digit_count = count_digits(gb_line_count);
+    const size_t gb_line_count_digit_count = gap_buffer_calculate_line_count_digit_count(context_get_gap_buffer(ctx));
 
     const size_t line_number_window_height = window_height;
     const size_t line_number_window_width = MAX(gb_line_count_digit_count, MIN_LINE_NUMBER_BOARD_DIGIT_COUNT) + 1;

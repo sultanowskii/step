@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "collections/gap_buffer.h"
+#include "nonstd/math.h"
 
 size_t gap_buffer_count_symbol(const struct GapBuffer *gb, char symbol) {
     size_t counter = 0;
@@ -20,4 +21,9 @@ size_t gap_buffer_count_symbol(const struct GapBuffer *gb, char symbol) {
 
 size_t gap_buffer_count_lines(const struct GapBuffer *gb) {
     return 1 + gap_buffer_count_symbol(gb, '\n');
+}
+
+size_t gap_buffer_calculate_line_count_digit_count(const struct GapBuffer *gb) {
+    size_t gb_line_count = gap_buffer_count_lines(gb);
+    return count_digits(gb_line_count);
 }

@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "collections/gap_buffer.h"
+#include "collections/queue.h"
 #include "tui/core/context.h"
 #include "tui/keys/handle_delete_key.h"
 #include "tui/keys/handle_navigation_key.h"

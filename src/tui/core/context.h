@@ -7,13 +7,15 @@
 #include "core/state.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
+#include "tui/events/event_queue.h"
 
 // Context wrapper with TUI-related stuff.
 // The struct is public for convenience
 //
 // Still, create/destroy shall be used
 struct TuiContext {
-    struct Context *ctx;
+    struct Context    *ctx;
+    struct EventQueue *events;
     // Line number board
     struct Board *line_number_board;
     // Status board
@@ -29,13 +31,14 @@ struct TuiContext {
 };
 
 struct TuiContext *tui_context_create(
-    struct Context *ctx,
-    struct Board   *line_number_board,
-    struct Board   *status_board,
-    struct Board   *text_board,
-    size_t          starting_symbol_index,
-    size_t          starting_line_index,
-    struct Coords  *cursor
+    struct Context    *ctx,
+    struct EventQueue *events,
+    struct Board      *line_number_board,
+    struct Board      *status_board,
+    struct Board      *text_board,
+    size_t             starting_symbol_index,
+    size_t             starting_line_index,
+    struct Coords     *cursor
 );
 void tui_context_destroy(struct TuiContext *tctx);
 

@@ -24,6 +24,8 @@
 #include "tui/color.h"
 #include "tui/coords.h"
 #include "tui/core/context.h"
+#include "tui/events/event.h"
+#include "tui/events/event_queue.h"
 #include "tui/keys/handle_key.h"
 #include "tui/layout.h"
 #include "tui/text.h"
@@ -51,8 +53,11 @@ void loop(
     struct Coords      cursor = {.y = 0, .x = 0};
     const size_t       starting_symbol_index = 0;
     const size_t       starting_line_index = 0;
+    struct EventQueue *event_queue = event_queue_create();
+
     struct TuiContext *tctx = tui_context_create(
         ctx,
+        event_queue,
         line_number_board,
         status_board,
         text_board,
@@ -74,10 +79,16 @@ void loop(
         int sym = wgetch(board_window(text_board));
         handle_key(tctx, sym);
 
+        while (!event_queue_is_empty(event_queue)) {
+            struct Event *event = event_queue_pop(event_queue);
+            event_handle(tctx, event);
+        }
+
         revise_cursor(tctx, text_board->height, text_board->width);
     }
 
     tui_context_destroy(tctx);
+    event_queue_destroy(event_queue);
 }
 
 // TODO: rename
