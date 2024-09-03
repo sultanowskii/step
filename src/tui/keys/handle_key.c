@@ -8,10 +8,10 @@
 #include "collections/gap_buffer.h"
 #include "collections/queue.h"
 #include "tui/core/context.h"
+#include "tui/events/event.h"
 #include "tui/keys/handle_delete_key.h"
 #include "tui/keys/handle_navigation_key.h"
 #include "tui/keys/handle_other_key.h"
-#include "tui/keys/handle_undo_key.h"
 #include "tui/keys/key.h"
 #include "tui/layout.h"
 #include "tui/optionals.h"
@@ -21,9 +21,10 @@ void handle_key(
     struct TuiContext *tctx,
     int                key
 ) {
-    struct Board *line_number_board = tctx->line_number_board;
-    struct Board *status_board = tctx->status_board;
-    struct Board *text_board = tctx->text_board;
+    struct Board      *line_number_board = tctx->line_number_board;
+    struct Board      *status_board = tctx->status_board;
+    struct Board      *text_board = tctx->text_board;
+    struct EventQueue *events = tctx->events;
 
     // TODO: handle in separate functions
     switch (key) {
@@ -39,11 +40,11 @@ void handle_key(
             break;
         }
         case CTRL('z'): {
-            handle_undo_key(tctx);
+            event_queue_push_key_undo(events);
             break;
         }
         case CTRL('y'): {
-            handle_redo_key(tctx);
+            event_queue_push_key_redo(events);
             break;
         }
         case CTRL('q'): {

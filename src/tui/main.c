@@ -26,6 +26,8 @@
 #include "tui/core/context.h"
 #include "tui/events/event.h"
 #include "tui/events/event_queue.h"
+#include "tui/handlers/newline.h"
+#include "tui/handlers/undo.h"
 #include "tui/keys/handle_key.h"
 #include "tui/layout.h"
 #include "tui/text.h"
@@ -66,6 +68,13 @@ void loop(
         &cursor
     );
 
+    struct EventHandler event_handler = {
+        .handle_newline_added = handle_newline_added,
+        .handle_newline_removed = handle_newline_removed,
+        .handle_key_undo = handle_key_undo,
+        .handle_key_redo = handle_key_redo,
+    };
+
     while (context_get_state(ctx) != STATE_EXIT) {
         update_line_number_board(tctx, text_board->height, text_board->width);
 
@@ -81,7 +90,7 @@ void loop(
 
         while (!event_queue_is_empty(event_queue)) {
             struct Event *event = event_queue_pop(event_queue);
-            event_handle(tctx, event);
+            event_handle(&event_handler, tctx, event);
         }
 
         revise_cursor(tctx, text_board->height, text_board->width);

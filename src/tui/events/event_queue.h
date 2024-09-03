@@ -10,6 +10,8 @@ void               event_queue_destroy(struct EventQueue *event_queue);
 
 void          event_queue_push_newline_added(struct EventQueue *event_queue, size_t prev_line_count);
 void          event_queue_push_newline_removed(struct EventQueue *event_queue, size_t prev_line_count);
+void          event_queue_push_key_undo(struct EventQueue *event_queue);
+void          event_queue_push_key_redo(struct EventQueue *event_queue);
 struct Event *event_queue_pop(struct EventQueue *event_queue);
 
 bool event_queue_is_empty(const struct EventQueue *event_queue);

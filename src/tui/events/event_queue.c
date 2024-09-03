@@ -38,6 +38,16 @@ void event_queue_push_newline_removed(struct EventQueue *event_queue, size_t pre
     queue_push_back(event_queue->queue, event);
 }
 
+void event_queue_push_key_undo(struct EventQueue *event_queue) {
+    struct Event *event = event_create_key_undo();
+    queue_push_back(event_queue->queue, event);
+}
+
+void event_queue_push_key_redo(struct EventQueue *event_queue) {
+    struct Event *event = event_create_key_redo();
+    queue_push_back(event_queue->queue, event);
+}
+
 struct Event *event_queue_pop(struct EventQueue *event_queue) {
     return queue_pop_front(event_queue->queue);
 }
