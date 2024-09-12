@@ -26,6 +26,7 @@
 #include "tui/core/context.h"
 #include "tui/events/event.h"
 #include "tui/events/event_queue.h"
+#include "tui/handlers/delete.h"
 #include "tui/handlers/newline.h"
 #include "tui/handlers/undo.h"
 #include "tui/keys/handle_key.h"
@@ -73,6 +74,8 @@ void loop(
         .handle_newline_removed = handle_newline_removed,
         .handle_key_undo = handle_key_undo,
         .handle_key_redo = handle_key_redo,
+        .handle_key_delete = handle_key_delete,
+        .handle_key_backspace = handle_key_backspace,
     };
 
     while (context_get_state(ctx) != STATE_EXIT) {

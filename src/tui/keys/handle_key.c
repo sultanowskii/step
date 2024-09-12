@@ -9,7 +9,6 @@
 #include "collections/queue.h"
 #include "tui/core/context.h"
 #include "tui/events/event.h"
-#include "tui/keys/handle_delete_key.h"
 #include "tui/keys/handle_navigation_key.h"
 #include "tui/keys/handle_other_key.h"
 #include "tui/keys/key.h"
@@ -59,12 +58,10 @@ void handle_key(
             break;
         }
         case KEY_DC:
+            event_queue_push_key_delete(events);
+            break;
         case KEY_BACKSPACE: {
-            optional_char maybe_deleted_symbol = handle_delete_key(tctx, key);
-            // TODO: improve
-            if (char_is_some(maybe_deleted_symbol) && char_get_val(maybe_deleted_symbol) == '\n') {
-                recompose_boards(tctx->ctx, line_number_board, status_board, text_board);
-            }
+            event_queue_push_key_backspace(events);
             break;
         }
         default: {

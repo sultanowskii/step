@@ -28,13 +28,13 @@ void event_queue_destroy(struct EventQueue *event_queue) {
     free(event_queue);
 }
 
-void event_queue_push_newline_added(struct EventQueue *event_queue, size_t prev_line_count) {
-    struct Event *event = event_create_newline_added(prev_line_count);
+void event_queue_push_newline_added(struct EventQueue *event_queue) {
+    struct Event *event = event_create_newline_added();
     queue_push_back(event_queue->queue, event);
 }
 
-void event_queue_push_newline_removed(struct EventQueue *event_queue, size_t prev_line_count) {
-    struct Event *event = event_create_newline_removed(prev_line_count);
+void event_queue_push_newline_removed(struct EventQueue *event_queue) {
+    struct Event *event = event_create_newline_removed();
     queue_push_back(event_queue->queue, event);
 }
 
@@ -45,6 +45,16 @@ void event_queue_push_key_undo(struct EventQueue *event_queue) {
 
 void event_queue_push_key_redo(struct EventQueue *event_queue) {
     struct Event *event = event_create_key_redo();
+    queue_push_back(event_queue->queue, event);
+}
+
+void event_queue_push_key_delete(struct EventQueue *event_queue) {
+    struct Event *event = event_create_key_delete();
+    queue_push_back(event_queue->queue, event);
+}
+
+void event_queue_push_key_backspace(struct EventQueue *event_queue) {
+    struct Event *event = event_create_key_backspace();
     queue_push_back(event_queue->queue, event);
 }
 

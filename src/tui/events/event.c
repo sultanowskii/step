@@ -10,6 +10,8 @@ enum EventType {
     EVENT_NEWLINE_REMOVED,
     EVENT_KEY_UNDO,
     EVENT_KEY_REDO,
+    EVENT_KEY_DELETE,
+    EVENT_KEY_BACKSPACE,
 };
 
 struct Event {
@@ -19,43 +21,55 @@ struct Event {
         struct EventNewlineRemoved newline_removed;
         struct EventKeyUndo        key_undo;
         struct EventKeyRedo        key_redo;
+        struct EventKeyDelete      key_delete;
+        struct EventKeyBackspace   key_backspace;
     } body;
 };
 
-struct Event *event_create_empty() {
+struct Event *event_create_empty(void) {
     struct Event *event = malloc(sizeof(struct Event));
     return event;
 }
 
-struct Event *event_create_newline_added(size_t prev_line_count) {
+struct Event *event_create_newline_added(void) {
     struct Event *event = event_create_empty();
     event->type = EVENT_NEWLINE_ADDED;
-    event->body.newline_added = (struct EventNewlineAdded){
-        .prev_line_count = prev_line_count,
-    };
+    event->body.newline_added = (struct EventNewlineAdded){};
     return event;
 }
 
-struct Event *event_create_newline_removed(size_t prev_line_count) {
+struct Event *event_create_newline_removed(void) {
     struct Event *event = event_create_empty();
     event->type = EVENT_NEWLINE_REMOVED;
-    event->body.newline_removed = (struct EventNewlineRemoved){
-        .prev_line_count = prev_line_count,
-    };
+    event->body.newline_removed = (struct EventNewlineRemoved){};
     return event;
 }
 
-struct Event *event_create_key_undo() {
+struct Event *event_create_key_undo(void) {
     struct Event *event = event_create_empty();
     event->type = EVENT_KEY_UNDO;
     event->body.key_undo = (struct EventKeyUndo){};
     return event;
 }
 
-struct Event *event_create_key_redo() {
+struct Event *event_create_key_redo(void) {
     struct Event *event = event_create_empty();
     event->type = EVENT_KEY_REDO;
     event->body.key_redo = (struct EventKeyRedo){};
+    return event;
+}
+
+struct Event *event_create_key_delete() {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_KEY_DELETE;
+    event->body.key_delete = (struct EventKeyDelete){};
+    return event;
+}
+
+struct Event *event_create_key_backspace() {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_KEY_BACKSPACE;
+    event->body.key_backspace = (struct EventKeyBackspace){};
     return event;
 }
 
@@ -79,6 +93,14 @@ void event_handle(const struct EventHandler *event_handler, struct TuiContext *t
         }
         case EVENT_KEY_REDO: {
             event_handler->handle_key_redo(tctx, &(event->body.key_redo));
+            break;
+        }
+        case EVENT_KEY_DELETE: {
+            event_handler->handle_key_delete(tctx, &(event->body.key_delete));
+            break;
+        }
+        case EVENT_KEY_BACKSPACE: {
+            event_handler->handle_key_backspace(tctx, &(event->body.key_backspace));
             break;
         }
         default: {

@@ -9,7 +9,7 @@
 #include "tui/color.h"
 
 // TODO: make configurable
-#define MIN_LINE_NUMBER_BOARD_DIGIT_COUNT 3
+#define MIN_LINE_NUMBER_BOARD_DIGIT_COUNT 1
 
 // TODO: extract?
 void recompose_boards(
