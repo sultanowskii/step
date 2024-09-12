@@ -3,7 +3,6 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
-#include "collections/gap_buffer_str.h"
 #include "tui/core/context.h"
 #include "tui/events/event.h"
 #include "tui/optionals.h"

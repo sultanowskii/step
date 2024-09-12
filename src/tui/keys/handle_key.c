@@ -10,7 +10,6 @@
 #include "tui/core/context.h"
 #include "tui/events/event.h"
 #include "tui/keys/handle_navigation_key.h"
-#include "tui/keys/handle_other_key.h"
 #include "tui/keys/key.h"
 #include "tui/layout.h"
 #include "tui/optionals.h"
@@ -65,11 +64,7 @@ void handle_key(
             break;
         }
         default: {
-            optional_char maybe_inserted_symbol = handle_other(tctx, key);
-            // TODO: improve
-            if (char_is_some(maybe_inserted_symbol) && char_get_val(maybe_inserted_symbol) == '\n') {
-                recompose_boards(tctx->ctx, line_number_board, status_board, text_board);
-            }
+            event_queue_push_key_text(events, key);
             break;
         }
     }

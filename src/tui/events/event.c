@@ -12,6 +12,7 @@ enum EventType {
     EVENT_KEY_REDO,
     EVENT_KEY_DELETE,
     EVENT_KEY_BACKSPACE,
+    EVENT_KEY_TEXT,
 };
 
 struct Event {
@@ -23,6 +24,7 @@ struct Event {
         struct EventKeyRedo        key_redo;
         struct EventKeyDelete      key_delete;
         struct EventKeyBackspace   key_backspace;
+        struct EventKeyText        key_text;
     } body;
 };
 
@@ -59,17 +61,24 @@ struct Event *event_create_key_redo(void) {
     return event;
 }
 
-struct Event *event_create_key_delete() {
+struct Event *event_create_key_delete(void) {
     struct Event *event = event_create_empty();
     event->type = EVENT_KEY_DELETE;
     event->body.key_delete = (struct EventKeyDelete){};
     return event;
 }
 
-struct Event *event_create_key_backspace() {
+struct Event *event_create_key_backspace(void) {
     struct Event *event = event_create_empty();
     event->type = EVENT_KEY_BACKSPACE;
     event->body.key_backspace = (struct EventKeyBackspace){};
+    return event;
+}
+
+struct Event *event_create_key_text(int key) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_KEY_TEXT;
+    event->body.key_text = (struct EventKeyText){.key = key};
     return event;
 }
 
@@ -101,6 +110,10 @@ void event_handle(const struct EventHandler *event_handler, struct TuiContext *t
         }
         case EVENT_KEY_BACKSPACE: {
             event_handler->handle_key_backspace(tctx, &(event->body.key_backspace));
+            break;
+        }
+        case EVENT_KEY_TEXT: {
+            event_handler->handle_key_text(tctx, &(event->body.key_text));
             break;
         }
         default: {

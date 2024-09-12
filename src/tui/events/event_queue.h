@@ -14,6 +14,7 @@ void          event_queue_push_key_undo(struct EventQueue *event_queue);
 void          event_queue_push_key_redo(struct EventQueue *event_queue);
 void          event_queue_push_key_delete(struct EventQueue *event_queue);
 void          event_queue_push_key_backspace(struct EventQueue *event_queue);
+void          event_queue_push_key_text(struct EventQueue *event_queue, int key);
 struct Event *event_queue_pop(struct EventQueue *event_queue);
 
 bool event_queue_is_empty(const struct EventQueue *event_queue);

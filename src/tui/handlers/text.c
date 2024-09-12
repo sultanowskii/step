@@ -1,11 +1,9 @@
-#include "tui/keys/handle_other_key.h"
+#include "tui/handlers/text.h"
 
 #include <stdbool.h>
 
-#include "core/commands/commands.h"
-#include "nonstd/optional.h"
-#include "tui/boards/board.h"
 #include "tui/core/context.h"
+#include "tui/events/event.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
 
@@ -31,24 +29,19 @@ optional_char convert_key_to_symbol(int key) {
     return char_none();
 }
 
-// TODO: return value
-// TODO: other -> insert/input?
-optional_char handle_other(
-    struct TuiContext *tctx,
-    int                key
-) {
+void handle_key_text(struct TuiContext *tctx, const struct EventKeyText *key_text) {
     struct Board *text_board = tctx->text_board;
 
-    optional_char maybe_symbol = convert_key_to_symbol(key);
+    optional_char maybe_symbol = convert_key_to_symbol(key_text->key);
     if (char_is_none(maybe_symbol)) {
-        return char_none();
+        return;
     }
 
     char symbol = char_get_val(maybe_symbol);
 
     optional_size_t maybe_index = get_index_from_cursor_position(tctx, text_board->height, text_board->width);
     if (size_t_is_none(maybe_index)) {
-        return char_none();
+        return;
     }
     size_t index = size_t_get_val(maybe_index);
 
@@ -59,5 +52,8 @@ optional_char handle_other(
 
     index++;
     move_cursor_to_index(tctx, text_board->height, text_board->width, index);
-    return char_some(symbol);
+
+    if (symbol == '\n') {
+        event_queue_push_newline_added(tctx->events);
+    }
 }
