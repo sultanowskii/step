@@ -3,13 +3,11 @@
 #include <errno.h>
 #include <ncurses.h>
 #include <stdbool.h>
-#include <stdio.h>
 
 #include "collections/gap_buffer.h"
 #include "collections/queue.h"
 #include "tui/core/context.h"
 #include "tui/events/event.h"
-#include "tui/keys/handle_navigation_key.h"
 #include "tui/keys/key.h"
 #include "tui/layout.h"
 #include "tui/optionals.h"
@@ -53,7 +51,7 @@ void handle_key(
         case KEY_UP:
         case KEY_LEFT:
         case KEY_RIGHT: {
-            handle_navigation_key(tctx, key);
+            event_queue_push_key_navigation(events, key);
             break;
         }
         case KEY_DC:

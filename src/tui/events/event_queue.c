@@ -63,6 +63,16 @@ void event_queue_push_key_text(struct EventQueue *event_queue, int key) {
     queue_push_back(event_queue->queue, event);
 }
 
+void event_queue_push_key_navigation(struct EventQueue *event_queue, int key) {
+    struct Event *event = event_create_key_navigation(key);
+    queue_push_back(event_queue->queue, event);
+}
+
+void event_queue_push_singular_navigation_request(struct EventQueue *event_queue, enum SingularNavigationRequest req) {
+    struct Event *event = event_create_singular_navigation_request(req);
+    queue_push_back(event_queue->queue, event);
+}
+
 struct Event *event_queue_pop(struct EventQueue *event_queue) {
     return queue_pop_front(event_queue->queue);
 }

@@ -13,18 +13,22 @@ enum EventType {
     EVENT_KEY_DELETE,
     EVENT_KEY_BACKSPACE,
     EVENT_KEY_TEXT,
+    EVENT_KEY_NAVIGATION,
+    EVENT_SINGULAR_NAVIGATION_REQUEST,
 };
 
 struct Event {
     enum EventType type;
     union {
-        struct EventNewlineAdded   newline_added;
-        struct EventNewlineRemoved newline_removed;
-        struct EventKeyUndo        key_undo;
-        struct EventKeyRedo        key_redo;
-        struct EventKeyDelete      key_delete;
-        struct EventKeyBackspace   key_backspace;
-        struct EventKeyText        key_text;
+        struct EventNewlineAdded              newline_added;
+        struct EventNewlineRemoved            newline_removed;
+        struct EventKeyUndo                   key_undo;
+        struct EventKeyRedo                   key_redo;
+        struct EventKeyDelete                 key_delete;
+        struct EventKeyBackspace              key_backspace;
+        struct EventKeyText                   key_text;
+        struct EventKeyNavigation             key_navigation;
+        struct EventSingularNavigationRequest singular_navigation_request;
     } body;
 };
 
@@ -82,6 +86,20 @@ struct Event *event_create_key_text(int key) {
     return event;
 }
 
+struct Event *event_create_key_navigation(int key) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_KEY_NAVIGATION;
+    event->body.key_navigation = (struct EventKeyNavigation){.key = key};
+    return event;
+}
+
+struct Event *event_create_singular_navigation_request(enum SingularNavigationRequest req) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_SINGULAR_NAVIGATION_REQUEST;
+    event->body.singular_navigation_request = (struct EventSingularNavigationRequest){.req = req};
+    return event;
+}
+
 void event_destroy(struct Event *event) {
     free(event);
 }
@@ -114,6 +132,14 @@ void event_handle(const struct EventHandler *event_handler, struct TuiContext *t
         }
         case EVENT_KEY_TEXT: {
             event_handler->handle_key_text(tctx, &(event->body.key_text));
+            break;
+        }
+        case EVENT_KEY_NAVIGATION: {
+            event_handler->handle_key_navigation(tctx, &(event->body.key_navigation));
+            break;
+        }
+        case EVENT_SINGULAR_NAVIGATION_REQUEST: {
+            event_handler->handle_singular_navigation_request(tctx, &(event->body.singular_navigation_request));
             break;
         }
         default: {

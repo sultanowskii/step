@@ -27,6 +27,7 @@
 #include "tui/events/event.h"
 #include "tui/events/event_queue.h"
 #include "tui/handlers/delete.h"
+#include "tui/handlers/navigation.h"
 #include "tui/handlers/newline.h"
 #include "tui/handlers/text.h"
 #include "tui/handlers/undo.h"
@@ -78,6 +79,8 @@ void loop(
         .handle_key_delete = handle_key_delete,
         .handle_key_backspace = handle_key_backspace,
         .handle_key_text = handle_key_text,
+        .handle_key_navigation = handle_key_navigation,
+        .handle_singular_navigation_request = handle_singular_navigation_request,
     };
 
     while (context_get_state(ctx) != STATE_EXIT) {
