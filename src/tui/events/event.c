@@ -6,29 +6,31 @@
 #include "tui/core/context.h"
 
 enum EventType {
-    EVENT_NEWLINE_ADDED,
-    EVENT_NEWLINE_REMOVED,
+    EVENT_SYMBOL_ADDED,
+    EVENT_SYMBOL_REMOVED,
     EVENT_KEY_UNDO,
     EVENT_KEY_REDO,
     EVENT_KEY_DELETE,
     EVENT_KEY_BACKSPACE,
     EVENT_KEY_TEXT,
     EVENT_KEY_NAVIGATION,
-    EVENT_SINGULAR_NAVIGATION_REQUEST,
+    EVENT_GO_UP_REQUEST,
+    EVENT_GO_DOWN_REQUEST,
 };
 
 struct Event {
     enum EventType type;
     union {
-        struct EventNewlineAdded              newline_added;
-        struct EventNewlineRemoved            newline_removed;
-        struct EventKeyUndo                   key_undo;
-        struct EventKeyRedo                   key_redo;
-        struct EventKeyDelete                 key_delete;
-        struct EventKeyBackspace              key_backspace;
-        struct EventKeyText                   key_text;
-        struct EventKeyNavigation             key_navigation;
-        struct EventSingularNavigationRequest singular_navigation_request;
+        struct EventSymbolAdded   symbol_added;
+        struct EventSymbolRemoved symbol_removed;
+        struct EventKeyUndo       key_undo;
+        struct EventKeyRedo       key_redo;
+        struct EventKeyDelete     key_delete;
+        struct EventKeyBackspace  key_backspace;
+        struct EventKeyText       key_text;
+        struct EventKeyNavigation key_navigation;
+        struct EventGoUpRequest   go_up_request;
+        struct EventGoDownRequest go_down_request;
     } body;
 };
 
@@ -37,17 +39,23 @@ struct Event *event_create_empty(void) {
     return event;
 }
 
-struct Event *event_create_newline_added(void) {
+struct Event *event_create_symbol_added(size_t index, char symbol) {
     struct Event *event = event_create_empty();
-    event->type = EVENT_NEWLINE_ADDED;
-    event->body.newline_added = (struct EventNewlineAdded){};
+    event->type = EVENT_SYMBOL_ADDED;
+    event->body.symbol_added = (struct EventSymbolAdded){
+        .index = index,
+        .symbol = symbol,
+    };
     return event;
 }
 
-struct Event *event_create_newline_removed(void) {
+struct Event *event_create_symbol_removed(size_t index, char symbol) {
     struct Event *event = event_create_empty();
-    event->type = EVENT_NEWLINE_REMOVED;
-    event->body.newline_removed = (struct EventNewlineRemoved){};
+    event->type = EVENT_SYMBOL_REMOVED;
+    event->body.symbol_removed = (struct EventSymbolRemoved){
+        .index = index,
+        .symbol = symbol,
+    };
     return event;
 }
 
@@ -93,10 +101,17 @@ struct Event *event_create_key_navigation(int key) {
     return event;
 }
 
-struct Event *event_create_singular_navigation_request(enum SingularNavigationRequest req) {
+struct Event *event_create_request_go_up(void) {
     struct Event *event = event_create_empty();
-    event->type = EVENT_SINGULAR_NAVIGATION_REQUEST;
-    event->body.singular_navigation_request = (struct EventSingularNavigationRequest){.req = req};
+    event->type = EVENT_GO_UP_REQUEST;
+    event->body.go_up_request = (struct EventGoUpRequest){};
+    return event;
+}
+
+struct Event *event_create_request_go_down(void) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_GO_DOWN_REQUEST;
+    event->body.go_down_request = (struct EventGoDownRequest){};
     return event;
 }
 
@@ -106,12 +121,12 @@ void event_destroy(struct Event *event) {
 
 void event_handle(const struct EventHandler *event_handler, struct TuiContext *tctx, struct Event *event) {
     switch (event->type) {
-        case EVENT_NEWLINE_ADDED: {
-            event_handler->handle_newline_added(tctx, &(event->body.newline_added));
+        case EVENT_SYMBOL_ADDED: {
+            event_handler->handle_symbol_added(tctx, &(event->body.symbol_added));
             break;
         };
-        case EVENT_NEWLINE_REMOVED: {
-            event_handler->handle_newline_removed(tctx, &(event->body.newline_removed));
+        case EVENT_SYMBOL_REMOVED: {
+            event_handler->handle_symbol_removed(tctx, &(event->body.symbol_removed));
             break;
         };
         case EVENT_KEY_UNDO: {
@@ -138,8 +153,12 @@ void event_handle(const struct EventHandler *event_handler, struct TuiContext *t
             event_handler->handle_key_navigation(tctx, &(event->body.key_navigation));
             break;
         }
-        case EVENT_SINGULAR_NAVIGATION_REQUEST: {
-            event_handler->handle_singular_navigation_request(tctx, &(event->body.singular_navigation_request));
+        case EVENT_GO_UP_REQUEST: {
+            event_handler->handle_request_go_up(tctx, &(event->body.go_up_request));
+            break;
+        }
+        case EVENT_GO_DOWN_REQUEST: {
+            event_handler->handle_request_go_down(tctx, &(event->body.go_down_request));
             break;
         }
         default: {

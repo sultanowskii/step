@@ -23,14 +23,20 @@ void handle_deletion(struct TuiContext *tctx, bool backwards) {
         if (index == 0) {
             return;
         }
+        if (tctx->cursor->y == 0 && tctx->cursor->x == 0) {
+            if (try_go_up(tctx)) {
+                tctx->cursor->y++;
+            }
+        }
         index--;
-
     } else {
         size_t gb_length = gap_buffer_get_length(gb);
         if (index >= gb_length) {
             return;
         }
     }
+
+    size_t index_of_deleted_symbol = index;
 
     char symbol = gap_buffer_get_at(gb, index);
 
@@ -41,9 +47,7 @@ void handle_deletion(struct TuiContext *tctx, bool backwards) {
 
     move_cursor_to_index(tctx, text_board->height, text_board->width, index);
 
-    if (symbol == '\n') {
-        event_queue_push_newline_removed(tctx->events);
-    }
+    event_queue_push_symbol_removed(tctx->events, index_of_deleted_symbol, symbol);
 }
 
 void handle_key_delete(struct TuiContext *tctx, const struct EventKeyDelete *key_delete) {

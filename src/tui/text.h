@@ -31,8 +31,8 @@ struct FindLineResult {
     bool   found;
 };
 
-struct FindLineResult find_next_line(const struct GapBuffer *gb, size_t starting_index);
-struct FindLineResult find_previous_line(const struct GapBuffer *gb, size_t starting_index);
+struct FindLineResult find_start_of_next_line(const struct GapBuffer *gb, size_t starting_index);
+struct FindLineResult find_start_of_previous_line(const struct GapBuffer *gb, size_t starting_index);
 
 optional_size_t get_index_from_cursor_position(const struct TuiContext *tctx, size_t max_rows, size_t max_columns);
 optional_size_t get_index_from_position(

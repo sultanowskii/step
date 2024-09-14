@@ -1,7 +1,8 @@
 #pragma once
 
-enum SingularNavigationRequest {
-    SINGULAR_NAVREQ_NO,
-    SINGULAR_NAVREQ_LOWER,
-    SINGULAR_NAVREQ_UPPER,
-};
+#include <stdbool.h>
+
+#include "tui/core/context.h"
+
+bool try_go_up(struct TuiContext *tctx);
+bool try_go_down(struct TuiContext *tctx);

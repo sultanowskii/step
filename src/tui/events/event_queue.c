@@ -28,13 +28,13 @@ void event_queue_destroy(struct EventQueue *event_queue) {
     free(event_queue);
 }
 
-void event_queue_push_newline_added(struct EventQueue *event_queue) {
-    struct Event *event = event_create_newline_added();
+void event_queue_push_symbol_added(struct EventQueue *event_queue, size_t index, char symbol) {
+    struct Event *event = event_create_symbol_added(index, symbol);
     queue_push_back(event_queue->queue, event);
 }
 
-void event_queue_push_newline_removed(struct EventQueue *event_queue) {
-    struct Event *event = event_create_newline_removed();
+void event_queue_push_symbol_removed(struct EventQueue *event_queue, size_t index, char symbol) {
+    struct Event *event = event_create_symbol_removed(index, symbol);
     queue_push_back(event_queue->queue, event);
 }
 
@@ -68,8 +68,13 @@ void event_queue_push_key_navigation(struct EventQueue *event_queue, int key) {
     queue_push_back(event_queue->queue, event);
 }
 
-void event_queue_push_singular_navigation_request(struct EventQueue *event_queue, enum SingularNavigationRequest req) {
-    struct Event *event = event_create_singular_navigation_request(req);
+void event_queue_push_request_go_up(struct EventQueue *event_queue) {
+    struct Event *event = event_create_request_go_up();
+    queue_push_back(event_queue->queue, event);
+}
+
+void event_queue_push_request_go_down(struct EventQueue *event_queue) {
+    struct Event *event = event_create_request_go_down();
     queue_push_back(event_queue->queue, event);
 }
 

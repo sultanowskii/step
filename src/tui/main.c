@@ -28,7 +28,7 @@
 #include "tui/events/event_queue.h"
 #include "tui/handlers/delete.h"
 #include "tui/handlers/navigation.h"
-#include "tui/handlers/newline.h"
+#include "tui/handlers/symbol.h"
 #include "tui/handlers/text.h"
 #include "tui/handlers/undo.h"
 #include "tui/keys/handle_key.h"
@@ -72,15 +72,16 @@ void loop(
     );
 
     struct EventHandler event_handler = {
-        .handle_newline_added = handle_newline_added,
-        .handle_newline_removed = handle_newline_removed,
+        .handle_symbol_added = handle_symbol_added,
+        .handle_symbol_removed = handle_symbol_removed,
         .handle_key_undo = handle_key_undo,
         .handle_key_redo = handle_key_redo,
         .handle_key_delete = handle_key_delete,
         .handle_key_backspace = handle_key_backspace,
         .handle_key_text = handle_key_text,
         .handle_key_navigation = handle_key_navigation,
-        .handle_singular_navigation_request = handle_singular_navigation_request,
+        .handle_request_go_up = handle_request_go_up,
+        .handle_request_go_down = handle_request_go_down,
     };
 
     while (context_get_state(ctx) != STATE_EXIT) {

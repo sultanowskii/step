@@ -44,6 +44,7 @@ void handle_key_text(struct TuiContext *tctx, const struct EventKeyText *key_tex
         return;
     }
     size_t index = size_t_get_val(maybe_index);
+    size_t index_of_inserted_symbol = index;
 
     struct Command       *cmd = command_create_insert_symbol(index, symbol);
     struct CommandResult *result = command_exec(tctx->ctx, cmd);
@@ -53,7 +54,5 @@ void handle_key_text(struct TuiContext *tctx, const struct EventKeyText *key_tex
     index++;
     move_cursor_to_index(tctx, text_board->height, text_board->width, index);
 
-    if (symbol == '\n') {
-        event_queue_push_newline_added(tctx->events);
-    }
+    event_queue_push_symbol_added(tctx->events, index_of_inserted_symbol, symbol);
 }

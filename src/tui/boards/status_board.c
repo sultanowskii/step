@@ -24,12 +24,14 @@ void update_status_board(struct TuiContext *tctx) {
         status_board_window,
         0,
         0,
-        "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu, i=",
+        "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu st_i=%zu st_l=%zu i=",
         index_to_human(tctx->starting_line_index + cursor->y),
         index_to_human(cursor->x),
         cursor->y,
         cursor->x,
-        gb_length
+        gb_length,
+        tctx->starting_symbol_index,
+        tctx->starting_line_index
     );
 
     optional_size_t maybe_index = get_index_from_cursor_position(tctx, text_board->height, text_board->width);

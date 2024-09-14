@@ -15,9 +15,8 @@ void handle_key_navigation(
     struct TuiContext               *tctx,
     const struct EventKeyNavigation *key_navigation
 ) {
-    struct Board                  *text_board = tctx->text_board;
-    struct Coords                 *cursor = tctx->cursor;
-    enum SingularNavigationRequest request = SINGULAR_NAVREQ_NO;
+    struct Board  *text_board = tctx->text_board;
+    struct Coords *cursor = tctx->cursor;
 
     // TODO: move outta here?
     unhighlight_cursor(text_board, cursor->y, cursor->x);
@@ -37,14 +36,14 @@ void handle_key_navigation(
             break;
         case KEY_DOWN:
             if (cursor->y == text_board->height - 1) {
-                request = SINGULAR_NAVREQ_LOWER;
+                event_queue_push_request_go_down(tctx->events);
                 break;
             }
             cursor->y++;
             break;
         case KEY_UP:
             if (cursor->y == 0) {
-                request = SINGULAR_NAVREQ_UPPER;
+                event_queue_push_request_go_up(tctx->events);
                 break;
             }
             cursor->y--;
@@ -53,38 +52,12 @@ void handle_key_navigation(
             break;
         }
     }
-
-    if (request != SINGULAR_NAVREQ_NO) {
-        event_queue_push_singular_navigation_request(tctx->events, request);
-    }
 }
 
-void handle_singular_navigation_request(
-    struct TuiContext                           *tctx,
-    const struct EventSingularNavigationRequest *singular_navigation_request
-) {
-    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
+void handle_request_go_up(struct TuiContext *tctx, const struct EventGoUpRequest *go_up_request) {
+    try_go_up(tctx);
+}
 
-    switch (singular_navigation_request->req) {
-        case SINGULAR_NAVREQ_UPPER: {
-            struct FindLineResult find_previous_line_result = find_previous_line(gb, tctx->starting_symbol_index);
-            if (find_previous_line_result.found) {
-                tctx->starting_symbol_index = find_previous_line_result.index;
-                tctx->starting_line_index--;
-            }
-            break;
-        }
-        case SINGULAR_NAVREQ_LOWER: {
-            struct FindLineResult find_next_line_result = find_next_line(gb, tctx->starting_symbol_index);
-            if (find_next_line_result.found) {
-                tctx->starting_symbol_index = find_next_line_result.index;
-                tctx->starting_line_index++;
-            }
-            break;
-        }
-        case SINGULAR_NAVREQ_NO:
-        default: {
-            break;
-        }
-    }
+void handle_request_go_down(struct TuiContext *tctx, const struct EventGoDownRequest *go_down_request) {
+    try_go_down(tctx);
 }
