@@ -4,11 +4,11 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
+#include "core/context.h"
 #include "nonstd/human.h"
 #include "tui/boards/board.h"
 #include "tui/color.h"
 #include "tui/coords.h"
-#include "tui/core/context.h"
 #include "tui/highlight.h"
 #include "tui/text.h" // TODO: once next_valid_coords() moves, change it
 #include "tui/tui.h"
@@ -139,28 +139,28 @@ size_t _get_row_from_position(
 }
 
 void update_line_number_board(
-    struct TuiContext *tctx,
-    size_t             text_board_max_rows,
-    size_t             text_board_max_columns
+    struct Context *ctx,
+    size_t          text_board_max_rows,
+    size_t          text_board_max_columns
 ) {
-    struct Board     *line_number_board = tctx->line_number_board;
-    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
+    struct Board     *line_number_board = ctx->line_number_board;
+    struct GapBuffer *gb = ctx->gap_buffer;
 
     _print_line_number_board_with_gap_buffer(
         line_number_board,
         gb,
-        tctx->starting_symbol_index,
-        tctx->starting_line_index,
+        ctx->starting_symbol_index,
+        ctx->starting_line_index,
         text_board_max_rows,
         text_board_max_columns
     );
 
     size_t row = _get_row_from_position(
         gb,
-        tctx->starting_symbol_index,
+        ctx->starting_symbol_index,
         text_board_max_rows,
         text_board_max_columns,
-        tctx->cursor
+        &ctx->cursor
     );
 
     line_number_board_highlight_line(line_number_board, row);

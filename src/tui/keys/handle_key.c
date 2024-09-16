@@ -6,7 +6,7 @@
 
 #include "collections/gap_buffer.h"
 #include "collections/queue.h"
-#include "tui/core/context.h"
+#include "core/context.h"
 #include "tui/events/event.h"
 #include "tui/keys/key.h"
 #include "tui/layout.h"
@@ -14,24 +14,21 @@
 #include "tui/text.h"
 
 void handle_key(
-    struct TuiContext *tctx,
-    int                key
+    struct Context *ctx,
+    int             key
 ) {
-    struct Board      *line_number_board = tctx->line_number_board;
-    struct Board      *status_board = tctx->status_board;
-    struct Board      *text_board = tctx->text_board;
-    struct EventQueue *events = tctx->events;
+    struct EventQueue *events = ctx->events;
 
     // TODO: handle in separate functions
     switch (key) {
         case KEY_RESIZE: {
-            recompose_boards(tctx->ctx, line_number_board, status_board, text_board);
+            recompose_boards(ctx);
             break;
         }
         case CTRL('s'): {
-            const char *filepath = tui_context_get_filepath(tctx);
+            const char *filepath = ctx->filepath;
             FILE       *file = fopen(filepath, "w+");
-            gap_buffer_write_to_file(tui_context_get_gap_buffer(tctx), file);
+            gap_buffer_write_to_file(ctx->gap_buffer, file);
             fclose(file);
             break;
         }
@@ -44,7 +41,7 @@ void handle_key(
             break;
         }
         case CTRL('q'): {
-            context_set_state(tctx->ctx, STATE_EXIT);
+            ctx->state = STATE_EXIT;
             break;
         }
         case KEY_DOWN:

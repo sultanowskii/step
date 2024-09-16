@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "tui/core/context.h"
+#include "core/context.h"
 #include "tui/events/event.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
@@ -29,8 +29,8 @@ optional_char convert_key_to_symbol(int key) {
     return char_none();
 }
 
-void handle_key_text(struct TuiContext *tctx, const struct EventKeyText *key_text) {
-    struct Board *text_board = tctx->text_board;
+void handle_key_text(struct Context *ctx, const struct EventKeyText *key_text) {
+    struct Board *text_board = ctx->text_board;
 
     optional_char maybe_symbol = convert_key_to_symbol(key_text->key);
     if (char_is_none(maybe_symbol)) {
@@ -39,7 +39,7 @@ void handle_key_text(struct TuiContext *tctx, const struct EventKeyText *key_tex
 
     char symbol = char_get_val(maybe_symbol);
 
-    optional_size_t maybe_index = get_index_from_cursor_position(tctx, text_board->height, text_board->width);
+    optional_size_t maybe_index = get_index_from_cursor_position(ctx, text_board->height, text_board->width);
     if (size_t_is_none(maybe_index)) {
         return;
     }
@@ -47,12 +47,12 @@ void handle_key_text(struct TuiContext *tctx, const struct EventKeyText *key_tex
     size_t index_of_inserted_symbol = index;
 
     struct Command       *cmd = command_create_insert_symbol(index, symbol);
-    struct CommandResult *result = command_exec(tctx->ctx, cmd);
+    struct CommandResult *result = command_exec(ctx, cmd);
     command_destroy(cmd);
-    undo_facade_add_done(tui_context_get_undo_facade(tctx), result);
+    undo_facade_add_done(ctx->undo_facade, result);
 
     index++;
-    move_cursor_to_index(tctx, text_board->height, text_board->width, index);
+    move_cursor_to_index(ctx, text_board->height, text_board->width, index);
 
-    event_queue_push_symbol_added(tctx->events, index_of_inserted_symbol, symbol);
+    event_queue_push_symbol_added(ctx->events, index_of_inserted_symbol, symbol);
 }

@@ -1,9 +1,9 @@
 #pragma once
 
+#include "core/context.h"
 #include "tui/boards/board.h"
-#include "tui/core/context.h"
 
 void handle_key(
-    struct TuiContext *tctx,
-    int                key
+    struct Context *ctx,
+    int             key
 );

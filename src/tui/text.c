@@ -5,8 +5,8 @@
 
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
+#include "core/context.h"
 #include "tui/coords.h"
-#include "tui/core/context.h"
 #include "tui/optionals.h"
 #include "tui/tui.h"
 
@@ -17,13 +17,13 @@ size_t gap_buffer_get_max_valid_index(const struct GapBuffer *gb) {
     return max_valid_index;
 }
 
-void revise_cursor(struct TuiContext *tctx, size_t max_rows, size_t max_columns) {
-    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
+void revise_cursor(struct Context *ctx, size_t max_rows, size_t max_columns) {
+    struct GapBuffer *gb = ctx->gap_buffer;
 
-    struct Coords revised = revise_coords_with_gap_buffer(gb, tctx->starting_symbol_index, max_rows, max_columns, *tctx->cursor);
+    struct Coords revised = revise_coords_with_gap_buffer(gb, ctx->starting_symbol_index, max_rows, max_columns, ctx->cursor);
 
-    tctx->cursor->y = revised.y;
-    tctx->cursor->x = revised.x;
+    ctx->cursor.y = revised.y;
+    ctx->cursor.x = revised.x;
 }
 
 // TODO: move to other file
@@ -144,9 +144,9 @@ struct FindLineResult find_start_of_previous_line(
     };
 }
 
-optional_size_t get_index_from_cursor_position(const struct TuiContext *tctx, size_t max_rows, size_t max_columns) {
-    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
-    return get_index_from_position(gb, tctx->starting_symbol_index, max_rows, max_columns, tctx->cursor);
+optional_size_t get_index_from_cursor_position(const struct Context *ctx, size_t max_rows, size_t max_columns) {
+    struct GapBuffer *gb = ctx->gap_buffer;
+    return get_index_from_position(gb, ctx->starting_symbol_index, max_rows, max_columns, &ctx->cursor);
 }
 
 optional_size_t get_index_from_position(
@@ -178,16 +178,16 @@ optional_size_t get_index_from_position(
     return size_t_none();
 }
 
-bool move_cursor_to_index(const struct TuiContext *tctx, size_t max_rows, size_t max_columns, size_t target_index) {
-    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
-    optional_coords   maybe_pos = get_position_from_index(gb, tctx->starting_symbol_index, max_rows, max_columns, target_index);
+bool move_cursor_to_index(struct Context *ctx, size_t max_rows, size_t max_columns, size_t target_index) {
+    struct GapBuffer *gb = ctx->gap_buffer;
+    optional_coords   maybe_pos = get_position_from_index(gb, ctx->starting_symbol_index, max_rows, max_columns, target_index);
 
     if (coords_is_none(maybe_pos)) {
         return false;
     }
 
     struct Coords pos = coords_get_val(maybe_pos);
-    (*tctx->cursor) = pos;
+    ctx->cursor = pos;
     return true;
 }
 

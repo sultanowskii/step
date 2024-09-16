@@ -7,65 +7,63 @@
 #include "core/commands/undo.h"
 #include "core/state.h"
 #include "nonstd/str.h"
-
-struct Context {
-    enum State         state;
-    struct UndoFacade *undo_facade;
-    struct GapBuffer  *gap_buffer;
-    char              *filepath;
-};
+#include "tui/boards/board.h"
+#include "tui/coords.h"
+#include "tui/events/event_queue.h"
 
 struct Context *_context_create_empty(void) {
     struct Context *ctx = malloc(sizeof(struct Context));
-    ctx->state = STATE_START;
-    ctx->gap_buffer = NULL;
     ctx->filepath = NULL;
+    ctx->state = STATE_START;
+    ctx->events = NULL;
+    ctx->undo_facade = NULL;
+    ctx->gap_buffer = NULL;
+    ctx->line_number_board = NULL;
+    ctx->status_board = NULL;
+    ctx->text_board = NULL;
+    ctx->cursor = (struct Coords){.y = 0, .x = 0};
+    ctx->starting_symbol_index = 0;
+    ctx->starting_line_index = 0;
     return ctx;
 }
 
 struct Context *context_create(
+    const char        *filepath,
     enum State         state,
+    struct EventQueue *events,
     struct UndoFacade *undo_facade,
     struct GapBuffer  *gap_buffer,
-    const char        *filepath // ah yes, trailing comma is prohibited with seemingly no explanation
+    struct Board      *line_number_board,
+    struct Board      *status_board,
+    struct Board      *text_board,
+    struct Coords      cursor,
+    size_t             starting_symbol_index,
+    size_t             starting_line_index
 ) {
     struct Context *ctx = _context_create_empty();
-    ctx->undo_facade = undo_facade;
-    ctx->state = state;
-    ctx->gap_buffer = gap_buffer;
     ctx->filepath = str_dup(filepath);
+    ctx->state = state;
+    ctx->events = events;
+    ctx->undo_facade = undo_facade;
+    ctx->gap_buffer = gap_buffer;
+    ctx->line_number_board = line_number_board;
+    ctx->status_board = status_board;
+    ctx->text_board = text_board;
+    ctx->cursor = cursor;
+    ctx->starting_symbol_index = starting_symbol_index;
+    ctx->starting_line_index = starting_line_index;
     return ctx;
 }
 
 void context_destroy(struct Context *ctx) {
     free(ctx->filepath);
-    ctx->undo_facade = NULL;
     ctx->filepath = NULL;
+    ctx->events = NULL;
+    ctx->undo_facade = NULL;
     ctx->gap_buffer = NULL;
+    ctx->line_number_board = NULL;
+    ctx->status_board = NULL;
+    ctx->text_board = NULL;
+    ctx->cursor = (struct Coords){.y = 0, .x = 0};
     free(ctx);
-}
-
-struct UndoFacade *context_get_undo_facade(const struct Context *ctx) {
-    return ctx->undo_facade;
-}
-
-struct GapBuffer *context_get_gap_buffer(const struct Context *ctx) {
-    return ctx->gap_buffer;
-}
-
-enum State context_get_state(const struct Context *ctx) {
-    return ctx->state;
-}
-
-void context_set_state(struct Context *ctx, enum State new_state) {
-    ctx->state = new_state;
-}
-
-const char *context_get_filepath(const struct Context *ctx) {
-    return ctx->filepath;
-}
-
-void context_set_filepath(struct Context *ctx, const char *new_filepath) {
-    free(ctx->filepath);
-    ctx->filepath = str_dup(new_filepath);
 }

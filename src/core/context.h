@@ -6,23 +6,59 @@
 #include "collections/gap_buffer.h"
 #include "core/commands/undo.h"
 #include "core/state.h"
+#include "tui/boards/board.h"
+#include "tui/coords.h"
+#include "tui/events/event_queue.h"
+
+struct Context {
+    char *filepath;
+
+    // Program state
+    enum State state;
+    // Event queue
+    struct EventQueue *events;
+
+    // Undo/redo storage
+    struct UndoFacade *undo_facade;
+
+    // Text buffer
+    struct GapBuffer *gap_buffer;
+
+    // Line number board
+    struct Board *line_number_board;
+    // Status board
+    struct Board *status_board;
+    // Main text board
+    struct Board *text_board;
+    // Current cursor position
+    struct Coords cursor;
+
+    // Index of the first symbol on the screen
+    size_t starting_symbol_index;
+    // Index of the first line on the screen
+    size_t starting_line_index;
+};
 
 // Creates context with specified done, undone stack and gap_buffer gap buffer.
 struct Context *context_create(
+    const char        *filepath,
     enum State         state,
+    struct EventQueue *events,
     struct UndoFacade *undo_facade,
     struct GapBuffer  *gap_buffer,
-    const char        *filepath
+    struct Board      *line_number_board,
+    struct Board      *status_board,
+    struct Board      *text_board,
+    struct Coords      cursor,
+    size_t             starting_symbol_index,
+    size_t             starting_line_index
 );
 
 // Destroys context. Some fields must be destroyed manually beforehand:
 // - undo_facade
 // - gap_buffer
+// - line_number_board
+// - status_board
+// - text_board
+// - cursor
 void context_destroy(struct Context *ctx);
-
-struct UndoFacade *context_get_undo_facade(const struct Context *ctx);
-struct GapBuffer  *context_get_gap_buffer(const struct Context *ctx);
-enum State         context_get_state(const struct Context *ctx);
-void               context_set_state(struct Context *ctx, enum State new_state);
-const char        *context_get_filepath(const struct Context *ctx);
-void               context_set_filepath(struct Context *ctx, const char *new_filepath);

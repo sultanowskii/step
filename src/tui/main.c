@@ -23,7 +23,6 @@
 #include "tui/boards/text_board.h"
 #include "tui/color.h"
 #include "tui/coords.h"
-#include "tui/core/context.h"
 #include "tui/events/event.h"
 #include "tui/events/event_queue.h"
 #include "tui/handlers/delete.h"
@@ -49,28 +48,7 @@ void teardown(void) {
     endwin();
 }
 
-void loop(
-    struct Context *ctx,
-    struct Board   *line_number_board,
-    struct Board   *status_board,
-    struct Board   *text_board
-) {
-    struct Coords      cursor = {.y = 0, .x = 0};
-    const size_t       starting_symbol_index = 0;
-    const size_t       starting_line_index = 0;
-    struct EventQueue *event_queue = event_queue_create();
-
-    struct TuiContext *tctx = tui_context_create(
-        ctx,
-        event_queue,
-        line_number_board,
-        status_board,
-        text_board,
-        starting_symbol_index,
-        starting_line_index,
-        &cursor
-    );
-
+void loop(struct Context *ctx) {
     struct EventHandler event_handler = {
         .handle_symbol_added = handle_symbol_added,
         .handle_symbol_removed = handle_symbol_removed,
@@ -84,44 +62,29 @@ void loop(
         .handle_request_go_down = handle_request_go_down,
     };
 
-    while (context_get_state(ctx) != STATE_EXIT) {
-        update_line_number_board(tctx, text_board->height, text_board->width);
+    struct Board      *text_board = ctx->text_board;
+    struct EventQueue *event_queue = ctx->events;
 
-        update_text_board(tctx);
+    while (ctx->state != STATE_EXIT) {
+        update_line_number_board(ctx, text_board->height, text_board->width);
 
-        update_status_board(tctx);
+        update_text_board(ctx);
+
+        update_status_board(ctx);
 
         update_panels();
         doupdate();
 
         int sym = wgetch(board_window(text_board));
-        handle_key(tctx, sym);
+        handle_key(ctx, sym);
 
         while (!event_queue_is_empty(event_queue)) {
             struct Event *event = event_queue_pop(event_queue);
-            event_handle(&event_handler, tctx, event);
+            event_handle(&event_handler, ctx, event);
         }
 
-        revise_cursor(tctx, text_board->height, text_board->width);
+        revise_cursor(ctx, text_board->height, text_board->width);
     }
-
-    tui_context_destroy(tctx);
-    event_queue_destroy(event_queue);
-}
-
-// TODO: rename
-void run(struct Context *ctx) {
-    struct Board *line_number_board = board_create_dummy();
-    struct Board *status_board = board_create_dummy();
-    struct Board *text_board = board_create_dummy();
-
-    recompose_boards(ctx, line_number_board, status_board, text_board);
-
-    loop(ctx, line_number_board, status_board, text_board);
-
-    board_destroy(line_number_board);
-    board_destroy(text_board);
-    board_destroy(status_board);
 }
 
 struct Context *setup_context(const char *filename) {
@@ -140,7 +103,28 @@ struct Context *setup_context(const char *filename) {
     struct GapBuffer *gb = gap_buffer_create_from_string(data);
     free(data);
 
-    struct Context *ctx = context_create(state, undo_facade, gb, filename);
+    struct Coords      cursor = {.y = 0, .x = 0};
+    const size_t       starting_symbol_index = 0;
+    const size_t       starting_line_index = 0;
+    struct EventQueue *event_queue = event_queue_create();
+
+    struct Board *line_number_board = board_create_dummy();
+    struct Board *status_board = board_create_dummy();
+    struct Board *text_board = board_create_dummy();
+
+    struct Context *ctx = context_create(
+        filename,
+        state,
+        event_queue,
+        undo_facade,
+        gb,
+        line_number_board,
+        status_board,
+        text_board,
+        cursor,
+        starting_symbol_index,
+        starting_line_index
+    );
 
     undo_facade_set_ctx(undo_facade, ctx);
 
@@ -148,21 +132,34 @@ struct Context *setup_context(const char *filename) {
 }
 
 void teardown_context(struct Context *ctx) {
-    struct UndoFacade *undo_facade = context_get_undo_facade(ctx);
-    undo_facade_destroy(undo_facade);
+    undo_facade_destroy(ctx->undo_facade);
 
-    struct GapBuffer *gb = context_get_gap_buffer(ctx);
-    gap_buffer_destroy(gb);
+    gap_buffer_destroy(ctx->gap_buffer);
+
+    board_destroy(ctx->line_number_board);
+    board_destroy(ctx->text_board);
+    board_destroy(ctx->status_board);
+
+    event_queue_destroy(ctx->events);
 
     context_destroy(ctx);
 }
 
-void tui_main(const char *filename) {
+// TODO: rename
+void run(const char *filename) {
     struct Context *ctx = setup_context(filename);
+
+    recompose_boards(ctx);
+
+    loop(ctx);
+
+    teardown_context(ctx);
+}
+
+void tui_main(const char *filename) {
     setup();
 
-    run(ctx);
+    run(filename);
 
     teardown();
-    teardown_context(ctx);
 }

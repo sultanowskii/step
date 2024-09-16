@@ -3,21 +3,21 @@
 #include <ncurses.h>
 #include <stddef.h>
 
+#include "core/context.h"
 #include "nonstd/human.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
-#include "tui/core/context.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
 #include "tui/tui.h"
 
-void update_status_board(struct TuiContext *tctx) {
-    struct Board *text_board = tctx->text_board;
-    struct Board *status_board = tctx->status_board;
+void update_status_board(struct Context *ctx) {
+    struct Board *text_board = ctx->text_board;
+    struct Board *status_board = ctx->status_board;
     WINDOW       *status_board_window = board_window(status_board);
 
-    struct Coords *cursor = tctx->cursor;
-    size_t         gb_length = gap_buffer_get_length(tui_context_get_gap_buffer(tctx));
+    struct Coords *cursor = &ctx->cursor;
+    size_t         gb_length = gap_buffer_get_length(ctx->gap_buffer);
 
     wclrtoeol(status_board_window);
     mvwprintw(
@@ -25,16 +25,16 @@ void update_status_board(struct TuiContext *tctx) {
         0,
         0,
         "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu st_i=%zu st_l=%zu i=",
-        index_to_human(tctx->starting_line_index + cursor->y),
+        index_to_human(ctx->starting_line_index + cursor->y),
         index_to_human(cursor->x),
         cursor->y,
         cursor->x,
         gb_length,
-        tctx->starting_symbol_index,
-        tctx->starting_line_index
+        ctx->starting_symbol_index,
+        ctx->starting_line_index
     );
 
-    optional_size_t maybe_index = get_index_from_cursor_position(tctx, text_board->height, text_board->width);
+    optional_size_t maybe_index = get_index_from_cursor_position(ctx, text_board->height, text_board->width);
     if (size_t_is_some(maybe_index)) {
         size_t index = size_t_get_val(maybe_index);
         wprintw(status_board_window, "%zu", index);

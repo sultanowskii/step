@@ -3,29 +3,29 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
-#include "tui/core/context.h"
+#include "core/context.h"
 #include "tui/events/event.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
 
-void handle_deletion(struct TuiContext *tctx, bool backwards) {
-    const struct Board *text_board = tctx->text_board;
+void handle_deletion(struct Context *ctx, bool backwards) {
+    const struct Board *text_board = ctx->text_board;
 
-    optional_size_t maybe_index = get_index_from_cursor_position(tctx, text_board->height, text_board->width);
+    optional_size_t maybe_index = get_index_from_cursor_position(ctx, text_board->height, text_board->width);
     if (size_t_is_none(maybe_index)) {
         return;
     }
 
-    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
+    struct GapBuffer *gb = ctx->gap_buffer;
     size_t            index = size_t_get_val(maybe_index);
 
     if (backwards) {
         if (index == 0) {
             return;
         }
-        if (tctx->cursor->y == 0 && tctx->cursor->x == 0) {
-            if (try_go_up(tctx)) {
-                tctx->cursor->y++;
+        if (ctx->cursor.y == 0 && ctx->cursor.x == 0) {
+            if (try_go_up(ctx)) {
+                ctx->cursor.y++;
             }
         }
         index--;
@@ -41,19 +41,19 @@ void handle_deletion(struct TuiContext *tctx, bool backwards) {
     char symbol = gap_buffer_get_at(gb, index);
 
     struct Command       *cmd = command_create_delete_symbol(index);
-    struct CommandResult *result = command_exec(tctx->ctx, cmd);
+    struct CommandResult *result = command_exec(ctx, cmd);
     command_destroy(cmd);
-    undo_facade_add_done(tui_context_get_undo_facade(tctx), result);
+    undo_facade_add_done(ctx->undo_facade, result);
 
-    move_cursor_to_index(tctx, text_board->height, text_board->width, index);
+    move_cursor_to_index(ctx, text_board->height, text_board->width, index);
 
-    event_queue_push_symbol_removed(tctx->events, index_of_deleted_symbol, symbol);
+    event_queue_push_symbol_removed(ctx->events, index_of_deleted_symbol, symbol);
 }
 
-void handle_key_delete(struct TuiContext *tctx, const struct EventKeyDelete *key_delete) {
-    handle_deletion(tctx, false);
+void handle_key_delete(struct Context *ctx, const struct EventKeyDelete *key_delete) {
+    handle_deletion(ctx, false);
 }
 
-void handle_key_backspace(struct TuiContext *tctx, const struct EventKeyBackspace *key_backspace) {
-    handle_deletion(tctx, true);
+void handle_key_backspace(struct Context *ctx, const struct EventKeyBackspace *key_backspace) {
+    handle_deletion(ctx, true);
 }

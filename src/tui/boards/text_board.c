@@ -4,10 +4,10 @@
 #include <stddef.h>
 
 #include "collections/gap_buffer.h"
+#include "core/context.h"
 #include "tui/boards/board.h"
 #include "tui/color.h"
 #include "tui/coords.h"
-#include "tui/core/context.h"
 #include "tui/highlight.h"
 #include "tui/text.h" // TODO: once next_valid_coords() moves, change it
 #include "tui/tui.h"
@@ -45,12 +45,12 @@ void print_gap_buffer_to_board(
     print_filler_till_end_of_board(board, &current);
 }
 
-void update_text_board(struct TuiContext *tctx) {
-    struct Board     *text_board = tctx->text_board;
-    struct GapBuffer *gb = tui_context_get_gap_buffer(tctx);
-    struct Coords    *cursor = tctx->cursor;
+void update_text_board(struct Context *ctx) {
+    struct Board     *text_board = ctx->text_board;
+    struct GapBuffer *gb = ctx->gap_buffer;
+    struct Coords    *cursor = &ctx->cursor;
 
-    print_gap_buffer_to_board(text_board, gb, tctx->starting_symbol_index, text_board->height, text_board->width);
+    print_gap_buffer_to_board(text_board, gb, ctx->starting_symbol_index, text_board->height, text_board->width);
 
     text_board_highlight_line(text_board, cursor->y);
     highlight_cursor(text_board, cursor->y, cursor->x);

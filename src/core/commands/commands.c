@@ -133,7 +133,7 @@ void command_result_destroy(struct CommandResult *result) {
 }
 
 struct CommandResult *command_exec_insert_symbol(struct Context *ctx, struct CmdInsertSymbol *insert_symbol) {
-    struct GapBuffer *gb = context_get_gap_buffer(ctx);
+    struct GapBuffer *gb = ctx->gap_buffer;
     size_t            index = insert_symbol->index;
     char              symbol = insert_symbol->symbol;
 
@@ -142,7 +142,7 @@ struct CommandResult *command_exec_insert_symbol(struct Context *ctx, struct Cmd
 }
 
 struct CommandResult *command_exec_delete_symbol(struct Context *ctx, struct CmdDeleteSymbol *delete_symbol) {
-    struct GapBuffer *gb = context_get_gap_buffer(ctx);
+    struct GapBuffer *gb = ctx->gap_buffer;
     size_t            index = delete_symbol->index;
     size_t            symbol = gap_buffer_get_at(gb, index);
 

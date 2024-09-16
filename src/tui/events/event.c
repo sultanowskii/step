@@ -2,8 +2,8 @@
 
 #include <malloc.h>
 
+#include "core/context.h"
 #include "nonstd/runtime.h"
-#include "tui/core/context.h"
 
 enum EventType {
     EVENT_SYMBOL_ADDED,
@@ -119,46 +119,46 @@ void event_destroy(struct Event *event) {
     free(event);
 }
 
-void event_handle(const struct EventHandler *event_handler, struct TuiContext *tctx, struct Event *event) {
+void event_handle(const struct EventHandler *event_handler, struct Context *ctx, struct Event *event) {
     switch (event->type) {
         case EVENT_SYMBOL_ADDED: {
-            event_handler->handle_symbol_added(tctx, &(event->body.symbol_added));
+            event_handler->handle_symbol_added(ctx, &(event->body.symbol_added));
             break;
         };
         case EVENT_SYMBOL_REMOVED: {
-            event_handler->handle_symbol_removed(tctx, &(event->body.symbol_removed));
+            event_handler->handle_symbol_removed(ctx, &(event->body.symbol_removed));
             break;
         };
         case EVENT_KEY_UNDO: {
-            event_handler->handle_key_undo(tctx, &(event->body.key_undo));
+            event_handler->handle_key_undo(ctx, &(event->body.key_undo));
             break;
         }
         case EVENT_KEY_REDO: {
-            event_handler->handle_key_redo(tctx, &(event->body.key_redo));
+            event_handler->handle_key_redo(ctx, &(event->body.key_redo));
             break;
         }
         case EVENT_KEY_DELETE: {
-            event_handler->handle_key_delete(tctx, &(event->body.key_delete));
+            event_handler->handle_key_delete(ctx, &(event->body.key_delete));
             break;
         }
         case EVENT_KEY_BACKSPACE: {
-            event_handler->handle_key_backspace(tctx, &(event->body.key_backspace));
+            event_handler->handle_key_backspace(ctx, &(event->body.key_backspace));
             break;
         }
         case EVENT_KEY_TEXT: {
-            event_handler->handle_key_text(tctx, &(event->body.key_text));
+            event_handler->handle_key_text(ctx, &(event->body.key_text));
             break;
         }
         case EVENT_KEY_NAVIGATION: {
-            event_handler->handle_key_navigation(tctx, &(event->body.key_navigation));
+            event_handler->handle_key_navigation(ctx, &(event->body.key_navigation));
             break;
         }
         case EVENT_GO_UP_REQUEST: {
-            event_handler->handle_request_go_up(tctx, &(event->body.go_up_request));
+            event_handler->handle_request_go_up(ctx, &(event->body.go_up_request));
             break;
         }
         case EVENT_GO_DOWN_REQUEST: {
-            event_handler->handle_request_go_down(tctx, &(event->body.go_down_request));
+            event_handler->handle_request_go_down(ctx, &(event->body.go_down_request));
             break;
         }
         default: {

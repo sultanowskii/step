@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "tui/core/context.h"
+#include "core/context.h"
 
-bool try_go_up(struct TuiContext *tctx);
-bool try_go_down(struct TuiContext *tctx);
+bool try_go_up(struct Context *ctx);
+bool try_go_down(struct Context *ctx);
