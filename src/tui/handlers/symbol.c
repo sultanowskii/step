@@ -19,9 +19,7 @@ bool is_power_of_10(size_t n) {
 }
 
 void handle_newline_added(struct Context *ctx, size_t index) {
-    size_t current_line_count = gap_buffer_count_lines(ctx->gap_buffer);
-
-    if (is_power_of_10(current_line_count)) {
+    if (is_power_of_10(ctx->line_count)) {
         recompose_boards(ctx);
     }
 
@@ -47,11 +45,9 @@ void handle_symbol_added(struct Context *ctx, const struct EventSymbolAdded *sym
 }
 
 void handle_newline_removed(struct Context *ctx, size_t index) {
-    size_t current_line_count = gap_buffer_count_lines(ctx->gap_buffer);
-
     // the idea is that we should update in cases like 10->9, 1000->999 and so on.
     // and, as you can notice, 9 + 1 = 10, 99 + 1 = 100, etc.
-    if (is_power_of_10(current_line_count + 1)) {
+    if (is_power_of_10(ctx->line_count + 1)) {
         recompose_boards(ctx);
     }
 

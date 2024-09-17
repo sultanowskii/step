@@ -38,7 +38,8 @@ struct Context *context_create(
     struct Board      *text_board,
     struct Coords      cursor,
     size_t             starting_symbol_index,
-    size_t             starting_line_index
+    size_t             starting_line_index,
+    size_t             line_count
 ) {
     struct Context *ctx = _context_create_empty();
     ctx->filepath = str_dup(filepath);
@@ -52,6 +53,7 @@ struct Context *context_create(
     ctx->cursor = cursor;
     ctx->starting_symbol_index = starting_symbol_index;
     ctx->starting_line_index = starting_line_index;
+    ctx->line_count = line_count;
     return ctx;
 }
 

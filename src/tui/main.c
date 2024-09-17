@@ -103,6 +103,8 @@ struct Context *setup_context(const char *filename) {
     struct GapBuffer *gb = gap_buffer_create_from_string(data);
     free(data);
 
+    size_t line_count = gap_buffer_count_lines(gb);
+
     struct Coords      cursor = {.y = 0, .x = 0};
     const size_t       starting_symbol_index = 0;
     const size_t       starting_line_index = 0;
@@ -123,7 +125,8 @@ struct Context *setup_context(const char *filename) {
         text_board,
         cursor,
         starting_symbol_index,
-        starting_line_index
+        starting_line_index,
+        line_count
     );
 
     undo_facade_set_ctx(undo_facade, ctx);

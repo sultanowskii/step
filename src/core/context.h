@@ -37,6 +37,8 @@ struct Context {
     size_t starting_symbol_index;
     // Index of the first line on the screen
     size_t starting_line_index;
+    // Number of lines in a buffer
+    size_t line_count; // TODO: extract this and buffer into a separate struct?
 };
 
 // Creates context with specified done, undone stack and gap_buffer gap buffer.
@@ -51,7 +53,8 @@ struct Context *context_create(
     struct Board      *text_board,
     struct Coords      cursor,
     size_t             starting_symbol_index,
-    size_t             starting_line_index
+    size_t             starting_line_index,
+    size_t             line_count
 );
 
 // Destroys context. Some fields must be destroyed manually beforehand:

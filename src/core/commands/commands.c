@@ -138,6 +138,9 @@ struct CommandResult *command_exec_insert_symbol(struct Context *ctx, struct Cmd
     char              symbol = insert_symbol->symbol;
 
     gap_buffer_insert_symbol(gb, index, symbol);
+    if (symbol == '\n') {
+        ctx->line_count++;
+    }
     return command_result_create_insert_symbol(index, symbol);
 }
 
@@ -147,7 +150,9 @@ struct CommandResult *command_exec_delete_symbol(struct Context *ctx, struct Cmd
     size_t            symbol = gap_buffer_get_at(gb, index);
 
     gap_buffer_delete(gb, index);
-
+    if (symbol == '\n') {
+        ctx->line_count--;
+    }
     return command_result_create_delete_symbol(index, symbol);
 }
 
