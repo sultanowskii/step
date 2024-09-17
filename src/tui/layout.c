@@ -9,7 +9,7 @@
 #include "tui/color.h"
 
 // TODO: make configurable
-#define MIN_LINE_NUMBER_BOARD_DIGIT_COUNT 1
+#define MIN_LINE_NUMBER_BOARD_DIGIT_COUNT 3
 
 void recompose_boards(struct Context *ctx) {
     size_t window_height, window_width;
