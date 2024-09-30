@@ -219,3 +219,33 @@ optional_coords get_position_from_index(
 
     return coords_none();
 }
+
+optional_size_t get_line_index_from_cursor(const struct Context *ctx) {
+    struct GapBuffer   *gb = ctx->gap_buffer;
+    const struct Coords cursor = ctx->cursor;
+    struct Coords       current = {.y = 0, .x = 0};
+    size_t              max_valid_index = gap_buffer_get_max_valid_index(gb);
+
+    size_t buffer_index = ctx->starting_symbol_index;
+    size_t line_index = ctx->starting_line_index;
+
+    while (buffer_index <= max_valid_index) {
+        if (current.y == cursor.y && current.x == cursor.x) {
+            return size_t_some(line_index);
+        }
+
+        char sym = gap_buffer_get_at(gb, buffer_index);
+        if (sym == '\n') {
+            line_index++;
+        }
+
+        optional_coords maybe_next = next_valid_coords(&current, ctx->text_board->height, ctx->text_board->width, sym);
+        if (coords_is_none(maybe_next)) {
+            return size_t_none();
+        }
+        current = coords_get_val(maybe_next);
+        buffer_index++;
+    }
+
+    return size_t_none();
+}

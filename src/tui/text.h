@@ -51,3 +51,5 @@ optional_coords get_position_from_index(
     size_t                  max_columns,
     size_t                  target_index
 );
+
+optional_size_t get_line_index_from_cursor(const struct Context *ctx);

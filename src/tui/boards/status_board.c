@@ -19,14 +19,22 @@ void update_status_board(struct Context *ctx) {
     struct Coords *cursor = &ctx->cursor;
     size_t         gb_length = gap_buffer_get_length(ctx->gap_buffer);
 
+    optional_size_t maybe_line_index = get_line_index_from_cursor(ctx);
+    size_t          line_index;
+    if (size_t_is_some(maybe_line_index)) {
+        line_index = size_t_get_val(maybe_line_index);
+    } else {
+        line_index = -1;
+    }
+
     wclrtoeol(status_board_window);
     mvwprintw(
         status_board_window,
         0,
         0,
-        "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu st_i=%zu st_l=%zu i=",
-        index_to_human(ctx->starting_line_index + cursor->y),
-        index_to_human(cursor->x),
+        "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu st_i=%zu st_l=%zu ln i=",
+        index_to_human(line_index),
+        index_to_human(cursor->x), // TODO: long lines
         cursor->y,
         cursor->x,
         gb_length,
