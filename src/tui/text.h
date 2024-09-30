@@ -16,6 +16,11 @@ optional_coords next_valid_coords(
     size_t               max_columns,
     char                 symbol
 );
+struct Coords next_valid_coords_without_height_limit(
+    const struct Coords *coords,
+    size_t               max_columns,
+    char                 symbol
+);
 
 void          revise_cursor(struct Context *ctx, size_t max_rows, size_t max_columns);
 struct Coords revise_coords_with_gap_buffer(
