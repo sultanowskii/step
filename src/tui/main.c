@@ -91,7 +91,7 @@ struct Context *setup_context(const char *filename) {
 
     struct UndoFacade *undo_facade = undo_facade_create();
 
-    FILE *f = fopen(filename, "rb");
+    FILE *f = fopen(filename, "w+");
     // TODO: handle properly
     if (f == NULL) {
         fprintf(stderr, "failed to open file '%s': %s\n", filename, strerror(errno));
