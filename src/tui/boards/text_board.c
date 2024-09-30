@@ -8,9 +8,9 @@
 #include "tui/boards/board.h"
 #include "tui/color.h"
 #include "tui/coords.h"
+#include "tui/fmt.h"
 #include "tui/highlight.h"
 #include "tui/text.h" // TODO: once next_valid_coords() moves, change it
-#include "tui/tui.h"
 
 void text_board_highlight_line(struct Board *text_board, size_t y) {
     highlight_line(text_board, y, COLOR_PAIR_TEXT_HIGHLIGHTED);

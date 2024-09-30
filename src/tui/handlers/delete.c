@@ -5,9 +5,9 @@
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "nonstd/compile.h"
+#include "tui/cursor.h"
 #include "tui/events/event.h"
 #include "tui/optionals.h"
-#include "tui/text.h"
 
 void handle_deletion(struct Context *ctx, bool backwards) {
     optional_size_t maybe_index = get_index_from_cursor_position(ctx);

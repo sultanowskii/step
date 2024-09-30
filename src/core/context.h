@@ -38,7 +38,7 @@ struct Context {
     // Index of the first line on the screen
     size_t starting_line_index;
     // Number of lines in a buffer
-    size_t line_count; // TODO: extract this and buffer into a separate struct?
+    size_t line_count;
 };
 
 // Creates context with specified done, undone stack and gap_buffer gap buffer.

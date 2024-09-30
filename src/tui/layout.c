@@ -7,9 +7,7 @@
 #include "nonstd/math.h"
 #include "tui/boards/board.h"
 #include "tui/color.h"
-
-// TODO: make configurable
-#define MIN_LINE_NUMBER_BOARD_DIGIT_COUNT 3
+#include "tui/conf.h"
 
 void recompose_boards(struct Context *ctx) {
     size_t window_height, window_width;

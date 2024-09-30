@@ -1,4 +1,4 @@
-#include "tui/tui.h"
+#include "tui/fmt.h"
 
 #include <ncurses.h>
 

@@ -7,6 +7,7 @@
 #include "nonstd/compile.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
+#include "tui/cursor.h"
 #include "tui/events/event.h"
 #include "tui/highlight.h"
 #include "tui/navigation.h"
@@ -43,9 +44,6 @@ void handle_key_navigation(
 ) {
     struct Board  *text_board = ctx->text_board;
     struct Coords *cursor = &ctx->cursor;
-
-    // TODO: move outta here?
-    unhighlight_cursor(text_board, cursor->y, cursor->x);
 
     switch (key_navigation->key) {
         case KEY_RIGHT:

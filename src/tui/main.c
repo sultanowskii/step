@@ -23,6 +23,7 @@
 #include "tui/boards/text_board.h"
 #include "tui/color.h"
 #include "tui/coords.h"
+#include "tui/cursor.h"
 #include "tui/events/event.h"
 #include "tui/events/event_queue.h"
 #include "tui/handlers/delete.h"
@@ -32,8 +33,6 @@
 #include "tui/handlers/undo.h"
 #include "tui/keys/handle_key.h"
 #include "tui/layout.h"
-#include "tui/text.h"
-#include "tui/tui.h"
 
 void setup(void) {
     initscr();
@@ -153,7 +152,6 @@ void run(const char *filename) {
     struct Context *ctx = setup_context(filename);
 
     recompose_boards(ctx);
-
     loop(ctx);
 
     teardown_context(ctx);

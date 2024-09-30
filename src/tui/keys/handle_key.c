@@ -19,7 +19,6 @@ void handle_key(
 ) {
     struct EventQueue *events = ctx->events;
 
-    // TODO: handle in separate functions
     switch (key) {
         case KEY_RESIZE: {
             recompose_boards(ctx);

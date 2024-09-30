@@ -3,9 +3,9 @@
 #include <stdbool.h>
 
 #include "core/context.h"
+#include "tui/cursor.h"
 #include "tui/events/event.h"
 #include "tui/optionals.h"
-#include "tui/text.h"
 
 bool is_key_printable(int symbol) {
     return ' ' <= symbol && symbol <= '~';

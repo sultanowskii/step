@@ -5,25 +5,15 @@
 
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
-#include "core/context.h"
+#include "tui/conf.h"
 #include "tui/coords.h"
 #include "tui/optionals.h"
-#include "tui/tui.h"
 
 // TODO: change to work with states (View [no] vs Insert [yes])
 size_t gap_buffer_get_max_valid_index(const struct GapBuffer *gb) {
     size_t gb_length = gap_buffer_get_length(gb);
     size_t max_valid_index = ALLOW_CURSOR_AFTER_LAST_SYMBOL ? gb_length : gb_length - 1;
     return max_valid_index;
-}
-
-void revise_cursor(struct Context *ctx) {
-    struct GapBuffer *gb = ctx->gap_buffer;
-
-    struct Coords revised = revise_coords_with_gap_buffer(gb, ctx->starting_symbol_index, ctx->text_board->height, ctx->text_board->width, ctx->cursor);
-
-    ctx->cursor.y = revised.y;
-    ctx->cursor.x = revised.x;
 }
 
 // TODO: move to other file
@@ -160,11 +150,6 @@ struct FindLineResult find_start_of_previous_line(
     };
 }
 
-optional_size_t get_index_from_cursor_position(const struct Context *ctx) {
-    struct GapBuffer *gb = ctx->gap_buffer;
-    return get_index_from_position(gb, ctx->starting_symbol_index, ctx->text_board->height, ctx->text_board->width, &ctx->cursor);
-}
-
 optional_size_t get_index_from_position(
     const struct GapBuffer *gb,
     size_t                  starting_index,
@@ -194,19 +179,6 @@ optional_size_t get_index_from_position(
     return size_t_none();
 }
 
-bool move_cursor_to_index(struct Context *ctx, size_t target_index) {
-    struct GapBuffer *gb = ctx->gap_buffer;
-    optional_coords   maybe_pos = get_position_from_index(gb, ctx->starting_symbol_index, ctx->text_board->height, ctx->text_board->width, target_index);
-
-    if (coords_is_none(maybe_pos)) {
-        return false;
-    }
-
-    struct Coords pos = coords_get_val(maybe_pos);
-    ctx->cursor = pos;
-    return true;
-}
-
 optional_coords get_position_from_index(
     const struct GapBuffer *gb,
     size_t                  starting_index,
@@ -234,34 +206,4 @@ optional_coords get_position_from_index(
     }
 
     return coords_none();
-}
-
-optional_size_t get_line_index_from_cursor(const struct Context *ctx) {
-    struct GapBuffer   *gb = ctx->gap_buffer;
-    const struct Coords cursor = ctx->cursor;
-    struct Coords       current = {.y = 0, .x = 0};
-    size_t              max_valid_index = gap_buffer_get_max_valid_index(gb);
-
-    size_t buffer_index = ctx->starting_symbol_index;
-    size_t line_index = ctx->starting_line_index;
-
-    while (buffer_index <= max_valid_index) {
-        if (current.y == cursor.y && current.x == cursor.x) {
-            return size_t_some(line_index);
-        }
-
-        char sym = gap_buffer_get_at(gb, buffer_index);
-        if (sym == '\n') {
-            line_index++;
-        }
-
-        optional_coords maybe_next = next_valid_coords(&current, ctx->text_board->height, ctx->text_board->width, sym);
-        if (coords_is_none(maybe_next)) {
-            return size_t_none();
-        }
-        current = coords_get_val(maybe_next);
-        buffer_index++;
-    }
-
-    return size_t_none();
 }

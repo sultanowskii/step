@@ -9,9 +9,9 @@
 #include "tui/boards/board.h"
 #include "tui/color.h"
 #include "tui/coords.h"
+#include "tui/fmt.h"
 #include "tui/highlight.h"
 #include "tui/text.h" // TODO: once next_valid_coords() moves, change it
-#include "tui/tui.h"
 
 static inline void _print_row_line_number(
     struct Board        *line_number_board,

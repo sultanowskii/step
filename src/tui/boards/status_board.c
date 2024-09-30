@@ -7,9 +7,9 @@
 #include "nonstd/human.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
+#include "tui/cursor.h"
+#include "tui/fmt.h"
 #include "tui/optionals.h"
-#include "tui/text.h"
-#include "tui/tui.h"
 
 void update_status_board(struct Context *ctx) {
     struct Board *status_board = ctx->status_board;
