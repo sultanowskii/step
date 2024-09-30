@@ -17,10 +17,10 @@ size_t gap_buffer_get_max_valid_index(const struct GapBuffer *gb) {
     return max_valid_index;
 }
 
-void revise_cursor(struct Context *ctx, size_t max_rows, size_t max_columns) {
+void revise_cursor(struct Context *ctx) {
     struct GapBuffer *gb = ctx->gap_buffer;
 
-    struct Coords revised = revise_coords_with_gap_buffer(gb, ctx->starting_symbol_index, max_rows, max_columns, ctx->cursor);
+    struct Coords revised = revise_coords_with_gap_buffer(gb, ctx->starting_symbol_index, ctx->text_board->height, ctx->text_board->width, ctx->cursor);
 
     ctx->cursor.y = revised.y;
     ctx->cursor.x = revised.x;
@@ -160,9 +160,9 @@ struct FindLineResult find_start_of_previous_line(
     };
 }
 
-optional_size_t get_index_from_cursor_position(const struct Context *ctx, size_t max_rows, size_t max_columns) {
+optional_size_t get_index_from_cursor_position(const struct Context *ctx) {
     struct GapBuffer *gb = ctx->gap_buffer;
-    return get_index_from_position(gb, ctx->starting_symbol_index, max_rows, max_columns, &ctx->cursor);
+    return get_index_from_position(gb, ctx->starting_symbol_index, ctx->text_board->height, ctx->text_board->width, &ctx->cursor);
 }
 
 optional_size_t get_index_from_position(
@@ -194,9 +194,9 @@ optional_size_t get_index_from_position(
     return size_t_none();
 }
 
-bool move_cursor_to_index(struct Context *ctx, size_t max_rows, size_t max_columns, size_t target_index) {
+bool move_cursor_to_index(struct Context *ctx, size_t target_index) {
     struct GapBuffer *gb = ctx->gap_buffer;
-    optional_coords   maybe_pos = get_position_from_index(gb, ctx->starting_symbol_index, max_rows, max_columns, target_index);
+    optional_coords   maybe_pos = get_position_from_index(gb, ctx->starting_symbol_index, ctx->text_board->height, ctx->text_board->width, target_index);
 
     if (coords_is_none(maybe_pos)) {
         return false;

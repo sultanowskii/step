@@ -138,11 +138,10 @@ size_t _get_row_from_position(
     return row_index;
 }
 
-void update_line_number_board(
-    struct Context *ctx,
-    size_t          text_board_max_rows,
-    size_t          text_board_max_columns
-) {
+void update_line_number_board(struct Context *ctx) {
+    size_t text_board_max_rows = ctx->text_board->height;
+    size_t text_board_max_columns = ctx->text_board->width;
+
     struct Board     *line_number_board = ctx->line_number_board;
     struct GapBuffer *gb = ctx->gap_buffer;
 

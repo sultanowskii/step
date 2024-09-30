@@ -6,8 +6,4 @@
 #include "core/context.h"
 #include "tui/boards/board.h"
 
-void update_line_number_board(
-    struct Context *ctx,
-    size_t          max_rows,
-    size_t          max_columns
-);
+void update_line_number_board(struct Context *ctx);

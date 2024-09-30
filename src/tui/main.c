@@ -66,7 +66,7 @@ void loop(struct Context *ctx) {
     struct EventQueue *event_queue = ctx->events;
 
     while (ctx->state != STATE_EXIT) {
-        update_line_number_board(ctx, text_board->height, text_board->width);
+        update_line_number_board(ctx);
 
         update_text_board(ctx);
 
@@ -83,7 +83,7 @@ void loop(struct Context *ctx) {
             event_handle(&event_handler, ctx, event);
         }
 
-        revise_cursor(ctx, text_board->height, text_board->width);
+        revise_cursor(ctx);
     }
 }
 

@@ -30,8 +30,6 @@ optional_char convert_key_to_symbol(int key) {
 }
 
 void handle_key_text(struct Context *ctx, const struct EventKeyText *key_text) {
-    struct Board *text_board = ctx->text_board;
-
     optional_char maybe_symbol = convert_key_to_symbol(key_text->key);
     if (char_is_none(maybe_symbol)) {
         return;
@@ -39,7 +37,7 @@ void handle_key_text(struct Context *ctx, const struct EventKeyText *key_text) {
 
     char symbol = char_get_val(maybe_symbol);
 
-    optional_size_t maybe_index = get_index_from_cursor_position(ctx, text_board->height, text_board->width);
+    optional_size_t maybe_index = get_index_from_cursor_position(ctx);
     if (size_t_is_none(maybe_index)) {
         return;
     }
@@ -52,7 +50,7 @@ void handle_key_text(struct Context *ctx, const struct EventKeyText *key_text) {
     undo_facade_add_done(ctx->undo_facade, result);
 
     index++;
-    move_cursor_to_index(ctx, text_board->height, text_board->width, index);
+    move_cursor_to_index(ctx, index);
 
     event_queue_push_symbol_added(ctx->events, index_of_inserted_symbol, symbol);
 }

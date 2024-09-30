@@ -10,6 +10,8 @@
 #include "tui/coords.h"
 #include "tui/optionals.h"
 
+size_t gap_buffer_get_max_valid_index(const struct GapBuffer *gb);
+
 optional_coords next_valid_coords(
     const struct Coords *coords,
     size_t               max_rows,
@@ -22,7 +24,7 @@ struct Coords next_valid_coords_without_height_limit(
     char                 symbol
 );
 
-void          revise_cursor(struct Context *ctx, size_t max_rows, size_t max_columns);
+void          revise_cursor(struct Context *ctx);
 struct Coords revise_coords_with_gap_buffer(
     const struct GapBuffer *gb,
     size_t                  starting_index,
@@ -39,7 +41,7 @@ struct FindLineResult {
 struct FindLineResult find_start_of_next_line(const struct GapBuffer *gb, size_t starting_index);
 struct FindLineResult find_start_of_previous_line(const struct GapBuffer *gb, size_t starting_index);
 
-optional_size_t get_index_from_cursor_position(const struct Context *ctx, size_t max_rows, size_t max_columns);
+optional_size_t get_index_from_cursor_position(const struct Context *ctx);
 optional_size_t get_index_from_position(
     const struct GapBuffer *gb,
     size_t                  starting_index,
@@ -48,7 +50,7 @@ optional_size_t get_index_from_position(
     const struct Coords    *position
 );
 
-bool            move_cursor_to_index(struct Context *ctx, size_t max_rows, size_t max_columns, size_t target_index);
+bool            move_cursor_to_index(struct Context *ctx, size_t target_index);
 optional_coords get_position_from_index(
     const struct GapBuffer *gb,
     size_t                  starting_index,

@@ -4,6 +4,7 @@
 
 #include "collections/gap_buffer.h"
 #include "core/context.h"
+#include "nonstd/compile.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
 #include "tui/events/event.h"
@@ -12,7 +13,7 @@
 #include "tui/text.h"
 
 bool row_lower_than_position_exists(const struct Context *ctx) {
-    optional_size_t maybe_index = get_index_from_cursor_position(ctx, ctx->text_board->height, ctx->text_board->width);
+    optional_size_t maybe_index = get_index_from_cursor_position(ctx);
     if (size_t_is_none(maybe_index)) {
         return false;
     }
@@ -84,10 +85,12 @@ void handle_key_navigation(
     }
 }
 
+IGNORE_UNUSED_PARAMETER()
 void handle_request_go_up(struct Context *ctx, const struct EventGoUpRequest *go_up_request) {
     try_go_up(ctx);
 }
 
+IGNORE_UNUSED_PARAMETER()
 void handle_request_go_down(struct Context *ctx, const struct EventGoDownRequest *go_down_request) {
     try_go_down(ctx);
 }

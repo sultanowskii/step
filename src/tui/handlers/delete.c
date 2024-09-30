@@ -4,14 +4,13 @@
 
 #include "collections/gap_buffer.h"
 #include "core/context.h"
+#include "nonstd/compile.h"
 #include "tui/events/event.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
 
 void handle_deletion(struct Context *ctx, bool backwards) {
-    const struct Board *text_board = ctx->text_board;
-
-    optional_size_t maybe_index = get_index_from_cursor_position(ctx, text_board->height, text_board->width);
+    optional_size_t maybe_index = get_index_from_cursor_position(ctx);
     if (size_t_is_none(maybe_index)) {
         return;
     }
@@ -45,15 +44,17 @@ void handle_deletion(struct Context *ctx, bool backwards) {
     command_destroy(cmd);
     undo_facade_add_done(ctx->undo_facade, result);
 
-    move_cursor_to_index(ctx, text_board->height, text_board->width, index);
+    move_cursor_to_index(ctx, index);
 
     event_queue_push_symbol_removed(ctx->events, index_of_deleted_symbol, symbol);
 }
 
+IGNORE_UNUSED_PARAMETER()
 void handle_key_delete(struct Context *ctx, const struct EventKeyDelete *key_delete) {
     handle_deletion(ctx, false);
 }
 
+IGNORE_UNUSED_PARAMETER()
 void handle_key_backspace(struct Context *ctx, const struct EventKeyBackspace *key_backspace) {
     handle_deletion(ctx, true);
 }
