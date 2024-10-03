@@ -10,8 +10,8 @@
 #include "tui/events/event.h"
 #include "tui/keys/key.h"
 #include "tui/layout.h"
-#include "tui/optionals.h"
-#include "tui/text.h"
+
+#include "tui/cursor.h"
 
 void handle_key(
     struct Context *ctx,
@@ -55,6 +55,16 @@ void handle_key(
             break;
         case KEY_BACKSPACE: {
             event_queue_push_key_backspace(events);
+            break;
+        }
+        // TODO: remove
+        case CTRL('o'): {
+            move_cursor_to_index(ctx, 4);
+            break;
+        }
+        // TODO: remove
+        case CTRL('p'): {
+            move_cursor_to_index(ctx, 1800);
             break;
         }
         default: {

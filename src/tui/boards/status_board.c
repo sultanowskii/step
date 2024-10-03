@@ -31,7 +31,7 @@ void update_status_board(struct Context *ctx) {
         status_board_window,
         0,
         0,
-        "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu st_i=%zu st_l=%zu ln i=",
+        "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu sti=%zu stl=%zu i=",
         index_to_human(line_index),
         index_to_human(cursor->x), // TODO: long lines
         cursor->y,
