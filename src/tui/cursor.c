@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "core/context.h"
+#include "nonstd/optionals.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
 

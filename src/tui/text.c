@@ -5,6 +5,7 @@
 
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
+#include "nonstd/optionals.h"
 #include "tui/conf.h"
 #include "tui/coords.h"
 #include "tui/optionals.h"

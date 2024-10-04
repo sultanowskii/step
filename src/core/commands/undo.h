@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "core/commands/commands.h"
+#include "nonstd/optionals.h"
 
 struct UndoFacade;
 
@@ -11,8 +12,9 @@ void               undo_facade_set_ctx(struct UndoFacade *undo_facade, struct Co
 void               undo_facade_destroy(struct UndoFacade *undo_facade);
 
 void undo_facade_add_done(struct UndoFacade *undo_facade, struct CommandResult *result);
-bool undo_facade_undo(struct UndoFacade *undo_facade);
-bool undo_facade_redo(struct UndoFacade *undo_facade);
+
+optional_size_t undo_facade_undo(struct UndoFacade *undo_facade);
+optional_size_t undo_facade_redo(struct UndoFacade *undo_facade);
 
 bool undo_facade_is_done_empty(const struct UndoFacade *undo_facade);
 bool undo_facade_is_undone_empty(const struct UndoFacade *undo_facade);

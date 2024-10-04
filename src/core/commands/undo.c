@@ -8,6 +8,8 @@
 #include "core/_context.h"
 #include "core/commands/commands.h"
 
+#include "nonstd/optionals.h"
+
 #define UNDO_MAX_COUNT 50
 
 struct UndoFacade {
@@ -61,10 +63,9 @@ struct CommandResult *_undo_facade_pop_undone(struct UndoFacade *undo_facade) {
     return evicting_stack_pop_back(undo_facade->undone);
 }
 
-// TODO: return index (optional_size_t) so that we can move the cursor to an appropriate position
-bool undo_facade_undo(struct UndoFacade *undo_facade) {
+optional_size_t undo_facade_undo(struct UndoFacade *undo_facade) {
     if (undo_facade_is_done_empty(undo_facade)) {
-        return false;
+        return size_t_none();
     }
 
     struct CommandResult *popped_result = _undo_facade_pop_done(undo_facade);
@@ -75,13 +76,12 @@ bool undo_facade_undo(struct UndoFacade *undo_facade) {
 
     _undo_facade_add_undone(undo_facade, result);
 
-    return true;
+    return size_t_some(command_result_get_index(result));
 }
 
-// TODO: return index (optional_size_t) so that we can move the cursor to an appropriate position
-bool undo_facade_redo(struct UndoFacade *undo_facade) {
+optional_size_t undo_facade_redo(struct UndoFacade *undo_facade) {
     if (undo_facade_is_undone_empty(undo_facade)) {
-        return false;
+        return size_t_none();
     }
 
     struct CommandResult *popped_result = _undo_facade_pop_undone(undo_facade);
@@ -92,7 +92,7 @@ bool undo_facade_redo(struct UndoFacade *undo_facade) {
 
     undo_facade_add_done(undo_facade, result);
 
-    return true;
+    return size_t_some(command_result_get_index(result));
 }
 
 bool undo_facade_is_done_empty(const struct UndoFacade *undo_facade) {

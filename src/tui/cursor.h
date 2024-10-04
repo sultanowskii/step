@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 #include "core/context.h"
-#include "tui/optionals.h"
+#include "nonstd/optionals.h"
 
 void revise_cursor(struct Context *ctx);
 

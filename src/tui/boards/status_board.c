@@ -5,11 +5,11 @@
 
 #include "core/context.h"
 #include "nonstd/human.h"
+#include "nonstd/optionals.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
 #include "tui/cursor.h"
 #include "tui/fmt.h"
-#include "tui/optionals.h"
 
 void update_status_board(struct Context *ctx) {
     struct Board *status_board = ctx->status_board;

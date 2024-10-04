@@ -5,6 +5,7 @@
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "nonstd/compile.h"
+#include "nonstd/optionals.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
 #include "tui/cursor.h"

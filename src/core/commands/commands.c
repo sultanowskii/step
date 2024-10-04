@@ -14,8 +14,6 @@
 enum CommandType {
     CMD_INSERT_SYMBOL,
     CMD_DELETE_SYMBOL,
-    CMD_UNDO,
-    CMD_REDO,
 };
 
 struct CmdInsertSymbol {
@@ -175,4 +173,18 @@ struct CommandResult *command_exec(struct Context *ctx, struct Command *command)
     result->time = time(NULL);
 
     return result;
+}
+
+size_t command_result_get_index(const struct CommandResult *result) {
+    switch (result->type) {
+        case CMD_INSERT_SYMBOL: {
+            return result->body.insert_symbol.index;
+        };
+        case CMD_DELETE_SYMBOL: {
+            return result->body.delete_symbol.index;
+        };
+        default: {
+            panic("runtime error: unexpected command type while executing command");
+        };
+    }
 }
