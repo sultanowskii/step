@@ -129,7 +129,6 @@ size_t _get_row_from_position(
 
         text_board_pos = coords_get_val(maybe_next);
 
-        // TODO: is that correct? Shouldn't it go before text_board_pos updating?
         if (sym == '\n') {
             row_index = text_board_pos.y;
         }

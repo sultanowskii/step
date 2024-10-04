@@ -16,7 +16,6 @@ void text_board_highlight_line(struct Board *text_board, size_t y) {
     highlight_line(text_board, y, COLOR_PAIR_TEXT_HIGHLIGHTED);
 }
 
-// TODO: improve arguments?
 void print_gap_buffer_to_board(
     struct Board           *board,
     const struct GapBuffer *gb,

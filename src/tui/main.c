@@ -80,6 +80,7 @@ void loop(struct Context *ctx) {
         while (!event_queue_is_empty(event_queue)) {
             struct Event *event = event_queue_pop(event_queue);
             event_handle(&event_handler, ctx, event);
+            event_destroy(event);
         }
 
         revise_cursor(ctx);
