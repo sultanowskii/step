@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXE=${EXE:-ste}
+EXE=${EXE:-step}
 EXE_ARGS=${EXE_ARGS:-}
 MAKE_TARGET=${MAKE_TARGET:-default}
 

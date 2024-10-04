@@ -1,3 +1,3 @@
-# ste
+# step
 
-Simple Text Editor
+Simple Text Editor, Personalized

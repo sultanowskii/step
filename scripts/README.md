@@ -4,13 +4,13 @@ Execute all scripts from the project root!
 
 ## [valgrind_run.sh](valgrind_run.sh)
 
-Runs `valgrind` on an executable (`./ste` by default).
+Runs `valgrind` on an executable (`./step` by default).
 
 ```bash
 ./scripts/valgrind_run.sh
 ```
 
-To profile other executables, provide `EXE` (`ste` by default) and `MAKE_TARGET` (`default` by default) variables. Example:
+To profile other executables, provide `EXE` (`step` by default) and `MAKE_TARGET` (`default` by default) variables. Example:
 
 ```bash
 EXE=playground_rope.elf MAKE_TARGET=playground-rope ./scripts/valgrind_run.sh
@@ -18,7 +18,7 @@ EXE=playground_rope.elf MAKE_TARGET=playground-rope ./scripts/valgrind_run.sh
 
 ## [build_image.sh](build_image.sh)
 
-Builds local image (`ste-valgrind`) based on (`karek/valgrind`).
+Builds local image (`step-valgrind`) based on (`karek/valgrind`).
 
 ## [valgrind_docker_run.sh](valgrind_docker_run.sh)
 

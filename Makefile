@@ -6,7 +6,7 @@ LIBS             :=
 ENTRYPOINT_SRC   := src/main.c
 ENTRYPOINT_OBJ   := src/main.o
 
-NAME             := ste
+NAME             := step
 TARGET           := $(NAME)
 
 TUI_SRCS         := $(shell find src/tui/ -type f -name '*.c')

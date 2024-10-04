@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build --tag 'ste-valgrind' scripts/
+docker build --tag 'step-valgrind' scripts/
