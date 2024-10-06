@@ -8,15 +8,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
 #include "core/commands/undo.h"
 #include "core/context.h"
 #include "core/state.h"
 #include "nonstd/io.h"
-#include "nonstd/math.h"
-#include "nonstd/runtime.h"
 #include "tui/boards/board.h"
 #include "tui/boards/line_number_board.h"
 #include "tui/boards/status_board.h"
@@ -33,19 +30,6 @@
 #include "tui/handlers/undo.h"
 #include "tui/keys/handle_key.h"
 #include "tui/layout.h"
-
-void setup(void) {
-    initscr();
-    setup_colors();
-    raw();
-    noecho();
-    keypad(stdscr, TRUE);
-    curs_set(0);
-}
-
-void teardown(void) {
-    endwin();
-}
 
 void loop(struct Context *ctx) {
     struct EventHandler event_handler = {
@@ -66,9 +50,7 @@ void loop(struct Context *ctx) {
 
     while (ctx->state != STATE_EXIT) {
         update_line_number_board(ctx);
-
         update_text_board(ctx);
-
         update_status_board(ctx);
 
         update_panels();
@@ -87,16 +69,35 @@ void loop(struct Context *ctx) {
     }
 }
 
-struct Context *setup_context(const char *filename) {
+void run(struct Context *ctx) {
+    recompose_boards(ctx);
+    loop(ctx);
+}
+
+void tui_setup(void) {
+    initscr();
+    setup_colors();
+    raw();
+    noecho();
+    keypad(stdscr, TRUE);
+    curs_set(0);
+}
+
+void tui_teardown(void) {
+    endwin();
+}
+
+struct Context *context_setup(const char *filename) {
     enum State state = STATE_START;
 
     struct UndoFacade *undo_facade = undo_facade_create();
 
-    FILE *f = fopen(filename, "r");
-    // TODO: handle properly
+    FILE *f = fopen(filename, "a+");
     if (f == NULL) {
+        // TODO: make message visible on screen (because ncurses saves/restores terminal state)
+        // - enter some sort of error mode where the only valid option is to exit.
         fprintf(stderr, "failed to open file '%s': %s\n", filename, strerror(errno));
-        panic("TODO: remove/replace me!");
+        return NULL;
     }
     char *data = file_read(f);
     fclose(f);
@@ -134,7 +135,7 @@ struct Context *setup_context(const char *filename) {
     return ctx;
 }
 
-void teardown_context(struct Context *ctx) {
+void context_teardown(struct Context *ctx) {
     undo_facade_destroy(ctx->undo_facade);
 
     gap_buffer_destroy(ctx->gap_buffer);
@@ -148,20 +149,16 @@ void teardown_context(struct Context *ctx) {
     context_destroy(ctx);
 }
 
-// TODO: rename
-void run(const char *filename) {
-    struct Context *ctx = setup_context(filename);
-
-    recompose_boards(ctx);
-    loop(ctx);
-
-    teardown_context(ctx);
-}
-
 void tui_main(const char *filename) {
-    setup();
+    tui_setup();
+    struct Context *ctx = context_setup(filename);
+    if (ctx == NULL) {
+        goto TUI_TEARDOWN;
+    }
 
-    run(filename);
+    run(ctx);
 
-    teardown();
+    context_teardown(ctx);
+TUI_TEARDOWN:
+    tui_teardown();
 }
