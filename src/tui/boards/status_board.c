@@ -31,14 +31,10 @@ void update_status_board(struct Context *ctx) {
         status_board_window,
         0,
         0,
-        "Ln %zu, Col %zu (y=%zu, x=%zu) len=%zu sti=%zu stl=%zu i=",
+        "Ln %zu, Col %zu. File size: %zu. i=",
         index_to_human(line_index),
         index_to_human(cursor->x), // TODO: long lines
-        cursor->y,
-        cursor->x,
-        gb_length,
-        ctx->starting_symbol_index,
-        ctx->starting_line_index
+        gb_length
     );
 
     optional_size_t maybe_index = get_index_from_cursor_position(ctx);
