@@ -12,18 +12,6 @@
 
 size_t gap_buffer_get_max_valid_index(const struct GapBuffer *gb);
 
-optional_coords next_valid_coords(
-    const struct Coords *coords,
-    size_t               max_rows,
-    size_t               max_columns,
-    char                 symbol
-);
-struct Coords next_valid_coords_without_height_limit(
-    const struct Coords *coords,
-    size_t               max_columns,
-    char                 symbol
-);
-
 struct Coords revise_coords_with_gap_buffer(
     const struct GapBuffer *gb,
     size_t                  starting_index,
@@ -54,4 +42,19 @@ optional_coords get_position_from_index(
     size_t                  max_rows,
     size_t                  max_columns,
     size_t                  target_index
+);
+
+size_t first_y_of_line_under_pos(
+    struct GapBuffer    *gb,
+    size_t               starting_symbol_index,
+    size_t               text_board_max_rows,
+    size_t               text_board_max_columns,
+    const struct Coords *pos
+);
+size_t last_y_of_line_under_pos(
+    struct GapBuffer    *gb,
+    size_t               starting_symbol_index,
+    size_t               text_board_max_rows,
+    size_t               text_board_max_columns,
+    const struct Coords *pos
 );

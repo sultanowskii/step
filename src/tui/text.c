@@ -8,6 +8,7 @@
 #include "nonstd/optionals.h"
 #include "tui/conf.h"
 #include "tui/coords.h"
+#include "tui/next_coords.h"
 #include "tui/optionals.h"
 
 // TODO: change to work with states (View [no] vs Insert [yes])
@@ -15,43 +16,6 @@ size_t gap_buffer_get_max_valid_index(const struct GapBuffer *gb) {
     size_t gb_length = gap_buffer_get_length(gb);
     size_t max_valid_index = ALLOW_CURSOR_AFTER_LAST_SYMBOL ? gb_length : gb_length - 1;
     return max_valid_index;
-}
-
-// TODO: move to other file
-optional_coords next_valid_coords(
-    const struct Coords *coords,
-    size_t               max_rows,
-    size_t               max_columns,
-    char                 symbol
-) {
-    struct Coords next = *coords;
-
-    next.x++;
-    if (next.x == max_columns || symbol == '\n') {
-        next.x = 0;
-        next.y++;
-    }
-    if (next.y == max_rows) {
-        return coords_none();
-    }
-
-    return coords_some(next);
-}
-
-struct Coords next_valid_coords_without_height_limit(
-    const struct Coords *coords,
-    size_t               max_columns,
-    char                 symbol
-) {
-    struct Coords next = *coords;
-
-    next.x++;
-    if (next.x == max_columns || symbol == '\n') {
-        next.x = 0;
-        next.y++;
-    }
-
-    return next;
 }
 
 struct Coords revise_coords_with_gap_buffer(
@@ -207,4 +171,73 @@ optional_coords get_position_from_index(
     }
 
     return coords_none();
+}
+
+size_t first_y_of_line_under_pos(
+    struct GapBuffer    *gb,
+    size_t               starting_symbol_index,
+    size_t               text_board_max_rows,
+    size_t               text_board_max_columns,
+    const struct Coords *pos
+) {
+    struct Coords text_board_pos = {.y = 0, .x = 0};
+    size_t        row_index = 0;
+
+    for (size_t i = starting_symbol_index; i < gap_buffer_get_length(gb); i++) {
+        char sym = gap_buffer_get_at(gb, i);
+
+        if (text_board_pos.y == pos->y && text_board_pos.x == pos->x) {
+            return row_index;
+        }
+
+        optional_coords maybe_next = next_valid_coords(&text_board_pos, text_board_max_rows, text_board_max_columns, sym);
+        if (coords_is_none(maybe_next)) {
+            break;
+        }
+
+        text_board_pos = coords_get_val(maybe_next);
+
+        if (sym == '\n') {
+            row_index = text_board_pos.y;
+        }
+    }
+
+    return row_index;
+}
+
+size_t last_y_of_line_under_pos(
+    struct GapBuffer    *gb,
+    size_t               starting_symbol_index,
+    size_t               text_board_max_rows,
+    size_t               text_board_max_columns,
+    const struct Coords *pos
+) {
+    struct Coords text_board_pos = {.y = 0, .x = 0};
+    size_t        row_index = 0;
+
+    bool after_cursor = false;
+
+    for (size_t i = starting_symbol_index; i < gap_buffer_get_length(gb); i++) {
+        char sym = gap_buffer_get_at(gb, i);
+
+        if (text_board_pos.y == pos->y && text_board_pos.x == pos->x) {
+            after_cursor = true;
+        }
+
+        if (sym == '\n') {
+            row_index = text_board_pos.y;
+            if (after_cursor) {
+                return row_index;
+            }
+        }
+
+        optional_coords maybe_next = next_valid_coords(&text_board_pos, text_board_max_rows, text_board_max_columns, sym);
+        if (coords_is_none(maybe_next)) {
+            break;
+        }
+
+        text_board_pos = coords_get_val(maybe_next);
+    }
+
+    return row_index;
 }

@@ -57,16 +57,6 @@ void handle_key(
             event_queue_push_key_backspace(events);
             break;
         }
-        // TODO: remove
-        case CTRL('o'): {
-            move_cursor_to_index(ctx, 4);
-            break;
-        }
-        // TODO: remove
-        case CTRL('p'): {
-            move_cursor_to_index(ctx, 1800);
-            break;
-        }
         default: {
             event_queue_push_key_text(events, key);
             break;

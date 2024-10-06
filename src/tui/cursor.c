@@ -4,6 +4,7 @@
 
 #include "core/context.h"
 #include "nonstd/optionals.h"
+#include "tui/next_coords.h"
 #include "tui/optionals.h"
 #include "tui/text.h"
 
@@ -146,4 +147,24 @@ optional_size_t get_line_index_from_cursor(const struct Context *ctx) {
     }
 
     return size_t_none();
+}
+
+size_t first_y_of_line_under_cursor(struct Context *ctx) {
+    return first_y_of_line_under_pos(
+        ctx->gap_buffer,
+        ctx->starting_symbol_index,
+        ctx->text_board->height,
+        ctx->text_board->width,
+        &ctx->cursor
+    );
+}
+
+size_t last_y_of_line_under_cursor(struct Context *ctx) {
+    return last_y_of_line_under_pos(
+        ctx->gap_buffer,
+        ctx->starting_symbol_index,
+        ctx->text_board->height,
+        ctx->text_board->width,
+        &ctx->cursor
+    );
 }

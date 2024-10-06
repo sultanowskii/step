@@ -12,6 +12,7 @@
 #include "tui/events/event.h"
 #include "tui/highlight.h"
 #include "tui/navigation.h"
+#include "tui/next_coords.h"
 #include "tui/text.h"
 
 bool row_lower_than_position_exists(const struct Context *ctx) {

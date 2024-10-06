@@ -9,9 +9,10 @@
 #include "tui/boards/board.h"
 #include "tui/color.h"
 #include "tui/coords.h"
+#include "tui/cursor.h"
 #include "tui/fmt.h"
 #include "tui/highlight.h"
-#include "tui/text.h" // TODO: once next_valid_coords() moves, change it
+#include "tui/next_coords.h"
 
 static inline void _print_row_line_number(
     struct Board        *line_number_board,
@@ -57,7 +58,7 @@ static inline void _print_row(
 }
 
 void line_number_board_highlight_line(struct Board *line_number_board, size_t y) {
-    highlight_line(line_number_board, y, COLOR_PAIR_LINE_NUMBER_HIGHLIGHTED);
+    highlight_row(line_number_board, y, COLOR_PAIR_LINE_NUMBER_HIGHLIGHTED);
 }
 
 void _print_line_number_board_with_gap_buffer(
@@ -105,38 +106,6 @@ void _print_line_number_board_with_gap_buffer(
     print_filler_till_end_of_board(line_number_board, &first_unhandled_row_pos);
 }
 
-size_t _get_row_from_position(
-    struct GapBuffer *gb,
-    size_t            starting_symbol_index,
-    size_t            text_board_max_rows,
-    size_t            text_board_max_columns,
-    struct Coords    *position
-) {
-    struct Coords text_board_pos = {.y = 0, .x = 0};
-    size_t        row_index = 0;
-
-    for (size_t i = starting_symbol_index; i < gap_buffer_get_length(gb); i++) {
-        char sym = gap_buffer_get_at(gb, i);
-
-        if (text_board_pos.y == position->y && text_board_pos.x == position->x) {
-            return row_index;
-        }
-
-        optional_coords maybe_next = next_valid_coords(&text_board_pos, text_board_max_rows, text_board_max_columns, sym);
-        if (coords_is_none(maybe_next)) {
-            break;
-        }
-
-        text_board_pos = coords_get_val(maybe_next);
-
-        if (sym == '\n') {
-            row_index = text_board_pos.y;
-        }
-    }
-
-    return row_index;
-}
-
 void update_line_number_board(struct Context *ctx) {
     size_t text_board_max_rows = ctx->text_board->height;
     size_t text_board_max_columns = ctx->text_board->width;
@@ -153,13 +122,10 @@ void update_line_number_board(struct Context *ctx) {
         text_board_max_columns
     );
 
-    size_t row = _get_row_from_position(
-        gb,
-        ctx->starting_symbol_index,
-        text_board_max_rows,
-        text_board_max_columns,
-        &ctx->cursor
-    );
+    size_t first_row = first_y_of_line_under_cursor(ctx);
+    size_t last_row = last_y_of_line_under_cursor(ctx);
 
-    line_number_board_highlight_line(line_number_board, row);
+    for (size_t y = first_row; y <= last_row; y++) {
+        line_number_board_highlight_line(line_number_board, y);
+    }
 }

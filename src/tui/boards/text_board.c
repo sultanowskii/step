@@ -8,12 +8,13 @@
 #include "tui/boards/board.h"
 #include "tui/color.h"
 #include "tui/coords.h"
+#include "tui/cursor.h"
 #include "tui/fmt.h"
 #include "tui/highlight.h"
-#include "tui/text.h" // TODO: once next_valid_coords() moves, change it
+#include "tui/next_coords.h"
 
 void text_board_highlight_line(struct Board *text_board, size_t y) {
-    highlight_line(text_board, y, COLOR_PAIR_TEXT_HIGHLIGHTED);
+    highlight_row(text_board, y, COLOR_PAIR_TEXT_HIGHLIGHTED);
 }
 
 void print_gap_buffer_to_board(
@@ -51,6 +52,12 @@ void update_text_board(struct Context *ctx) {
 
     print_gap_buffer_to_board(text_board, gb, ctx->starting_symbol_index, text_board->height, text_board->width);
 
-    text_board_highlight_line(text_board, cursor->y);
+    size_t first_row = first_y_of_line_under_cursor(ctx);
+    size_t last_row = last_y_of_line_under_cursor(ctx);
+
+    for (size_t y = first_row; y <= last_row; y++) {
+        text_board_highlight_line(text_board, y);
+    }
+
     highlight_cursor(text_board, cursor->y, cursor->x);
 }
