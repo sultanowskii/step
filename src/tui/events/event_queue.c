@@ -30,56 +30,56 @@ void event_queue_destroy(struct EventQueue *event_queue) {
 
 void event_queue_push_symbol_added(struct EventQueue *event_queue, size_t index, char symbol) {
     struct Event *event = event_create_symbol_added(index, symbol);
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_symbol_removed(struct EventQueue *event_queue, size_t index, char symbol) {
     struct Event *event = event_create_symbol_removed(index, symbol);
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_key_undo(struct EventQueue *event_queue) {
     struct Event *event = event_create_key_undo();
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_key_redo(struct EventQueue *event_queue) {
     struct Event *event = event_create_key_redo();
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_key_delete(struct EventQueue *event_queue) {
     struct Event *event = event_create_key_delete();
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_key_backspace(struct EventQueue *event_queue) {
     struct Event *event = event_create_key_backspace();
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_key_text(struct EventQueue *event_queue, int key) {
     struct Event *event = event_create_key_text(key);
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_key_navigation(struct EventQueue *event_queue, int key) {
     struct Event *event = event_create_key_navigation(key);
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_request_go_up(struct EventQueue *event_queue) {
     struct Event *event = event_create_request_go_up();
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 void event_queue_push_request_go_down(struct EventQueue *event_queue) {
     struct Event *event = event_create_request_go_down();
-    queue_push_back(event_queue->queue, event);
+    queue_push(event_queue->queue, event);
 }
 
 struct Event *event_queue_pop(struct EventQueue *event_queue) {
-    return queue_pop_front(event_queue->queue);
+    return queue_pop(event_queue->queue);
 }
 
 bool event_queue_is_empty(const struct EventQueue *event_queue) {

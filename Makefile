@@ -34,18 +34,13 @@ clean:
 .PHONY: build
 build: $(TARGET)
 
-.PHONY: playground-rope
-playground-rope: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_rope.o
-	echo $^
-	$(CC) $(INCLUDES) $(CFLAGS) -o playground_rope.elf $^
-
 .PHONY: playground-gap-buffer
 playground-gap-buffer: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_gap_buffer.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_gap_buffer.elf $^
 
-.PHONY: playground-deque
-playground-deque: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_deque.o
+.PHONY: playground-queue
+playground-queue: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_queue.o
 	echo $^
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_deque.elf $^
 
@@ -65,7 +60,7 @@ playground-ncurses: $(OBJS) $(PGROUND_OBJS) playgrounds/playground_ncurses.o
 	$(CC) $(INCLUDES) $(CFLAGS) -o playground_ncurses.elf $^ $(TUI_LIBS)
 
 .PHONY: playgrounds
-playgrounds: playground-rope playground-gap-buffer playground-deque playground-evicting-stack playground-evicting-deque playground-ncurses
+playgrounds: playground-gap-buffer playground-queue playground-evicting-stack playground-evicting-deque playground-ncurses
 
 .PHONY: $(TARGET)
 $(TARGET): $(OBJS) $(TUI_OBJS) $(ENTRYPOINT_OBJ)

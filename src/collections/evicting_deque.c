@@ -37,9 +37,9 @@ struct DequeNode *deque_node_create(void *value) {
 }
 
 void deque_node_destroy(struct DequeNode *dnode) {
-    dnode->value = FREED_DUMMY;
-    dnode->next = FREED_DUMMY;
-    dnode->prev = FREED_DUMMY;
+    dnode->value = NULL;
+    dnode->next = NULL;
+    dnode->prev = NULL;
     free(dnode);
 }
 
