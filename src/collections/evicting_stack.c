@@ -48,6 +48,10 @@ void *evicting_stack_peek_back(struct EvictingStack *estack) {
     return evicting_deque_peek_back(estack->edeque);
 }
 
+void *evicting_stack_peek_back_offset(struct EvictingStack *estack, size_t offset) {
+    return evicting_deque_peek_back_offset(estack->edeque, offset);
+}
+
 void evicting_stack_print(const struct EvictingStack *estack, print print_value) {
     evicting_stack_print_with_indent(estack, print_value, 0);
 }

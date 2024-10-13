@@ -45,11 +45,13 @@ struct Queue *queue_create_empty(void) {
     struct Queue *queue = malloc(sizeof(struct Queue));
     queue->head = NULL;
     queue->tail = NULL;
+    queue->size = 0;
     return queue;
 }
 
 struct Queue *queue_create(void) {
     struct Queue *queue = queue_create_empty();
+    queue->size = 0;
     return queue;
 }
 

@@ -4,17 +4,11 @@
 #include <stddef.h>
 #include <time.h>
 
-#include "collections/evicting_stack.h"
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "core/state.h"
 #include "nonstd/runtime.h"
 #include "nonstd/str.h"
-
-enum CommandType {
-    CMD_INSERT_SYMBOL,
-    CMD_DELETE_SYMBOL,
-};
 
 struct CmdInsertSymbol {
     size_t index;
@@ -187,4 +181,9 @@ size_t command_result_get_index(const struct CommandResult *result) {
             panic("runtime error: unexpected command type while executing command");
         };
     }
+    return -1;
+}
+
+enum CommandType command_result_get_type(const struct CommandResult *result) {
+    return result->type;
 }

@@ -15,6 +15,7 @@ void                  evicting_stack_destroy(struct EvictingStack *estack, destr
 void *evicting_stack_push_back(struct EvictingStack *estack, void *value);
 void *evicting_stack_pop_back(struct EvictingStack *estack);
 void *evicting_stack_peek_back(struct EvictingStack *estack);
+void *evicting_stack_peek_back_offset(struct EvictingStack *estack, size_t offset);
 
 size_t evicting_stack_get_size(const struct EvictingStack *estack);
 size_t evicting_stack_get_max_size(const struct EvictingStack *estack);

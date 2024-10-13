@@ -1,6 +1,12 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stddef.h>
+
+enum CommandType {
+    CMD_INSERT_SYMBOL,
+    CMD_DELETE_SYMBOL,
+};
 
 #include "core/_context.h"
 
@@ -15,7 +21,8 @@ void            command_destroy(struct Command *cmd);
 // Returns an index of command result.
 //
 // Currently, all commands have index, so no unexpected surprises here.
-size_t command_result_get_index(const struct CommandResult *result);
+size_t           command_result_get_index(const struct CommandResult *result);
+enum CommandType command_result_get_type(const struct CommandResult *result);
 
 void command_result_destroy(struct CommandResult *result);
 

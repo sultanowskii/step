@@ -235,6 +235,19 @@ void *evicting_deque_pop_back(struct EvictingDeque *edeque) {
     return value;
 }
 
+void *evicting_deque_peek_back_offset(struct EvictingDeque *edeque, size_t offset) {
+    if (offset >= evicting_deque_get_size(edeque)) {
+        return NULL;
+    }
+
+    struct DequeNode *node = edeque->tail;
+    for (size_t i = 0; i < offset; i++) {
+        node = node->prev;
+    }
+
+    return node->value;
+}
+
 void *evicting_deque_peek_back(struct EvictingDeque *edeque) {
     if (evicting_deque_get_size(edeque) == 0) {
         return NULL;
