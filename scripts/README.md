@@ -22,6 +22,10 @@ Builds local image (`step-valgrind`) based on (`karek/valgrind`).
 
 ## [valgrind_docker_run.sh](valgrind_docker_run.sh)
 
-Same as `valgrind_run.sh`, but runs (and builds!) inside of a docker container.
+Same as `valgrind_run.sh`, but runs (and builds app) inside of a docker container.
 
 This one is preferred because `valgrind` just DOES NOT WORK quite often on the host machine.
+
+```bash
+EXE=step EXE_ARGS=Makefile MAKE_TARGET=build ./scripts/valgrind_docker_run.sh
+```
