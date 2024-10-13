@@ -1,6 +1,7 @@
 #include "tui/color.h"
 
 #include <ncurses.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "nonstd/runtime.h"
@@ -43,12 +44,20 @@ void setup_custom_colors() {
 void setup_default_colors() {
     use_default_colors();
 
-    init_pair(COLOR_PAIR_TEXT, COLOR_BLACK, COLOR_WHITE);
+    init_pair(COLOR_PAIR_TEXT, COLOR_WHITE, COLOR_BLACK);
+    init_pair(COLOR_PAIR_TEXT_HIGHLIGHTED, COLOR_WHITE, COLOR_BLACK);
+
+    init_pair(COLOR_PAIR_TEXT_CURSOR, COLOR_BLACK, COLOR_WHITE);
+
+    init_pair(COLOR_PAIR_LINE_NUMBER, COLOR_WHITE, COLOR_BLACK);
+    init_pair(COLOR_PAIR_LINE_NUMBER_HIGHLIGHTED, COLOR_WHITE, COLOR_BLACK);
+
+    init_pair(COLOR_PAIR_STATUS, COLOR_BLACK, COLOR_WHITE);
 }
 
-void setup_colors() {
+bool setup_colors() {
     if (!has_colors()) {
-        panic("TODO: HANDLE NO COLORS :C");
+        return false;
     }
 
     start_color();
@@ -58,4 +67,5 @@ void setup_colors() {
     } else {
         setup_default_colors();
     }
+    return true;
 }

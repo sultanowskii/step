@@ -34,7 +34,6 @@ void queue_node_destroy(struct QueueNode *node) {
     free(node);
 }
 
-// TODO: independent implementation?
 struct Queue {
     size_t            size;
     struct QueueNode *head;
@@ -55,7 +54,7 @@ struct Queue *queue_create(void) {
     return queue;
 }
 
-void queue_destroy(struct Queue *queue, destroy destroy_value) {
+void queue_destroy(struct Queue *queue, func_destroy destroy_value) {
     while (queue_get_size(queue) != 0) {
         void *value = queue_pop(queue);
         destroy_value(value);

@@ -18,7 +18,7 @@ struct EvictingStack *evicting_stack_create(size_t max_size) {
     return estack;
 }
 
-void evicting_stack_destroy(struct EvictingStack *estack, destroy destroy_value) {
+void evicting_stack_destroy(struct EvictingStack *estack, func_destroy destroy_value) {
     evicting_deque_destroy(estack->edeque, destroy_value);
     estack->edeque = FREED_DUMMY;
     free(estack);

@@ -65,7 +65,7 @@ struct EvictingDeque *evicting_deque_create(size_t max_size) {
     return edeque;
 }
 
-void evicting_deque_destroy(struct EvictingDeque *edeque, destroy destroy_value) {
+void evicting_deque_destroy(struct EvictingDeque *edeque, func_destroy destroy_value) {
     while (evicting_deque_get_size(edeque) != 0) {
         void *value = evicting_deque_pop_front(edeque);
         destroy_value(value);

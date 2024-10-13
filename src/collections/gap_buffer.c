@@ -87,10 +87,6 @@ void _gap_buffer_grow(struct GapBuffer *gb, size_t index, size_t n) {
         gb->buffer[index] = gb->buffer[index - n];
     }
 
-    for (size_t i = index; i < index + n; i++) {
-        gb->buffer[i] = '_'; // TODO: remove?
-    }
-
     gb->length += n;
     gb->left = index;
     gb->right = gb->left + n;
@@ -101,7 +97,6 @@ void _gap_buffer_move_left(struct GapBuffer *gb, size_t index) {
         gb->left--;
         gb->right--;
         gb->buffer[gb->right + 1] = gb->buffer[gb->left];
-        gb->buffer[gb->left] = '_'; // TODO: remove?
     }
 }
 
@@ -110,7 +105,6 @@ void _gap_buffer_move_right(struct GapBuffer *gb, size_t index) {
         gb->left++;
         gb->right++;
         gb->buffer[gb->left - 1] = gb->buffer[gb->right];
-        gb->buffer[gb->right] = '_'; // TODO: remove?
     }
 }
 
@@ -134,7 +128,7 @@ void _gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s, size_
     }
 
     size_t i = 0;
-    size_t current_index = index; // TODO: just use gb->left?
+    size_t current_index = index;
 
     while (i < length) {
         if (gb->left == gb->right) {
@@ -161,13 +155,11 @@ void gap_buffer_delete(struct GapBuffer *gb, size_t index) {
     if (index + 1 == gb->size) {
         gap_buffer_move_gap(gb, index);
         gb->right++;
-        gb->buffer[gb->right] = '_'; // TODO: remove?
         return;
     }
 
     gap_buffer_move_gap(gb, index + 1);
     gb->left--;
-    gb->buffer[gb->left] = '_'; // TODO: remove?
 }
 
 void gap_buffer_delete_n(struct GapBuffer *gb, size_t index, size_t n) {
@@ -203,14 +195,12 @@ void gap_buffer_write_to_file(const struct GapBuffer *gb, FILE *f) {
     char  *left_part_start = gb->buffer;
     size_t left_part_length = gb->left;
     if (left_part_length > 0) {
-        // TODO: handle fail
         fwrite(left_part_start, sizeof(char), left_part_length, f);
     }
 
     char  *right_part_start = gb->buffer + gb->right + 1;
     size_t right_part_length = gb->length - gb->right - 1;
     if (right_part_length > 0) {
-        // TODO: handle fail
         fwrite(right_part_start, sizeof(char), right_part_length, f);
     }
 }

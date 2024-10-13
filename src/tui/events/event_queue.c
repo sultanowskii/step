@@ -23,7 +23,7 @@ struct EventQueue *event_queue_create(void) {
 }
 
 void event_queue_destroy(struct EventQueue *event_queue) {
-    queue_destroy(event_queue->queue, event_destroy);
+    queue_destroy(event_queue->queue, (func_destroy)event_destroy);
     event_queue->queue = NULL;
     free(event_queue);
 }

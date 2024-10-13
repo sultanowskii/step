@@ -50,7 +50,7 @@ struct Coords revise_coords_with_gap_buffer(
     return last_valid;
 }
 
-struct FindLineResult find_start_of_next_line(
+optional_size_t find_start_of_next_line(
     const struct GapBuffer *gb,
     size_t                  starting_index
 ) {
@@ -58,27 +58,45 @@ struct FindLineResult find_start_of_next_line(
     for (size_t i = starting_index; i < gb_length; i++) {
         char symbol = gap_buffer_get_at(gb, i);
         if (symbol == '\n') {
-            return (struct FindLineResult){
-                .found = true,
-                .index = i + 1,
-            };
+            return size_t_some(i + 1);
         }
     }
 
-    return (struct FindLineResult){
-        .found = false,
-        .index = 0,
-    };
+    return size_t_none();
 }
 
-struct FindLineResult find_start_of_previous_line(
+optional_size_t find_start_of_current_line(
     const struct GapBuffer *gb,
     size_t                  starting_index
 ) {
     if (starting_index == 0) {
-        return (struct FindLineResult){
-            .found = false,
-        };
+        return size_t_some(0);
+    }
+
+    size_t i = starting_index - 1;
+
+    while (true) {
+        char symbol = gap_buffer_get_at(gb, i);
+        if (symbol == '\n') {
+            return size_t_some(i + 1);
+        }
+
+        if (i == 0) {
+            return size_t_some(0);
+        }
+
+        i--;
+    }
+
+    return size_t_none();
+}
+
+optional_size_t find_start_of_previous_line(
+    const struct GapBuffer *gb,
+    size_t                  starting_index
+) {
+    if (starting_index == 0) {
+        return size_t_none();
     }
 
     bool   start_of_current_line_found = false;
@@ -88,21 +106,14 @@ struct FindLineResult find_start_of_previous_line(
         char symbol = gap_buffer_get_at(gb, i);
         if (symbol == '\n') {
             if (start_of_current_line_found) {
-                return (struct FindLineResult){
-                    .found = true,
-                    .index = i + 1,
-                };
-            } else {
-                start_of_current_line_found = true;
+                return size_t_some(i + 1);
             }
+            start_of_current_line_found = true;
         }
 
         if (i == 0) {
             if (start_of_current_line_found) {
-                return (struct FindLineResult){
-                    .found = true,
-                    .index = 0,
-                };
+                return size_t_some(0);
             }
             break;
         }
@@ -110,9 +121,7 @@ struct FindLineResult find_start_of_previous_line(
         i--;
     }
 
-    return (struct FindLineResult){
-        .found = false,
-    };
+    return size_t_none();
 }
 
 optional_size_t get_index_from_position(

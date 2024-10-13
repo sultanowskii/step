@@ -10,40 +10,81 @@
 #include "tui/coords.h"
 #include "tui/cursor.h"
 #include "tui/fmt.h"
+#include "tui/text.h"
+
+void print_err(WINDOW *status_board_window) {
+    wprintw(status_board_window, "(err)");
+}
+
+void print_value_ln(struct Context *ctx) {
+    WINDOW *status_board_window = board_window(ctx->status_board);
+
+    optional_size_t maybe_line_index = get_line_index_from_cursor(ctx);
+    if (size_t_is_none(maybe_line_index)) {
+        print_err(status_board_window);
+        return;
+    }
+
+    size_t line_index = size_t_get_val(maybe_line_index);
+    wprintw(status_board_window, "%zu", index_to_human(line_index));
+}
+
+void print_value_col(struct Context *ctx) {
+    WINDOW *status_board_window = board_window(ctx->status_board);
+
+    optional_size_t maybe_cursor_index = get_index_from_cursor_position(ctx);
+    if (size_t_is_none(maybe_cursor_index)) {
+        print_err(status_board_window);
+        return;
+    }
+    size_t index = size_t_get_val(maybe_cursor_index);
+
+    optional_size_t maybe_line_start_index = find_start_of_current_line(ctx->gap_buffer, index);
+    if (size_t_is_none(maybe_cursor_index)) {
+        print_err(status_board_window);
+        return;
+    }
+
+    size_t col = index - size_t_get_val(maybe_line_start_index);
+    wprintw(status_board_window, "%zu", index_to_human(col));
+}
+
+void print_value_file_size(struct Context *ctx) {
+    WINDOW *status_board_window = board_window(ctx->status_board);
+    wprintw(status_board_window, "%zu", gap_buffer_get_length(ctx->gap_buffer));
+}
+
+void print_value_index(struct Context *ctx) {
+    WINDOW *status_board_window = board_window(ctx->status_board);
+
+    optional_size_t maybe_index = get_index_from_cursor_position(ctx);
+    if (size_t_is_none(maybe_index)) {
+        print_err(status_board_window);
+        return;
+    }
+
+    size_t index = size_t_get_val(maybe_index);
+    wprintw(status_board_window, "%zu", index);
+}
 
 void update_status_board(struct Context *ctx) {
     struct Board *status_board = ctx->status_board;
     WINDOW       *status_board_window = board_window(status_board);
 
-    struct Coords *cursor = &ctx->cursor;
-    size_t         gb_length = gap_buffer_get_length(ctx->gap_buffer);
-
-    optional_size_t maybe_line_index = get_line_index_from_cursor(ctx);
-    size_t          line_index;
-    if (size_t_is_some(maybe_line_index)) {
-        line_index = size_t_get_val(maybe_line_index);
-    } else {
-        line_index = -1;
-    }
-
     wclrtoeol(status_board_window);
-    mvwprintw(
-        status_board_window,
-        0,
-        0,
-        "Ln %zu, Col %zu. File size: %zu. i=",
-        index_to_human(line_index),
-        index_to_human(cursor->x), // TODO: long lines
-        gb_length
-    );
+    wmove(status_board_window, 0, 0);
 
-    optional_size_t maybe_index = get_index_from_cursor_position(ctx);
-    if (size_t_is_some(maybe_index)) {
-        size_t index = size_t_get_val(maybe_index);
-        wprintw(status_board_window, "%zu", index);
-    } else {
-        wprintw(status_board_window, "%s", "cant get");
-    }
+    wprintw(status_board_window, "Ln ");
+    print_value_ln(ctx);
+
+    wprintw(status_board_window, ", Col ");
+    print_value_col(ctx);
+
+    wprintw(status_board_window, ". File size: ");
+    print_value_file_size(ctx);
+
+    wprintw(status_board_window, ", index: ");
+    print_value_index(ctx);
 
     struct Coords current = {
         .y = getcury(status_board_window),

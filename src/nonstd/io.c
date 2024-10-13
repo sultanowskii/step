@@ -25,6 +25,5 @@ char *file_read(FILE *f) {
 }
 
 void file_write(FILE *f, const char *s) {
-    // TODO: handle case when less chunks written?
     fwrite(s, sizeof(char), strlen(s), f);
 }

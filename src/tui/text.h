@@ -20,13 +20,9 @@ struct Coords revise_coords_with_gap_buffer(
     struct Coords           raw
 );
 
-struct FindLineResult {
-    size_t index;
-    bool   found;
-};
-
-struct FindLineResult find_start_of_next_line(const struct GapBuffer *gb, size_t starting_index);
-struct FindLineResult find_start_of_previous_line(const struct GapBuffer *gb, size_t starting_index);
+optional_size_t find_start_of_next_line(const struct GapBuffer *gb, size_t starting_index);
+optional_size_t find_start_of_current_line(const struct GapBuffer *gb, size_t starting_index);
+optional_size_t find_start_of_previous_line(const struct GapBuffer *gb, size_t starting_index);
 
 optional_size_t get_index_from_position(
     const struct GapBuffer *gb,

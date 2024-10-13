@@ -52,8 +52,8 @@ void undo_facade_set_ctx(struct UndoFacade *undo_facade, struct Context *ctx) {
 }
 
 void undo_facade_destroy(struct UndoFacade *undo_facade) {
-    evicting_stack_destroy(undo_facade->done, command_result_or_delimiter_destroy);
-    evicting_stack_destroy(undo_facade->undone, command_result_or_delimiter_destroy);
+    evicting_stack_destroy(undo_facade->done, (func_destroy)command_result_or_delimiter_destroy);
+    evicting_stack_destroy(undo_facade->undone, (func_destroy)command_result_or_delimiter_destroy);
     undo_facade->done = NULL;
     undo_facade->undone = NULL;
     free(undo_facade);
