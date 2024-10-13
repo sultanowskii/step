@@ -4,7 +4,6 @@
 #include <malloc.h>
 #include <ncurses.h>
 #include <panel.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -23,11 +22,7 @@
 #include "tui/cursor.h"
 #include "tui/events/event.h"
 #include "tui/events/event_queue.h"
-#include "tui/handlers/delete.h"
-#include "tui/handlers/navigation.h"
-#include "tui/handlers/symbol.h"
-#include "tui/handlers/text.h"
-#include "tui/handlers/undo.h"
+#include "tui/handlers/handlers.h"
 #include "tui/keys/handle_key.h"
 #include "tui/layout.h"
 
