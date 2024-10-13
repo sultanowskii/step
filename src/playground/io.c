@@ -18,7 +18,7 @@ size_t read_size_t(void) {
     return v;
 }
 
-char *read_str() {
+char *read_str(void) {
     char *s = malloc(128);
     scanf(" %127s", s);
     return s;

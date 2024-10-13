@@ -22,7 +22,7 @@ struct DequeNode {
     struct DequeNode *next;
 };
 
-struct DequeNode *deque_node_create_empty() {
+struct DequeNode *deque_node_create_empty(void) {
     struct DequeNode *dnode = malloc(sizeof(struct DequeNode));
     dnode->value = NULL;
     dnode->next = NULL;
@@ -50,7 +50,7 @@ struct EvictingDeque {
     struct DequeNode *tail;
 };
 
-struct EvictingDeque *evicting_deque_create_emtpy() {
+struct EvictingDeque *evicting_deque_create_emtpy(void) {
     struct EvictingDeque *edeque = malloc(sizeof(struct EvictingDeque));
     edeque->max_size = 0;
     edeque->size = 0;

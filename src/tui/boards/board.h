@@ -14,7 +14,6 @@ struct Board {
     struct Coords start;
 };
 
-struct Board *board_create_empty();
 // Creates uninitialized board. Must be used in pair with `board_resize()`
 struct Board *board_create_dummy();
 // Creates board, initialises window and panel with provided size and position

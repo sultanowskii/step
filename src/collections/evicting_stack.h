@@ -8,7 +8,6 @@
 
 struct EvictingStack;
 
-struct EvictingStack *evicting_stack_create_empty();
 struct EvictingStack *evicting_stack_create(size_t max_size);
 void                  evicting_stack_destroy(struct EvictingStack *estack, func_destroy destroy_value);
 

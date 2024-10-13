@@ -15,7 +15,7 @@ static inline size_t _(size_t rgb) {
     return rgb_to_ncurses(rgb);
 }
 
-void setup_custom_colors() {
+void setup_custom_colors(void) {
     init_color(COLOR_TEXT_TEXT, _(215), _(215), _(215));
     init_color(COLOR_TEXT_BACKGROUND, _(40), _(40), _(40));
     init_pair(COLOR_PAIR_TEXT, COLOR_TEXT_TEXT, COLOR_TEXT_BACKGROUND);
@@ -41,7 +41,7 @@ void setup_custom_colors() {
     init_pair(COLOR_PAIR_STATUS, COLOR_STATUS_TEXT, COLOR_STATUS_BACKGROUND);
 }
 
-void setup_default_colors() {
+void setup_default_colors(void) {
     use_default_colors();
 
     init_pair(COLOR_PAIR_TEXT, COLOR_WHITE, COLOR_BLACK);
@@ -55,7 +55,7 @@ void setup_default_colors() {
     init_pair(COLOR_PAIR_STATUS, COLOR_BLACK, COLOR_WHITE);
 }
 
-bool setup_colors() {
+bool setup_colors(void) {
     if (!has_colors()) {
         return false;
     }

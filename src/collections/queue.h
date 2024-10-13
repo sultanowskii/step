@@ -7,7 +7,6 @@
 
 struct Queue;
 
-struct Queue *queue_create_empty(void);
 struct Queue *queue_create(void);
 void          queue_destroy(struct Queue *queue, void (*destroy_value)(void *));
 

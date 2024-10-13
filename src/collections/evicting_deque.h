@@ -7,7 +7,6 @@
 
 struct EvictingDeque;
 
-struct EvictingDeque *evicting_deque_create_emtpy();
 struct EvictingDeque *evicting_deque_create(size_t max_size);
 void                  evicting_deque_destroy(struct EvictingDeque *edeque, void (*destroy_value)(void *));
 

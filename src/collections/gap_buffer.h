@@ -5,7 +5,6 @@
 
 struct GapBuffer;
 
-struct GapBuffer *gap_buffer_create_empty();
 struct GapBuffer *gap_buffer_create_from_string(const char *s);
 void              gap_buffer_destroy(struct GapBuffer *gb);
 

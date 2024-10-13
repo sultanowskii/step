@@ -27,7 +27,7 @@ struct GapBuffer {
 
 void _gap_buffer_grow(struct GapBuffer *gb, size_t index, size_t n);
 
-struct GapBuffer *gap_buffer_create_empty() {
+struct GapBuffer *gap_buffer_create_empty(void) {
     struct GapBuffer *gb = malloc(sizeof(struct GapBuffer));
     gb->buffer = NULL;
     gb->size = 0;

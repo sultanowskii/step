@@ -5,7 +5,7 @@
 #include <panel.h>
 #include <stddef.h>
 
-struct Board *board_create_empty() {
+struct Board *board_create_empty(void) {
     struct Board *board = malloc(sizeof(struct Board));
     board->panel = NULL;
     board->height = 0;

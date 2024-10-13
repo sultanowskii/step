@@ -32,4 +32,4 @@ enum ColorPairs {
 // THIS LIBRARY IS 30+ YEARS OLD
 size_t rgb_to_ncurses(size_t rgb);
 
-bool setup_colors();
+bool setup_colors(void);
