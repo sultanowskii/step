@@ -8,3 +8,5 @@ void print_indent(size_t size);
 void iprintf(size_t indent_size, const char *format, ...);
 // Prints a newline.
 void print_newline(void);
+// Same as sprintf, but allocates a buffer.
+char *alloc_sprintf(const char *format, ...);

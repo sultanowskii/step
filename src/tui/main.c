@@ -11,7 +11,9 @@
 #include "collections/gap_buffer_str.h"
 #include "core/commands/undo.h"
 #include "core/context.h"
+#include "core/error_message.h"
 #include "core/state.h"
+#include "nonstd/fmt.h"
 #include "nonstd/io.h"
 #include "tui/boards/board.h"
 #include "tui/boards/line_number_board.h"
@@ -89,9 +91,7 @@ struct Context *context_setup(const char *filename) {
 
     FILE *f = fopen(filename, "a+");
     if (f == NULL) {
-        // TODO: make message visible on screen (because ncurses saves/restores terminal state)
-        // - enter some sort of error mode where the only valid option is to exit.
-        fprintf(stderr, "failed to open file '%s': %s\n", filename, strerror(errno));
+        error_message = alloc_sprintf("failed to open file '%s': %s", filename, strerror(errno));
         return NULL;
     }
     char *data = file_read(f);
@@ -144,10 +144,14 @@ void context_teardown(struct Context *ctx) {
     context_destroy(ctx);
 }
 
-void tui_main(const char *filename) {
+bool tui_main(const char *filename) {
+    bool success = true;
+
     tui_setup();
+
     struct Context *ctx = context_setup(filename);
     if (ctx == NULL) {
+        success = false;
         goto TUI_TEARDOWN;
     }
 
@@ -156,4 +160,5 @@ void tui_main(const char *filename) {
     context_teardown(ctx);
 TUI_TEARDOWN:
     tui_teardown();
+    return success;
 }

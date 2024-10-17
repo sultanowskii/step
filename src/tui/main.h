@@ -1,3 +1,5 @@
 #pragma once
 
-void tui_main(const char *filename);
+#include <stdbool.h>
+
+bool tui_main(const char *filename);

@@ -63,7 +63,7 @@ void gap_buffer_destroy(struct GapBuffer *gb) {
 
 void _gap_buffer_inrease_size(struct GapBuffer *gb, size_t size) {
     while (gb->size <= size) {
-        gb->size *= 2; // TODO: improve
+        gb->size = grow_size(gb->size);
     }
 
     gb->buffer = realloc(gb->buffer, gb->size);
