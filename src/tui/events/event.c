@@ -14,8 +14,8 @@ enum EventType {
     EVENT_KEY_BACKSPACE,
     EVENT_KEY_TEXT,
     EVENT_KEY_NAVIGATION,
-    EVENT_GO_UP_REQUEST,
-    EVENT_GO_DOWN_REQUEST,
+    EVENT_REQUEST_GO_UP,
+    EVENT_REQUEST_GO_DOWN,
 };
 
 struct Event {
@@ -29,8 +29,8 @@ struct Event {
         struct EventKeyBackspace  key_backspace;
         struct EventKeyText       key_text;
         struct EventKeyNavigation key_navigation;
-        struct EventGoUpRequest   go_up_request;
-        struct EventGoDownRequest go_down_request;
+        struct EventRequestGoUp   request_go_up;
+        struct EventRequestGoDown request_go_down;
     } body;
 };
 
@@ -103,15 +103,15 @@ struct Event *event_create_key_navigation(int key) {
 
 struct Event *event_create_request_go_up(void) {
     struct Event *event = event_create_empty();
-    event->type = EVENT_GO_UP_REQUEST;
-    event->body.go_up_request = (struct EventGoUpRequest){};
+    event->type = EVENT_REQUEST_GO_UP;
+    event->body.request_go_up = (struct EventRequestGoUp){};
     return event;
 }
 
 struct Event *event_create_request_go_down(void) {
     struct Event *event = event_create_empty();
-    event->type = EVENT_GO_DOWN_REQUEST;
-    event->body.go_down_request = (struct EventGoDownRequest){};
+    event->type = EVENT_REQUEST_GO_DOWN;
+    event->body.request_go_down = (struct EventRequestGoDown){};
     return event;
 }
 
@@ -119,50 +119,26 @@ void event_destroy(struct Event *event) {
     free(event);
 }
 
+#define EVENT_CASE(NAME, name)                                  \
+    case EVENT_##NAME: {                                        \
+        event_handler->handle_##name(ctx, &(event->body.name)); \
+        break;                                                  \
+    };
 void event_handle(const struct EventHandler *event_handler, struct Context *ctx, struct Event *event) {
     switch (event->type) {
-        case EVENT_SYMBOL_ADDED: {
-            event_handler->handle_symbol_added(ctx, &(event->body.symbol_added));
-            break;
-        };
-        case EVENT_SYMBOL_REMOVED: {
-            event_handler->handle_symbol_removed(ctx, &(event->body.symbol_removed));
-            break;
-        };
-        case EVENT_KEY_UNDO: {
-            event_handler->handle_key_undo(ctx, &(event->body.key_undo));
-            break;
-        }
-        case EVENT_KEY_REDO: {
-            event_handler->handle_key_redo(ctx, &(event->body.key_redo));
-            break;
-        }
-        case EVENT_KEY_DELETE: {
-            event_handler->handle_key_delete(ctx, &(event->body.key_delete));
-            break;
-        }
-        case EVENT_KEY_BACKSPACE: {
-            event_handler->handle_key_backspace(ctx, &(event->body.key_backspace));
-            break;
-        }
-        case EVENT_KEY_TEXT: {
-            event_handler->handle_key_text(ctx, &(event->body.key_text));
-            break;
-        }
-        case EVENT_KEY_NAVIGATION: {
-            event_handler->handle_key_navigation(ctx, &(event->body.key_navigation));
-            break;
-        }
-        case EVENT_GO_UP_REQUEST: {
-            event_handler->handle_request_go_up(ctx, &(event->body.go_up_request));
-            break;
-        }
-        case EVENT_GO_DOWN_REQUEST: {
-            event_handler->handle_request_go_down(ctx, &(event->body.go_down_request));
-            break;
-        }
+        EVENT_CASE(SYMBOL_ADDED, symbol_added);
+        EVENT_CASE(SYMBOL_REMOVED, symbol_removed);
+        EVENT_CASE(KEY_UNDO, key_undo);
+        EVENT_CASE(KEY_REDO, key_redo);
+        EVENT_CASE(KEY_DELETE, key_delete);
+        EVENT_CASE(KEY_BACKSPACE, key_backspace);
+        EVENT_CASE(KEY_TEXT, key_text);
+        EVENT_CASE(KEY_NAVIGATION, key_navigation);
+        EVENT_CASE(REQUEST_GO_UP, request_go_up);
+        EVENT_CASE(REQUEST_GO_DOWN, request_go_down);
         default: {
             panic("runtime error: unexpected command type while executing command");
         };
     }
 }
+#undef EVENT_CASE

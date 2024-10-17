@@ -48,19 +48,21 @@ void handle_key_navigation(
     struct Coords *cursor = &ctx->cursor;
 
     switch (key_navigation->key) {
-        case KEY_RIGHT:
+        case KEY_RIGHT: {
             if (cursor->x == text_board->width - 1) {
                 break;
             }
             cursor->x++;
             break;
-        case KEY_LEFT:
+        }
+        case KEY_LEFT: {
             if (cursor->x == 0) {
                 break;
             }
             cursor->x--;
             break;
-        case KEY_DOWN:
+        }
+        case KEY_DOWN: {
             if (!row_lower_than_position_exists(ctx)) {
                 break;
             }
@@ -72,13 +74,15 @@ void handle_key_navigation(
             }
             cursor->y++;
             break;
-        case KEY_UP:
+        }
+        case KEY_UP: {
             if (cursor->y == 0) {
                 event_queue_push_request_go_up(ctx->events);
                 break;
             }
             cursor->y--;
             break;
+        }
         default: {
             break;
         }
@@ -86,11 +90,11 @@ void handle_key_navigation(
 }
 
 IGNORE_UNUSED_PARAMETER()
-void handle_request_go_up(struct Context *ctx, const struct EventGoUpRequest *go_up_request) {
+void handle_request_go_up(struct Context *ctx, const struct EventRequestGoUp *request_go_up) {
     try_go_up(ctx);
 }
 
 IGNORE_UNUSED_PARAMETER()
-void handle_request_go_down(struct Context *ctx, const struct EventGoDownRequest *go_down_request) {
+void handle_request_go_down(struct Context *ctx, const struct EventRequestGoDown *request_go_down) {
     try_go_down(ctx);
 }
