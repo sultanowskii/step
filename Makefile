@@ -68,3 +68,7 @@ $(TARGET): $(OBJS) $(TUI_OBJS) $(ENTRYPOINT_OBJ)
 
 %.o: %.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c -o $@ $<
+
+.PHONY: install
+install:
+	install -m 755 $(TARGET) /usr/bin/
