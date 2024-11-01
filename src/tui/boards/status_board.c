@@ -2,8 +2,10 @@
 
 #include <ncurses.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "core/context.h"
+#include "core/state.h"
 #include "nonstd/human.h"
 #include "nonstd/optionals.h"
 #include "tui/boards/board.h"
@@ -14,6 +16,12 @@
 
 void print_err(WINDOW *status_board_window) {
     wprintw(status_board_window, "(err)");
+}
+
+void print_value_state(struct Context *ctx) {
+    const char *state_str = STATE_STR[ctx->state];
+    wprintw(board_window(ctx->status_board), "%s", state_str);
+    print_filler(ctx->status_board, STATE_STR_MAX_LENGTH - strlen(state_str));
 }
 
 void print_value_ln(struct Context *ctx) {
@@ -74,16 +82,20 @@ void update_status_board(struct Context *ctx) {
     wclrtoeol(status_board_window);
     wmove(status_board_window, 0, 0);
 
-    wprintw(status_board_window, "Ln ");
+    print_value_state(ctx);
+
+    wprintw(status_board_window, " Ln ");
     print_value_ln(ctx);
 
     wprintw(status_board_window, ", Col ");
     print_value_col(ctx);
 
-    wprintw(status_board_window, ". File size: ");
-    print_value_file_size(ctx);
+    if (0) {
+        wprintw(status_board_window, ". File size: ");
+        print_value_file_size(ctx);
+    }
 
-    wprintw(status_board_window, ", index: ");
+    wprintw(status_board_window, ". Index: ");
     print_value_index(ctx);
 
     struct Coords current = {

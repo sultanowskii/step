@@ -45,6 +45,8 @@ void loop(struct Context *ctx) {
     struct Board      *text_board = ctx->text_board;
     struct EventQueue *event_queue = ctx->events;
 
+    ctx->state = STATE_NORMAL;
+
     while (ctx->state != STATE_EXIT) {
         update_line_number_board(ctx);
         update_text_board(ctx);
