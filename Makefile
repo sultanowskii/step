@@ -1,5 +1,4 @@
-CFLAGS           := -Wall -Wextra -fPIC -g
-CFLAGS_DEBUG     := -Wall -Wextra -fPIC -g
+CFLAGS           := -Wall -Wswitch-enum -Wextra -fPIC -g
 INCLUDES         := -Isrc
 LIBS             := 
 

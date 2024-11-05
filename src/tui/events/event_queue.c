@@ -78,6 +78,16 @@ void event_queue_push_request_go_down(struct EventQueue *event_queue) {
     queue_push(event_queue->queue, event);
 }
 
+void event_queue_push_request_go_to_bof(struct EventQueue *event_queue) {
+    struct Event *event = event_create_request_go_to_bof();
+    queue_push(event_queue->queue, event);
+}
+
+void event_queue_push_request_go_to_eof(struct EventQueue *event_queue) {
+    struct Event *event = event_create_request_go_to_eof();
+    queue_push(event_queue->queue, event);
+}
+
 struct Event *event_queue_pop(struct EventQueue *event_queue) {
     return queue_pop(event_queue->queue);
 }

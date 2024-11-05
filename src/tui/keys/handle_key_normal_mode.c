@@ -37,6 +37,14 @@ void handle_key_normal_mode(
             event_queue_push_key_redo(events);
             break;
         }
+        case 'g': {
+            event_queue_push_request_go_to_bof(events);
+            break;
+        }
+        case 'G': {
+            event_queue_push_request_go_to_eof(events);
+            break;
+        }
         case CTRL('q'): {
             ctx->state = STATE_EXIT;
             break;

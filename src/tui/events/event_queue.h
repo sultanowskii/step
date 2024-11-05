@@ -18,6 +18,8 @@ void          event_queue_push_key_text(struct EventQueue *event_queue, int key)
 void          event_queue_push_key_navigation(struct EventQueue *event_queue, int key);
 void          event_queue_push_request_go_up(struct EventQueue *event_queue);
 void          event_queue_push_request_go_down(struct EventQueue *event_queue);
+void          event_queue_push_request_go_to_bof(struct EventQueue *event_queue);
+void          event_queue_push_request_go_to_eof(struct EventQueue *event_queue);
 struct Event *event_queue_pop(struct EventQueue *event_queue);
 
 bool event_queue_is_empty(const struct EventQueue *event_queue);

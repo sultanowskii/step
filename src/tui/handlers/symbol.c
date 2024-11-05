@@ -40,7 +40,7 @@ void handle_symbol_added(struct Context *ctx, const struct EventSymbolAdded *sym
     }
 
     if (symbol_added->symbol == '\n') {
-        return handle_newline_added(ctx, index);
+        handle_newline_added(ctx, index);
     }
 }
 
@@ -60,7 +60,8 @@ void handle_symbol_removed(struct Context *ctx, const struct EventSymbolRemoved 
     size_t index = symbol_removed->index;
 
     if (symbol_removed->symbol == '\n') {
-        return handle_newline_removed(ctx, index);
+        handle_newline_removed(ctx, index);
+        return;
     }
 
     if (index < ctx->starting_symbol_index) {

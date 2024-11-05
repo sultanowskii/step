@@ -98,3 +98,13 @@ IGNORE_UNUSED_PARAMETER()
 void handle_request_go_down(struct Context *ctx, const struct EventRequestGoDown *request_go_down) {
     try_go_down(ctx);
 }
+
+IGNORE_UNUSED_PARAMETER()
+void handle_request_go_to_bof(struct Context *ctx, const struct EventRequestGoToBof *request_go_to_bof) {
+    move_cursor_to_index(ctx, 0);
+}
+
+IGNORE_UNUSED_PARAMETER()
+void handle_request_go_to_eof(struct Context *ctx, const struct EventRequestGoToEof *request_go_to_eof) {
+    move_cursor_to_index(ctx, gap_buffer_get_length(ctx->gap_buffer));
+}

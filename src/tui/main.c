@@ -40,6 +40,8 @@ void loop(struct Context *ctx) {
         .handle_key_navigation = handle_key_navigation,
         .handle_request_go_up = handle_request_go_up,
         .handle_request_go_down = handle_request_go_down,
+        .handle_request_go_to_bof = handle_request_go_to_bof,
+        .handle_request_go_to_eof = handle_request_go_to_eof,
     };
 
     struct Board      *text_board = ctx->text_board;

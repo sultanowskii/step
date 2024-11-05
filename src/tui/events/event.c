@@ -16,21 +16,25 @@ enum EventType {
     EVENT_KEY_NAVIGATION,
     EVENT_REQUEST_GO_UP,
     EVENT_REQUEST_GO_DOWN,
+    EVENT_REQUEST_GO_TO_BOF,
+    EVENT_REQUEST_GO_TO_EOF,
 };
 
 struct Event {
     enum EventType type;
     union {
-        struct EventSymbolAdded   symbol_added;
-        struct EventSymbolRemoved symbol_removed;
-        struct EventKeyUndo       key_undo;
-        struct EventKeyRedo       key_redo;
-        struct EventKeyDelete     key_delete;
-        struct EventKeyBackspace  key_backspace;
-        struct EventKeyText       key_text;
-        struct EventKeyNavigation key_navigation;
-        struct EventRequestGoUp   request_go_up;
-        struct EventRequestGoDown request_go_down;
+        struct EventSymbolAdded    symbol_added;
+        struct EventSymbolRemoved  symbol_removed;
+        struct EventKeyUndo        key_undo;
+        struct EventKeyRedo        key_redo;
+        struct EventKeyDelete      key_delete;
+        struct EventKeyBackspace   key_backspace;
+        struct EventKeyText        key_text;
+        struct EventKeyNavigation  key_navigation;
+        struct EventRequestGoUp    request_go_up;
+        struct EventRequestGoDown  request_go_down;
+        struct EventRequestGoToBof request_go_to_bof;
+        struct EventRequestGoToEof request_go_to_eof;
     } body;
 };
 
@@ -115,6 +119,20 @@ struct Event *event_create_request_go_down(void) {
     return event;
 }
 
+struct Event *event_create_request_go_to_bof(void) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_REQUEST_GO_TO_BOF;
+    event->body.request_go_to_bof = (struct EventRequestGoToBof){};
+    return event;
+}
+
+struct Event *event_create_request_go_to_eof(void) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_REQUEST_GO_TO_EOF;
+    event->body.request_go_to_eof = (struct EventRequestGoToEof){};
+    return event;
+}
+
 void event_destroy(struct Event *event) {
     free(event);
 }
@@ -136,6 +154,8 @@ void event_handle(const struct EventHandler *event_handler, struct Context *ctx,
         EVENT_CASE(KEY_NAVIGATION, key_navigation);
         EVENT_CASE(REQUEST_GO_UP, request_go_up);
         EVENT_CASE(REQUEST_GO_DOWN, request_go_down);
+        EVENT_CASE(REQUEST_GO_TO_BOF, request_go_to_bof);
+        EVENT_CASE(REQUEST_GO_TO_EOF, request_go_to_eof);
         default: {
             panic("runtime error: unexpected command type while executing command");
         };
