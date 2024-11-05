@@ -13,14 +13,15 @@ void handle_key_insert_mode(
     struct EventQueue *events = ctx->events;
 
     switch (key) {
-        case KEY_DC:
+        case KEY_DC: {
             event_queue_push_key_delete(events);
             break;
+        }
         case KEY_BACKSPACE: {
             event_queue_push_key_backspace(events);
             break;
         }
-        // TODO: change to Esc
+        case ESC:
         case CTRL('q'): {
             ctx->state = STATE_NORMAL;
             break;
