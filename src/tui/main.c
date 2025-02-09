@@ -63,10 +63,9 @@ void loop(struct Context *ctx) {
         while (!event_queue_is_empty(event_queue)) {
             struct Event *event = event_queue_pop(event_queue);
             event_handle(&event_handler, ctx, event);
+            revise_cursor(ctx);
             event_destroy(event);
         }
-
-        revise_cursor(ctx);
     }
 }
 
@@ -97,6 +96,11 @@ void tui_setup(void) {
     // https://en.wikipedia.org/wiki/Escape_sequence
     // man 3 ESCDELAY
     set_escdelay(10);
+
+    mousemask(
+        BUTTON1_PRESSED | BUTTON1_RELEASED | BUTTON1_CLICKED | BUTTON_SHIFT | BUTTON_CTRL | REPORT_MOUSE_POSITION,
+        NULL
+    );
 }
 
 void tui_teardown(void) {

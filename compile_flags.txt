@@ -1,0 +1,4 @@
+-Isrc
+-lpanel
+-lncurses
+
