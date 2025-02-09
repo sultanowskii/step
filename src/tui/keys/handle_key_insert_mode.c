@@ -3,7 +3,6 @@
 #include <ncurses.h>
 
 #include "core/context.h"
-#include "tui/boards/board.h"
 #include "tui/keys/key.h"
 
 void handle_key_insert_mode(

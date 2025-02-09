@@ -4,6 +4,8 @@
 #include "tui/cursor.h"
 #include "tui/keys/handle_key_insert_mode.h"
 #include "tui/keys/handle_key_normal_mode.h"
+#include "tui/boards/board.h"
+#include "tui/layout.h"
 
 void handle_mouse(struct Context *ctx) {
     MEVENT event;
@@ -20,9 +22,15 @@ void handle_mouse(struct Context *ctx) {
 }
 
 void handle_key(struct Context *ctx, int key) {
-    if (key == KEY_MOUSE) {
-        handle_mouse(ctx);
-        return;
+    switch (key) {
+        case KEY_RESIZE: {
+            recompose_boards(ctx);
+            return;
+        }
+        if (key == KEY_MOUSE) {
+            handle_mouse(ctx);
+            return;
+        }
     }
 
     switch (ctx->state) {

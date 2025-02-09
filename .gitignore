@@ -7,3 +7,6 @@
 vgcore.*
 
 .vscode/
+
+flamegraph.svg
+
