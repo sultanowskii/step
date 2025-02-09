@@ -27,7 +27,7 @@ void handle_key(struct Context *ctx, int key) {
             recompose_boards(ctx);
             return;
         }
-        if (key == KEY_MOUSE) {
+        case KEY_MOUSE: {
             handle_mouse(ctx);
             return;
         }
