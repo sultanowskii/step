@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <stddef.h>
 
+#include "collections/bit_array.h"
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "tui/boards/board.h"
@@ -18,6 +19,7 @@ void text_board_highlight_line(struct Board *text_board, size_t y) {
 }
 
 void print_gap_buffer_to_board(
+    struct Context         *ctx,
     struct Board           *board,
     const struct GapBuffer *gb,
     size_t                  starting_index,
@@ -29,10 +31,11 @@ void print_gap_buffer_to_board(
     for (size_t i = starting_index; i < gap_buffer_get_length(gb); i++) {
         char sym = gap_buffer_get_at(gb, i);
 
-        mvwaddch(board_window(board), current.y, current.x, sym);
-
-        if (sym == '\n') {
-            print_filler_till_end_of_row(board, &current);
+        if (bit_array_test_at(ctx->rows_to_redraw, current.y)) {
+            mvwaddch(board_window(board), current.y, current.x, sym);
+            if (sym == '\n') {
+                print_filler_till_end_of_row(board, &current);
+            }
         }
 
         optional_coords maybe_next = next_valid_coords(&current, max_rows, max_columns, sym);
@@ -50,7 +53,7 @@ void update_text_board(struct Context *ctx) {
     struct GapBuffer *gb = ctx->gap_buffer;
     struct Coords    *cursor = &ctx->cursor;
 
-    print_gap_buffer_to_board(text_board, gb, ctx->starting_symbol_index, text_board->height, text_board->width);
+    print_gap_buffer_to_board(ctx, text_board, gb, ctx->starting_symbol_index, text_board->height, text_board->width);
 
     size_t first_row = first_y_of_line_under_cursor(ctx);
     size_t last_row = last_y_of_line_under_cursor(ctx);

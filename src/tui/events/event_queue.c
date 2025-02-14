@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include "collections/queue.h"
+#include "nonstd/mem.h"
 #include "tui/events/event.h"
 
 struct EventQueue {

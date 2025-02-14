@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "collections/bit_array.h"
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
 #include "core/commands/undo.h"
@@ -56,6 +57,8 @@ void loop(struct Context *ctx) {
 
         update_panels();
         doupdate();
+
+        bit_array_clear(ctx->rows_to_redraw);
 
         int sym = wgetch(board_window(text_board));
         handle_key(ctx, sym);
@@ -128,6 +131,8 @@ struct Context *context_setup(const char *filename) {
     const size_t       starting_symbol_index = 0;
     const size_t       starting_line_index = 0;
     struct EventQueue *event_queue = event_queue_create();
+    struct BitArray   *rows_to_redraw = bit_array_create(256);
+    bit_array_flood(rows_to_redraw);
 
     struct Board *line_number_board = board_create_dummy();
     struct Board *status_board = board_create_dummy();
@@ -145,7 +150,8 @@ struct Context *context_setup(const char *filename) {
         cursor,
         starting_symbol_index,
         starting_line_index,
-        line_count
+        line_count,
+        rows_to_redraw
     );
 
     undo_facade_set_ctx(undo_facade, ctx);
@@ -155,6 +161,8 @@ struct Context *context_setup(const char *filename) {
 
 void context_teardown(struct Context *ctx) {
     undo_facade_destroy(ctx->undo_facade);
+
+    bit_array_destroy(ctx->rows_to_redraw);
 
     gap_buffer_destroy(ctx->gap_buffer);
 

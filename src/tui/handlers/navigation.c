@@ -2,6 +2,7 @@
 
 #include <ncurses.h>
 
+#include "collections/bit_array.h"
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "nonstd/compile.h"
@@ -14,6 +15,7 @@
 #include "tui/navigation.h"
 #include "tui/next_coords.h"
 #include "tui/text.h"
+#include "tui/update/update.h"
 
 bool row_lower_than_position_exists(const struct Context *ctx) {
     optional_size_t maybe_index = get_index_from_cursor_position(ctx);
@@ -47,6 +49,7 @@ void handle_key_navigation(
     struct Board  *text_board = ctx->text_board;
     struct Coords *cursor = &ctx->cursor;
 
+    bit_array_set_at(ctx->rows_to_redraw, cursor->y);
     switch (key_navigation->key) {
         case KEY_RIGHT: {
             if (cursor->x == text_board->width - 1) {
@@ -72,7 +75,10 @@ void handle_key_navigation(
                 event_queue_push_request_go_down(ctx->events);
                 break;
             }
+
+            require_redraw_for_line_at_cursor(ctx);
             cursor->y++;
+
             break;
         }
         case KEY_UP: {
@@ -87,16 +93,21 @@ void handle_key_navigation(
             break;
         }
     }
+    bit_array_set_at(ctx->rows_to_redraw, cursor->y);
 }
 
 IGNORE_UNUSED_PARAMETER()
 void handle_request_go_up(struct Context *ctx, const struct EventRequestGoUp *request_go_up) {
-    try_go_up(ctx);
+    if (try_go_up(ctx)) {
+        bit_array_flood(ctx->rows_to_redraw);
+    }
 }
 
 IGNORE_UNUSED_PARAMETER()
 void handle_request_go_down(struct Context *ctx, const struct EventRequestGoDown *request_go_down) {
-    try_go_down(ctx);
+    if (try_go_down(ctx)) {
+        bit_array_flood(ctx->rows_to_redraw);
+    }
 }
 
 IGNORE_UNUSED_PARAMETER()

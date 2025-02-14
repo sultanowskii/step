@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <stddef.h>
 
+#include "collections/bit_array.h"
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "nonstd/human.h"
@@ -17,7 +18,7 @@
 static inline void _print_row_line_number(
     struct Board        *line_number_board,
     const struct Coords *current,
-    size_t              *line_index
+    size_t               line_index
 ) {
     mvwprintw(
         board_window(line_number_board),
@@ -25,9 +26,8 @@ static inline void _print_row_line_number(
         0,
         "%*zu",
         (int)line_number_board->width,
-        index_to_human(*line_index)
+        index_to_human(line_index)
     );
-    (*line_index)++;
 }
 
 static inline void _print_row_blank(
@@ -47,7 +47,7 @@ static inline void _print_row_blank(
 static inline void _print_row(
     struct Board  *line_number_board,
     struct Coords *text_board_pos,
-    size_t        *line_index,
+    size_t         line_index,
     bool           is_newline
 ) {
     if (is_newline) {
@@ -61,7 +61,9 @@ void line_number_board_highlight_line(struct Board *line_number_board, size_t y)
     highlight_row(line_number_board, y, COLOR_PAIR_LINE_NUMBER_HIGHLIGHTED);
 }
 
+// TODO: clean up
 void _print_line_number_board_with_gap_buffer(
+    struct Context   *ctx,
     struct Board     *line_number_board,
     struct GapBuffer *gb,
     size_t            starting_symbol_index,
@@ -73,8 +75,9 @@ void _print_line_number_board_with_gap_buffer(
     size_t        line_index = starting_line_index;
     size_t        last_handled_row = 0;
 
-    _print_row_line_number(line_number_board, &text_board_pos, &line_index);
+    _print_row_line_number(line_number_board, &text_board_pos, line_index);
     last_handled_row = 0;
+    line_index++;
 
     size_t gb_length = gap_buffer_get_length(gb);
     for (size_t i = starting_symbol_index; i < gb_length; i++) {
@@ -92,13 +95,19 @@ void _print_line_number_board_with_gap_buffer(
         if (x_reached_end_of_row || is_newline) {
             bool row_already_handled = (text_board_pos.y == last_handled_row);
             if (!row_already_handled) {
-                _print_row(line_number_board, &text_board_pos, &line_index, is_newline);
+                bool redraw_required = bit_array_test_at(ctx->rows_to_redraw, text_board_pos.y);
+                if (redraw_required) {
+                    _print_row(line_number_board, &text_board_pos, line_index, is_newline);
+                }
+                if (is_newline) {
+                    line_index++;
+                }
                 last_handled_row = text_board_pos.y;
             }
         }
     }
 
-    // filling out the rest of the board
+    // fill out the rest of the board
     struct Coords first_unhandled_row_pos = {
         .y = last_handled_row + 1,
         .x = 0,
@@ -114,6 +123,7 @@ void update_line_number_board(struct Context *ctx) {
     struct GapBuffer *gb = ctx->gap_buffer;
 
     _print_line_number_board_with_gap_buffer(
+        ctx,
         line_number_board,
         gb,
         ctx->starting_symbol_index,

@@ -6,6 +6,7 @@
 #include "nonstd/optionals.h"
 #include "tui/cursor.h"
 #include "tui/events/event.h"
+#include "tui/update/update.h"
 
 bool is_key_printable(int symbol) {
     return ' ' <= symbol && symbol <= '~';
@@ -53,4 +54,7 @@ void handle_key_text(struct Context *ctx, const struct EventKeyText *key_text) {
     move_cursor_to_index(ctx, index);
 
     event_queue_push_symbol_added(ctx->events, index_of_inserted_symbol, symbol);
+
+    // TODO: optimize?
+    bit_array_flood(ctx->rows_to_redraw);
 }

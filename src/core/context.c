@@ -2,7 +2,7 @@
 
 #include <malloc.h>
 
-#include "collections/evicting_stack.h"
+#include "collections/bit_array.h"
 #include "collections/gap_buffer.h"
 #include "core/commands/undo.h"
 #include "core/state.h"
@@ -24,6 +24,7 @@ struct Context *_context_create_empty(void) {
     ctx->cursor = (struct Coords){.y = 0, .x = 0};
     ctx->starting_symbol_index = 0;
     ctx->starting_line_index = 0;
+    ctx->rows_to_redraw = NULL;
     return ctx;
 }
 
@@ -39,7 +40,8 @@ struct Context *context_create(
     struct Coords      cursor,
     size_t             starting_symbol_index,
     size_t             starting_line_index,
-    size_t             line_count
+    size_t             line_count,
+    struct BitArray   *rows_to_redraw
 ) {
     struct Context *ctx = _context_create_empty();
     ctx->filepath = str_dup(filepath);
@@ -54,6 +56,7 @@ struct Context *context_create(
     ctx->starting_symbol_index = starting_symbol_index;
     ctx->starting_line_index = starting_line_index;
     ctx->line_count = line_count;
+    ctx->rows_to_redraw = rows_to_redraw;
     return ctx;
 }
 
@@ -67,5 +70,6 @@ void context_destroy(struct Context *ctx) {
     ctx->status_board = NULL;
     ctx->text_board = NULL;
     ctx->cursor = (struct Coords){.y = 0, .x = 0};
+    ctx->rows_to_redraw = NULL;
     free(ctx);
 }

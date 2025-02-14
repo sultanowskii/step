@@ -47,6 +47,9 @@ void handle_deletion(struct Context *ctx, bool backwards) {
     move_cursor_to_index(ctx, index);
 
     event_queue_push_symbol_removed(ctx->events, index_of_deleted_symbol, symbol);
+
+    // TODO: optimize?
+    bit_array_flood(ctx->rows_to_redraw);
 }
 
 IGNORE_UNUSED_PARAMETER()

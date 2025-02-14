@@ -2,7 +2,7 @@
 
 #include "core/_context.h"
 
-#include "collections/evicting_stack.h"
+#include "collections/bit_array.h"
 #include "collections/gap_buffer.h"
 #include "core/commands/undo.h"
 #include "core/state.h"
@@ -39,6 +39,9 @@ struct Context {
     size_t starting_line_index;
     // Number of lines in a buffer
     size_t line_count;
+
+    // Lines to update the screen
+    struct BitArray *rows_to_redraw;
 };
 
 // Creates context with specified done, undone stack and gap_buffer gap buffer.
@@ -54,7 +57,8 @@ struct Context *context_create(
     struct Coords      cursor,
     size_t             starting_symbol_index,
     size_t             starting_line_index,
-    size_t             line_count
+    size_t             line_count,
+    struct BitArray   *rows_to_redraw
 );
 
 // Destroys context. Some fields must be destroyed manually beforehand:
