@@ -6,9 +6,7 @@
 
 #include "collections/gap_buffer.h"
 #include "core/context.h"
-#include "core/state.h"
 #include "nonstd/runtime.h"
-#include "nonstd/str.h"
 
 struct CmdInsertSymbol {
     size_t index;

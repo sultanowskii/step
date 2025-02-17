@@ -7,7 +7,6 @@
 #include <string.h>
 
 #include "nonstd/fmt.h"
-#include "nonstd/math.h"
 #include "nonstd/mem.h"
 
 #define DEFAULT_BUFFER_SIZE 64

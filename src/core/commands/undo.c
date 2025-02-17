@@ -7,7 +7,6 @@
 #include "collections/evicting_stack.h"
 #include "core/_context.h"
 #include "core/commands/commands.h"
-#include "nonstd/math.h"
 #include "nonstd/optionals.h"
 
 // Delimiter is used to divide done/undone stacks into a groups of operations.

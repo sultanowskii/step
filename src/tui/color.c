@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "nonstd/runtime.h"
-
 size_t rgb_to_ncurses(size_t rgb) {
     return rgb * 1000 / 255;
 }

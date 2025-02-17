@@ -11,7 +11,6 @@
 #include "tui/coords.h"
 #include "tui/cursor.h"
 #include "tui/events/event.h"
-#include "tui/highlight.h"
 #include "tui/navigation.h"
 #include "tui/next_coords.h"
 #include "tui/text.h"

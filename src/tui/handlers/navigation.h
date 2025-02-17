@@ -2,7 +2,6 @@
 
 #include "core/context.h"
 #include "tui/events/event.h"
-#include "tui/navigation.h"
 
 void handle_key_navigation(struct Context *ctx, const struct EventKeyNavigation *key_navigation);
 

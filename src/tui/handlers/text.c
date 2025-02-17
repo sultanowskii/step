@@ -6,7 +6,6 @@
 #include "nonstd/optionals.h"
 #include "tui/cursor.h"
 #include "tui/events/event.h"
-#include "tui/update/update.h"
 
 bool is_key_printable(int symbol) {
     return ' ' <= symbol && symbol <= '~';

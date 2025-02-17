@@ -4,7 +4,6 @@
 #include <stddef.h>
 
 #include "core/_context.h"
-#include "tui/navigation.h"
 
 struct Event;
 

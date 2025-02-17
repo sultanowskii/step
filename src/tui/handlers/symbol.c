@@ -2,8 +2,6 @@
 
 #include <stddef.h>
 
-#include "collections/gap_buffer.h"
-#include "collections/gap_buffer_str.h"
 #include "core/context.h"
 #include "tui/events/event.h"
 #include "tui/events/event_queue.h"
