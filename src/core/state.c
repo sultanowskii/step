@@ -6,6 +6,7 @@ const char *STATE_STR[] = {
     [STATE_START] = "START",
     [STATE_NORMAL] = "NORMAL",
     [STATE_INSERT] = "INSERT",
+    [STATE_VISUAL] = "VISUAL",
     [STATE_EXIT] = "EXIT",
 };
 

@@ -6,6 +6,7 @@ enum State {
     STATE_START,
     STATE_NORMAL,
     STATE_INSERT,
+    STATE_VISUAL,
     STATE_EXIT,
 };
 

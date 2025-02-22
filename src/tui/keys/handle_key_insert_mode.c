@@ -5,10 +5,7 @@
 #include "core/context.h"
 #include "tui/keys/key.h"
 
-void handle_key_insert_mode(
-    struct Context *ctx,
-    int             key
-) {
+void handle_key_insert_mode(struct Context *ctx, int key) {
     struct EventQueue *events = ctx->events;
 
     switch (key) {

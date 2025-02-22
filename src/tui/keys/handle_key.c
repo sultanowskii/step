@@ -6,6 +6,7 @@
 #include "tui/cursor.h"
 #include "tui/keys/handle_key_insert_mode.h"
 #include "tui/keys/handle_key_normal_mode.h"
+#include "tui/keys/handle_key_visual_mode.h"
 #include "tui/layout.h"
 
 // TODO: move to handlers/
@@ -48,6 +49,10 @@ void handle_key(struct Context *ctx, int key) {
         }
         case STATE_NORMAL: {
             handle_key_normal_mode(ctx, key);
+            break;
+        }
+        case STATE_VISUAL: {
+            handle_key_visual_mode(ctx, key);
             break;
         }
         case STATE_EXIT: {

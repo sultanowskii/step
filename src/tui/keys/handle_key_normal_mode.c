@@ -3,13 +3,12 @@
 #include <ncurses.h>
 
 #include "core/context.h"
+#include "nonstd/optionals.h"
+#include "tui/cursor.h"
 #include "tui/keys/key.h"
 #include "tui/layout.h"
 
-void handle_key_normal_mode(
-    struct Context *ctx,
-    int             key
-) {
+void handle_key_normal_mode(struct Context *ctx, int key) {
     struct EventQueue *events = ctx->events;
 
     switch (key) {
@@ -26,6 +25,16 @@ void handle_key_normal_mode(
         }
         case 'i': {
             ctx->state = STATE_INSERT;
+            break;
+        }
+        case 'v': {
+            optional_size_t maybe_current_index = get_index_from_cursor_position(ctx);
+            if (size_t_is_some(maybe_current_index)) {
+                size_t current_index = size_t_get_val(maybe_current_index);
+                ctx->selection_starting_symbol_index = current_index;
+                ctx->selection_ending_symbol_index = current_index;
+                ctx->state = STATE_VISUAL;
+            }
             break;
         }
         case 'u': {

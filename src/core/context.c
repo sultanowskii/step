@@ -25,6 +25,8 @@ struct Context *_context_create_empty(void) {
     ctx->starting_symbol_index = 0;
     ctx->starting_line_index = 0;
     ctx->rows_to_redraw = NULL;
+    ctx->selection_starting_symbol_index = 0;
+    ctx->selection_ending_symbol_index = 0;
     return ctx;
 }
 
@@ -41,7 +43,9 @@ struct Context *context_create(
     size_t             starting_symbol_index,
     size_t             starting_line_index,
     size_t             line_count,
-    struct BitArray   *rows_to_redraw
+    struct BitArray   *rows_to_redraw,
+    size_t             selection_starting_symbol_index,
+    size_t             selection_ending_symbol_index
 ) {
     struct Context *ctx = _context_create_empty();
     ctx->filepath = str_dup(filepath);
@@ -57,6 +61,8 @@ struct Context *context_create(
     ctx->starting_line_index = starting_line_index;
     ctx->line_count = line_count;
     ctx->rows_to_redraw = rows_to_redraw;
+    ctx->selection_starting_symbol_index = selection_starting_symbol_index;
+    ctx->selection_ending_symbol_index = selection_ending_symbol_index;
     return ctx;
 }
 
@@ -71,5 +77,7 @@ void context_destroy(struct Context *ctx) {
     ctx->text_board = NULL;
     ctx->cursor = (struct Coords){.y = 0, .x = 0};
     ctx->rows_to_redraw = NULL;
+    ctx->selection_starting_symbol_index = 0;
+    ctx->selection_ending_symbol_index = 0;
     free(ctx);
 }

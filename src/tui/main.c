@@ -130,6 +130,8 @@ struct Context *context_setup(const char *filename) {
     struct Coords      cursor = {.y = 0, .x = 0};
     const size_t       starting_symbol_index = 0;
     const size_t       starting_line_index = 0;
+    const size_t       selection_starting_symbol_index = 0;
+    const size_t       selection_ending_symbol_index = 0;
     struct EventQueue *event_queue = event_queue_create();
     struct BitArray   *rows_to_redraw = bit_array_create(256);
     bit_array_flood(rows_to_redraw);
@@ -151,7 +153,9 @@ struct Context *context_setup(const char *filename) {
         starting_symbol_index,
         starting_line_index,
         line_count,
-        rows_to_redraw
+        rows_to_redraw,
+        selection_starting_symbol_index,
+        selection_ending_symbol_index
     );
 
     undo_facade_set_ctx(undo_facade, ctx);

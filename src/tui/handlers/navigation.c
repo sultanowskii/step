@@ -6,6 +6,7 @@
 #include "collections/gap_buffer.h"
 #include "core/context.h"
 #include "nonstd/compile.h"
+#include "nonstd/math.h"
 #include "nonstd/optionals.h"
 #include "tui/boards/board.h"
 #include "tui/coords.h"
@@ -92,7 +93,13 @@ void handle_key_navigation(
             break;
         }
     }
+    revise_cursor(ctx);
     bit_array_set_at(ctx->rows_to_redraw, cursor->y);
+
+    optional_size_t maybe_new_selection_ending_symbol_index = get_index_from_cursor_position(ctx);
+    if (size_t_is_some(maybe_new_selection_ending_symbol_index)) {
+        ctx->selection_ending_symbol_index = size_t_get_val(maybe_new_selection_ending_symbol_index);
+    }
 }
 
 IGNORE_UNUSED_PARAMETER()

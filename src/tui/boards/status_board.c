@@ -75,6 +75,12 @@ void print_value_index(struct Context *ctx) {
     wprintw(status_board_window, "%zu", index);
 }
 
+void print_selection(struct Context *ctx) {
+    WINDOW *status_board_window = board_window(ctx->status_board);
+    
+    wprintw(status_board_window, "[%zu; %zu]", ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index);
+}
+
 void update_status_board(struct Context *ctx) {
     struct Board *status_board = ctx->status_board;
     WINDOW       *status_board_window = board_window(status_board);
@@ -97,6 +103,9 @@ void update_status_board(struct Context *ctx) {
 
     wprintw(status_board_window, ". Index: ");
     print_value_index(ctx);
+
+    wprintw(status_board_window, ", selection: ");
+    print_selection(ctx);
 
     struct Coords current = {
         .y = getcury(status_board_window),
