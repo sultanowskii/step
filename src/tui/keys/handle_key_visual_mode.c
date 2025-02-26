@@ -20,6 +20,10 @@ void handle_key_visual_mode(struct Context *ctx, int key) {
             // TODO: cut
             break;
         }
+        case 'd': {
+            // TODO: remove
+            break;
+        }
         case KEY_DOWN:
         case KEY_UP:
         case KEY_LEFT:

@@ -46,6 +46,9 @@ struct Context {
     // Selection boundaries
     size_t selection_starting_symbol_index;
     size_t selection_ending_symbol_index;
+
+    // Inner clipboard
+    struct Clipboard *clipboard;
 };
 
 // Creates context with specified done, undone stack and gap_buffer gap buffer.
@@ -64,7 +67,8 @@ struct Context *context_create(
     size_t             line_count,
     struct BitArray   *rows_to_redraw,
     size_t             selection_starting_symbol_index,
-    size_t             selection_ending_symbol_index
+    size_t             selection_ending_symbol_index,
+    struct Clipboard  *clipboard
 );
 
 // Destroys context. Some fields must be destroyed manually beforehand:
@@ -74,4 +78,5 @@ struct Context *context_create(
 // - status_board
 // - text_board
 // - cursor
+// - clipboard
 void context_destroy(struct Context *ctx);

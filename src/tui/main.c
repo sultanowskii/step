@@ -10,6 +10,7 @@
 #include "collections/bit_array.h"
 #include "collections/gap_buffer.h"
 #include "collections/gap_buffer_str.h"
+#include "core/clipboard.h"
 #include "core/commands/undo.h"
 #include "core/context.h"
 #include "core/error_message.h"
@@ -140,6 +141,8 @@ struct Context *context_setup(const char *filename) {
     struct Board *status_board = board_create_dummy();
     struct Board *text_board = board_create_dummy();
 
+    struct Clipboard *clipboard = clipboard_create();
+
     struct Context *ctx = context_create(
         filename,
         state,
@@ -155,7 +158,8 @@ struct Context *context_setup(const char *filename) {
         line_count,
         rows_to_redraw,
         selection_starting_symbol_index,
-        selection_ending_symbol_index
+        selection_ending_symbol_index,
+        clipboard
     );
 
     undo_facade_set_ctx(undo_facade, ctx);
@@ -165,6 +169,8 @@ struct Context *context_setup(const char *filename) {
 
 void context_teardown(struct Context *ctx) {
     undo_facade_destroy(ctx->undo_facade);
+
+    clipboard_destroy(ctx->clipboard);
 
     bit_array_destroy(ctx->rows_to_redraw);
 

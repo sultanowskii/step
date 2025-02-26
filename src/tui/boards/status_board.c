@@ -77,7 +77,7 @@ void print_value_index(struct Context *ctx) {
 
 void print_selection(struct Context *ctx) {
     WINDOW *status_board_window = board_window(ctx->status_board);
-    
+
     wprintw(status_board_window, "[%zu; %zu]", ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index);
 }
 

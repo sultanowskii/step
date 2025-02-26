@@ -53,6 +53,14 @@ void handle_key_normal_mode(struct Context *ctx, int key) {
             event_queue_push_request_go_to_eof(events);
             break;
         }
+        case 'p': {
+            // TODO: paste
+            break;
+        }
+        case 'x': {
+            // TODO: remove one symbol under cursor
+            break;
+        }
         case CTRL('q'): {
             ctx->state = STATE_EXIT;
             break;
