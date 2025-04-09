@@ -11,7 +11,7 @@ struct Clipboard {
     size_t capacity;
 };
 
-struct Clipboard *clipboard_create() {
+struct Clipboard *clipboard_create(void) {
     struct Clipboard *clipboard = malloc(sizeof(struct Clipboard));
     clipboard->data = malloc(DEFAULT_CLIPBOARD_CAPACITY);
     clipboard->capacity = DEFAULT_CLIPBOARD_CAPACITY;

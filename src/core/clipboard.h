@@ -4,7 +4,7 @@
 
 struct Clipboard;
 
-struct Clipboard *clipboard_create();
+struct Clipboard *clipboard_create(void);
 void              clipboard_destroy(struct Clipboard *clipboard);
 
 const char *clipboard_get(struct Clipboard *clipboard);

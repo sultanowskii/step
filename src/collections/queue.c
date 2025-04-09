@@ -40,7 +40,7 @@ struct Queue {
     struct QueueNode *tail;
 };
 
-struct Queue *queue_create_empty(void) {
+static inline struct Queue *_queue_create_empty(void) {
     struct Queue *queue = malloc(sizeof(struct Queue));
     queue->head = NULL;
     queue->tail = NULL;
@@ -49,7 +49,7 @@ struct Queue *queue_create_empty(void) {
 }
 
 struct Queue *queue_create(void) {
-    struct Queue *queue = queue_create_empty();
+    struct Queue *queue = _queue_create_empty();
     queue->size = 0;
     return queue;
 }
@@ -65,22 +65,26 @@ void queue_destroy(struct Queue *queue, func_destroy destroy_value) {
     free(queue);
 }
 
-size_t queue_get_size(const struct Queue *queue) {
+static inline size_t _queue_get_size(const struct Queue *queue) {
     return queue->size;
 }
 
-void _queue_size_inc(struct Queue *queue) {
+size_t queue_get_size(const struct Queue *queue) {
+    return _queue_get_size(queue);
+}
+
+static inline void _queue_size_inc(struct Queue *queue) {
     queue->size++;
 }
 
-void _queue_size_dec(struct Queue *queue) {
+static inline void _queue_size_dec(struct Queue *queue) {
     queue->size--;
 }
 
 void queue_push(struct Queue *queue, void *value) {
     struct QueueNode *node = queue_node_create(value);
 
-    if (queue_get_size(queue) == 0) {
+    if (_queue_get_size(queue) == 0) {
         queue->head = node;
         queue->tail = node;
     } else {
@@ -93,12 +97,12 @@ void queue_push(struct Queue *queue, void *value) {
 }
 
 void *queue_pop(struct Queue *queue) {
-    if (queue_get_size(queue) == 0) {
+    if (_queue_get_size(queue) == 0) {
         return NULL;
     }
 
     struct QueueNode *node = queue->tail;
-    if (queue_get_size(queue) == 1) {
+    if (_queue_get_size(queue) == 1) {
         queue->head = NULL;
         queue->tail = NULL;
     } else {
@@ -113,7 +117,7 @@ void *queue_pop(struct Queue *queue) {
 }
 
 void *queue_peek(struct Queue *queue) {
-    if (queue_get_size(queue) == 0) {
+    if (_queue_get_size(queue) == 0) {
         return NULL;
     }
 

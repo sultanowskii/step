@@ -11,10 +11,10 @@
 
 struct DequeNode;
 
-void              _evicting_deque_push_front(struct EvictingDeque *edeque, struct DequeNode *dnode);
-struct DequeNode *_evicting_deque_pop_front(struct EvictingDeque *edeque);
-void              _evicting_deque_push_back(struct EvictingDeque *edeque, struct DequeNode *dnode);
-struct DequeNode *_evicting_deque_pop_back(struct EvictingDeque *edeque);
+static void              _evicting_deque_push_front(struct EvictingDeque *edeque, struct DequeNode *dnode);
+static struct DequeNode *_evicting_deque_pop_front(struct EvictingDeque *edeque);
+static void              _evicting_deque_push_back(struct EvictingDeque *edeque, struct DequeNode *dnode);
+static struct DequeNode *_evicting_deque_pop_back(struct EvictingDeque *edeque);
 
 struct DequeNode {
     void             *value;
@@ -77,11 +77,11 @@ void evicting_deque_destroy(struct EvictingDeque *edeque, func_destroy destroy_v
     free(edeque);
 }
 
-void _evicting_deque_size_inc(struct EvictingDeque *edeque) {
+static inline void _evicting_deque_size_inc(struct EvictingDeque *edeque) {
     edeque->size++;
 }
 
-void _evicting_deque_size_dec(struct EvictingDeque *edeque) {
+static inline void _evicting_deque_size_dec(struct EvictingDeque *edeque) {
     edeque->size--;
 }
 
@@ -97,7 +97,7 @@ size_t evicting_deque_is_size_limited(const struct EvictingDeque *edeque) {
     return evicting_deque_get_max_size(edeque) > 0;
 }
 
-void _evicting_deque_push_front(struct EvictingDeque *edeque, struct DequeNode *dnode) {
+static inline void _evicting_deque_push_front(struct EvictingDeque *edeque, struct DequeNode *dnode) {
     if (evicting_deque_get_size(edeque) == 0) {
         edeque->head = dnode;
         edeque->tail = dnode;

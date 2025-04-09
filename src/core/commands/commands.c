@@ -73,7 +73,7 @@ struct CommandResult {
     } body;
 };
 
-struct Command *command_create_empty() {
+struct Command *command_create_empty(void) {
     struct Command *cmd = malloc(sizeof(struct Command));
     return cmd;
 }
@@ -169,7 +169,7 @@ void command_destroy(struct Command *cmd) {
     free(cmd);
 }
 
-struct CommandResult *command_result_create_empty() {
+struct CommandResult *command_result_create_empty(void) {
     struct CommandResult *result = malloc(sizeof(struct CommandResult));
     return result;
 }

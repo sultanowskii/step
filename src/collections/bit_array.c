@@ -11,7 +11,7 @@ struct BitArray {
     uint8_t *data;
 };
 
-struct BitArray *bit_array_create_empty() {
+struct BitArray *bit_array_create_empty(void) {
     struct BitArray *bit_array = malloc(sizeof(struct BitArray));
     bit_array->size = 0;
     bit_array->data = NULL;

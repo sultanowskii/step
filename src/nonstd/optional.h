@@ -19,7 +19,7 @@
         };                                                 \
     }                                                      \
                                                            \
-    static inline optional_##name name##_none() {          \
+    static inline optional_##name name##_none(void) {      \
         return (optional_##name){                          \
             .exists = false,                               \
         };                                                 \

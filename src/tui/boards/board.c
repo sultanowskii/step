@@ -36,7 +36,7 @@ struct Board *board_create(
     return board;
 }
 
-struct Board *board_create_dummy() {
+struct Board *board_create_dummy(void) {
     struct Board *board = board_create(1, 1, 0, 0);
     return board;
 }
