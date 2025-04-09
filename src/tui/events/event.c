@@ -13,6 +13,9 @@ enum EventType {
     EVENT_KEY_DELETE,
     EVENT_KEY_BACKSPACE,
     EVENT_KEY_TEXT,
+    EVENT_KEY_COPY,
+    EVENT_KEY_CUT,
+    EVENT_KEY_PASTE,
     EVENT_KEY_NAVIGATION,
     EVENT_REQUEST_GO_UP,
     EVENT_REQUEST_GO_DOWN,
@@ -30,6 +33,9 @@ struct Event {
         struct EventKeyDelete      key_delete;
         struct EventKeyBackspace   key_backspace;
         struct EventKeyText        key_text;
+        struct EventKeyCopy        key_copy;
+        struct EventKeyCut         key_cut;
+        struct EventKeyPaste       key_paste;
         struct EventKeyNavigation  key_navigation;
         struct EventRequestGoUp    request_go_up;
         struct EventRequestGoDown  request_go_down;
@@ -98,6 +104,27 @@ struct Event *event_create_key_text(int key) {
     return event;
 }
 
+struct Event *event_create_key_copy(size_t index, size_t length) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_KEY_COPY;
+    event->body.key_copy = (struct EventKeyCopy){.index = index, .length = length};
+    return event;
+}
+
+struct Event *event_create_key_cut(size_t index, size_t length) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_KEY_CUT;
+    event->body.key_cut = (struct EventKeyCut){.index = index, .length = length};
+    return event;
+}
+
+struct Event *event_create_key_paste(size_t index) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_KEY_PASTE;
+    event->body.key_paste = (struct EventKeyPaste){.index = index};
+    return event;
+}
+
 struct Event *event_create_key_navigation(int key) {
     struct Event *event = event_create_empty();
     event->type = EVENT_KEY_NAVIGATION;
@@ -151,6 +178,9 @@ void event_handle(const struct EventHandler *event_handler, struct Context *ctx,
         EVENT_CASE(KEY_DELETE, key_delete);
         EVENT_CASE(KEY_BACKSPACE, key_backspace);
         EVENT_CASE(KEY_TEXT, key_text);
+        EVENT_CASE(KEY_COPY, key_copy);
+        EVENT_CASE(KEY_CUT, key_cut);
+        EVENT_CASE(KEY_PASTE, key_paste);
         EVENT_CASE(KEY_NAVIGATION, key_navigation);
         EVENT_CASE(REQUEST_GO_UP, request_go_up);
         EVENT_CASE(REQUEST_GO_DOWN, request_go_down);

@@ -18,7 +18,7 @@ const size_t UNDO_COMMAND_MAX_COUNT = 10000;
 const size_t UNDO_GROUP_MAX_SIZE = 10;
 
 void command_result_or_delimiter_destroy(struct CommandResult *result) {
-    if (result == DELIMITER) {
+    if (result == DELIMITER || result == NULL) {
         return;
     }
 
@@ -108,6 +108,14 @@ bool is_delimiter_required(struct UndoFacade *undo_facade, struct CommandResult 
                 return true;
             }
             break;
+        };
+        case CMD_INSERT_STRING: {
+            // TODO: implement
+            return true;
+        };
+        case CMD_DELETE_STRING: {
+            // TODO: implement
+            return true;
         };
     }
 

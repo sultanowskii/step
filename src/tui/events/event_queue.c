@@ -64,6 +64,21 @@ void event_queue_push_key_text(struct EventQueue *event_queue, int key) {
     queue_push(event_queue->queue, event);
 }
 
+void event_queue_push_key_copy(struct EventQueue *event_queue, size_t index, size_t length) {
+    struct Event *event = event_create_key_copy(index, length);
+    queue_push(event_queue->queue, event);
+}
+
+void event_queue_push_key_cut(struct EventQueue *event_queue, size_t index, size_t length) {
+    struct Event *event = event_create_key_cut(index, length);
+    queue_push(event_queue->queue, event);
+}
+
+void event_queue_push_key_paste(struct EventQueue *event_queue, size_t index) {
+    struct Event *event = event_create_key_paste(index);
+    queue_push(event_queue->queue, event);
+}
+
 void event_queue_push_key_navigation(struct EventQueue *event_queue, int key) {
     struct Event *event = event_create_key_navigation(key);
     queue_push(event_queue->queue, event);

@@ -26,6 +26,7 @@
 #include "tui/cursor.h"
 #include "tui/events/event.h"
 #include "tui/events/event_queue.h"
+#include "tui/handlers/copypaste.h"
 #include "tui/handlers/handlers.h"
 #include "tui/keys/handle_key.h"
 #include "tui/layout.h"
@@ -39,6 +40,9 @@ void loop(struct Context *ctx) {
         .handle_key_delete = handle_key_delete,
         .handle_key_backspace = handle_key_backspace,
         .handle_key_text = handle_key_text,
+        .handle_key_copy = handle_key_copy,
+        .handle_key_cut = handle_key_cut,
+        .handle_key_paste = handle_key_paste,
         .handle_key_navigation = handle_key_navigation,
         .handle_request_go_up = handle_request_go_up,
         .handle_request_go_down = handle_request_go_down,

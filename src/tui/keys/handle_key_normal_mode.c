@@ -54,11 +54,15 @@ void handle_key_normal_mode(struct Context *ctx, int key) {
             break;
         }
         case 'p': {
-            // TODO: paste
+            optional_size_t maybe_current_index = get_index_from_cursor_position(ctx);
+            if (size_t_is_some(maybe_current_index)) {
+                size_t current_index = size_t_get_val(maybe_current_index);
+                event_queue_push_key_paste(events, current_index);
+            }
             break;
         }
         case 'x': {
-            // TODO: remove one symbol under cursor
+            event_queue_push_key_delete(events);
             break;
         }
         case CTRL('q'): {

@@ -1,5 +1,9 @@
 #include "tui/keys/handle_key_visual_mode.h"
 
+#include <ncurses.h>
+
+#include "core/state.h"
+#include "nonstd/math.h"
 #include "tui/keys/key.h"
 
 void handle_key_visual_mode(struct Context *ctx, int key) {
@@ -13,15 +17,23 @@ void handle_key_visual_mode(struct Context *ctx, int key) {
             break;
         }
         case 'c': {
-            // TODO: copy
+            size_t index = MIN(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index);
+            size_t length = UNSIGNED_ABS_DIFF(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index) + 1;
+            event_queue_push_key_copy(events, index, length);
+            ctx->state = STATE_NORMAL;
             break;
         }
         case 'x': {
-            // TODO: cut
+            size_t index = MIN(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index);
+            size_t length = UNSIGNED_ABS_DIFF(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index) + 1;
+            event_queue_push_key_cut(events, index, length);
+            ctx->state = STATE_NORMAL;
             break;
         }
+        case KEY_DC:
+        case KEY_BACKSPACE:
         case 'd': {
-            // TODO: remove
+            // TODO: delete selected
             break;
         }
         case KEY_DOWN:

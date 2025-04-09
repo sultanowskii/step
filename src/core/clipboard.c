@@ -32,9 +32,9 @@ const char *clipboard_get(struct Clipboard *clipboard) {
 void clipboard_set(struct Clipboard *clipboard, const char *s, size_t length) {
     if (length >= clipboard->capacity) {
         size_t new_capacity = length + 1;
-        clipboard->data = realloc(clipboard->data, clipboard->capacity);
+        clipboard->data = realloc(clipboard->data, new_capacity);
         clipboard->capacity = new_capacity;
     }
 
-    strncpy(clipboard->data, s, length);
+    strncpy(clipboard->data, s, length + 1);
 }

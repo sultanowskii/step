@@ -116,7 +116,7 @@ void gap_buffer_move_gap(struct GapBuffer *gb, size_t index) {
     }
 }
 
-void _gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s, size_t length) {
+static inline void _gap_buffer_insert(struct GapBuffer *gb, size_t index, const char *s, size_t length) {
     assert(gb->left <= gb->right);
     if (length == 0) {
         return;
@@ -167,11 +167,11 @@ void gap_buffer_delete_n(struct GapBuffer *gb, size_t index, size_t n) {
     }
 }
 
-size_t _gap_buffer_get_gap_size(const struct GapBuffer *gb) {
+static inline size_t _gap_buffer_get_gap_size(const struct GapBuffer *gb) {
     return gb->right - gb->left + 1;
 }
 
-size_t _gap_buffer_get_real_index(const struct GapBuffer *gb, size_t index) {
+static inline size_t _gap_buffer_get_real_index(const struct GapBuffer *gb, size_t index) {
     if (index < gb->left) {
         return index;
     }
@@ -188,6 +188,22 @@ char gap_buffer_get_at(const struct GapBuffer *gb, size_t index) {
 
 void gap_buffer_set_at(struct GapBuffer *gb, size_t index, char c) {
     gb->buffer[_gap_buffer_get_real_index(gb, index)] = c;
+}
+
+size_t gap_buffer_strncpy_from(struct GapBuffer *gb, char *buf, size_t starting_index, size_t n) {
+    size_t written = 0;
+    size_t buf_index = 0;
+    size_t gb_index = starting_index;
+
+    while (written < n && gb_index < gap_buffer_get_length(gb)) {
+        buf[buf_index] = gap_buffer_get_at(gb, gb_index);
+        buf_index++;
+        gb_index++;
+        written++;
+    }
+    buf[buf_index] = '\0';
+
+    return written;
 }
 
 void gap_buffer_write_to_file(const struct GapBuffer *gb, FILE *f) {

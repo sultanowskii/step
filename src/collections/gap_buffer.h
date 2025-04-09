@@ -18,7 +18,8 @@ size_t gap_buffer_get_length(const struct GapBuffer *gb);
 char gap_buffer_get_at(const struct GapBuffer *gb, size_t index);
 void gap_buffer_set_at(struct GapBuffer *gb, size_t index, char c);
 
-void gap_buffer_write_to_file(const struct GapBuffer *gb, FILE *f);
+size_t gap_buffer_strncpy_from(struct GapBuffer *gb, char *buf, size_t starting_index, size_t n);
+void   gap_buffer_write_to_file(const struct GapBuffer *gb, FILE *f);
 
 void gap_buffer_print(const struct GapBuffer *gb);
 void gap_buffer_print_with_indent(const struct GapBuffer *gb, size_t indent_size);
