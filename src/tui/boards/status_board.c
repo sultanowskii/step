@@ -90,10 +90,10 @@ void update_status_board(struct Context *ctx) {
 
     print_value_state(ctx);
 
-    wprintw(status_board_window, " Ln ");
+    wprintw(status_board_window, " ");
     print_value_ln(ctx);
 
-    wprintw(status_board_window, ", Col ");
+    wprintw(status_board_window, ":");
     print_value_col(ctx);
 
     if (0) {
@@ -104,8 +104,10 @@ void update_status_board(struct Context *ctx) {
     wprintw(status_board_window, ". Index: ");
     print_value_index(ctx);
 
-    wprintw(status_board_window, ", selection: ");
-    print_selection(ctx);
+    if (ctx->state == STATE_VISUAL) {
+        wprintw(status_board_window, " Selection: ");
+        print_selection(ctx);
+    }
 
     struct Coords current = {
         .y = getcury(status_board_window),
