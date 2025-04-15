@@ -30,7 +30,11 @@ usage: ./step FILENAME
 
 ### Modes
 
-The idea is very similar to vim. There are normal (command) and insert modes.
+The idea is very similar to vim. There are:
+
+- Normal (command)
+- Insert (the usual text editor experience)
+- Visual (selection)
 
 #### All modes
 
@@ -42,8 +46,6 @@ These keys work in all modes:
 
 #### Normal (command) mode
 
-This is where you would
-
 | Key           | Action                       |
 |---------------|------------------------------|
 | `Ctrl+q`      | Quit                         |
@@ -52,31 +54,34 @@ This is where you would
 | `r`           | Redo                         |
 | `g`           | Goto Beginning of File (BOF) |
 | `G`           | Goto End of File (EOF)       |
+| `x`           | Remove one symbol            |
+| `p`           | Insert clipboard             |
 | `i`           | Enter **Insert mode**        |
+| `v`           | Enter **Visual mode**        |
 
 #### Insert mode
 
 Basic text insertion mode - just like in most of text editors.
 
-| Key               | Action                                       |
-|-------------------|----------------------------------------------|
-| `Ctrl+q` / `Esc`  | Exit Insert Mode (aka enter **Normal mode**) |
-| `Backspace`/`Del` | Remove symbol                                |
+| Key               | Action                                          |
+|-------------------|-------------------------------------------------|
+| `Ctrl+q` / `Esc`  | Exit **Insert Mode** (= Enter **Normal mode**) |
 
-## Features
+#### Visual (select) mode
 
-- Undo/redo support - it might be simple and not as fancy as what modern text editors offer, but it works
-- (As far as I know) doesn't have memory leaks
-
-Not a feature itself, but worth mentioning: written fully in C, using `ncurses` for the TUI
+| Key              | Action                                         |
+|------------------|------------------------------------------------|
+| `c`              | Copy selected to clipboard                     |
+| `x`              | Cut selected to clipboard                      |
+| `Ctrl+q` / `Esc` | Exit **Visual Mode** (= Enter **Normal mode**) |
 
 ## Limitations
 
 - ASCII only
 - Enormously large files aren't handled in any specific way, therefore some operations (as well as opening/saving) might be slow
-- Currently, no copy/cut/paste support
 - As some other TUIs, could work weirdly in small terminal windows - get a bigger one :)
+- Internal clipboard only (I'm NOT making the real clipboard support - that's one hell of a nightmare)
 
 ## About
 
-I've played with `ncurses` before, but I've always wanted to actually make an app using it. Well, I did it.
+The protracted pet ncurses project. Still like it quite a lot.
