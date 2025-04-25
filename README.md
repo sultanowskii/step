@@ -2,6 +2,8 @@
 
 Simple Text Editor, Personalized
 
+![screenshot](assets/screenshot.png)
+
 ## Build
 
 The only external dependency is `ncurses` (and `panels`, which is usually shipped with ncurses).
@@ -55,13 +57,13 @@ These keys work in all modes:
 | `g`           | Goto Beginning of File (BOF) |
 | `G`           | Goto End of File (EOF)       |
 | `x`           | Remove one symbol            |
-| `p`           | Insert clipboard             |
+| `p`           | Insert clipboard contents    |
 | `i`           | Enter **Insert mode**        |
 | `v`           | Enter **Visual mode**        |
 
 #### Insert mode
 
-Basic text insertion mode - just like in most of text editors.
+Basic text mode.
 
 | Key               | Action                                          |
 |-------------------|-------------------------------------------------|
@@ -69,18 +71,19 @@ Basic text insertion mode - just like in most of text editors.
 
 #### Visual (select) mode
 
-| Key              | Action                                         |
-|------------------|------------------------------------------------|
-| `c`              | Copy selected to clipboard                     |
-| `x`              | Cut selected to clipboard                      |
-| `Ctrl+q` / `Esc` | Exit **Visual Mode** (= Enter **Normal mode**) |
+| Key                     | Action                                         |
+|-------------------------|------------------------------------------------|
+| `c`                     | Copy selected to clipboard                     |
+| `x`                     | Cut selected to clipboard                      |
+| `d`, `DEL`, `Backspace` | Remove selected                                |
+| `Ctrl+q` / `Esc`        | Exit **Visual Mode** (= Enter **Normal mode**) |
 
 ## Limitations
 
 - ASCII only
+- Internal clipboard only (I'm NOT making the real clipboard support - that's one hell of a nightmare)
 - Enormously large files aren't handled in any specific way, therefore some operations (as well as opening/saving) might be slow
 - As some other TUIs, could work weirdly in small terminal windows - get a bigger one :)
-- Internal clipboard only (I'm NOT making the real clipboard support - that's one hell of a nightmare)
 
 ## About
 
