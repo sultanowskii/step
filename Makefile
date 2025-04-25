@@ -24,7 +24,7 @@ OBJS             := $(SRCS:.c=.o)
 TO_CLEANUP       := $(TARGET) $(shell find . -type f -name '*.o' -o -name '*.elf')
 
 .PHONY: default
-default: clean build
+default: build
 
 .PHONY: clean
 clean:
