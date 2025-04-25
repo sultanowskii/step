@@ -9,6 +9,9 @@
 void handle_key_visual_mode(struct Context *ctx, int key) {
     struct EventQueue *events = ctx->events;
 
+    size_t selection_index = MIN(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index);
+    size_t selection_length = UNSIGNED_ABS_DIFF(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index) + 1;
+
     switch (key) {
         case ESC:
         case CTRL('q'): {
@@ -17,16 +20,12 @@ void handle_key_visual_mode(struct Context *ctx, int key) {
             break;
         }
         case 'c': {
-            size_t index = MIN(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index);
-            size_t length = UNSIGNED_ABS_DIFF(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index) + 1;
-            event_queue_push_key_copy(events, index, length);
+            event_queue_push_key_copy(events, selection_index, selection_length);
             ctx->state = STATE_NORMAL;
             break;
         }
         case 'x': {
-            size_t index = MIN(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index);
-            size_t length = UNSIGNED_ABS_DIFF(ctx->selection_starting_symbol_index, ctx->selection_ending_symbol_index) + 1;
-            event_queue_push_key_cut(events, index, length);
+            event_queue_push_key_cut(events, selection_index, selection_length);
             ctx->state = STATE_NORMAL;
             break;
         }
