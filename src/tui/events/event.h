@@ -47,6 +47,11 @@ struct EventKeyPaste {
     size_t index;
 };
 
+struct EventRequestDeleteString {
+    size_t index;
+    size_t length;
+};
+
 struct EventKeyNavigation {
     int key;
 };
@@ -76,6 +81,7 @@ struct EventHandler {
     DEFINE_HANDLER_FIELD(KeyCopy, key_copy)
     DEFINE_HANDLER_FIELD(KeyCut, key_cut)
     DEFINE_HANDLER_FIELD(KeyPaste, key_paste)
+    DEFINE_HANDLER_FIELD(RequestDeleteString, request_delete_string)
     DEFINE_HANDLER_FIELD(KeyNavigation, key_navigation)
     DEFINE_HANDLER_FIELD(RequestGoUp, request_go_up)
     DEFINE_HANDLER_FIELD(RequestGoDown, request_go_down)
@@ -95,6 +101,7 @@ DEFINE_EVENT_CREATE(key_text)(int key);
 DEFINE_EVENT_CREATE(key_copy)(size_t index, size_t length);
 DEFINE_EVENT_CREATE(key_cut)(size_t index, size_t length);
 DEFINE_EVENT_CREATE(key_paste)(size_t index);
+DEFINE_EVENT_CREATE(request_delete_string)(size_t index, size_t length);
 DEFINE_EVENT_CREATE(key_navigation)(int key);
 DEFINE_EVENT_CREATE(request_go_up)(void);
 DEFINE_EVENT_CREATE(request_go_down)(void);

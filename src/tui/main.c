@@ -43,6 +43,7 @@ void loop(struct Context *ctx) {
         .handle_key_copy = handle_key_copy,
         .handle_key_cut = handle_key_cut,
         .handle_key_paste = handle_key_paste,
+        .handle_request_delete_string = handle_request_delete_string,
         .handle_key_navigation = handle_key_navigation,
         .handle_request_go_up = handle_request_go_up,
         .handle_request_go_down = handle_request_go_down,

@@ -16,6 +16,7 @@ enum EventType {
     EVENT_KEY_COPY,
     EVENT_KEY_CUT,
     EVENT_KEY_PASTE,
+    EVENT_REQUEST_DELETE_STRING,
     EVENT_KEY_NAVIGATION,
     EVENT_REQUEST_GO_UP,
     EVENT_REQUEST_GO_DOWN,
@@ -26,21 +27,22 @@ enum EventType {
 struct Event {
     enum EventType type;
     union {
-        struct EventSymbolAdded    symbol_added;
-        struct EventSymbolRemoved  symbol_removed;
-        struct EventKeyUndo        key_undo;
-        struct EventKeyRedo        key_redo;
-        struct EventKeyDelete      key_delete;
-        struct EventKeyBackspace   key_backspace;
-        struct EventKeyText        key_text;
-        struct EventKeyCopy        key_copy;
-        struct EventKeyCut         key_cut;
-        struct EventKeyPaste       key_paste;
-        struct EventKeyNavigation  key_navigation;
-        struct EventRequestGoUp    request_go_up;
-        struct EventRequestGoDown  request_go_down;
-        struct EventRequestGoToBof request_go_to_bof;
-        struct EventRequestGoToEof request_go_to_eof;
+        struct EventSymbolAdded         symbol_added;
+        struct EventSymbolRemoved       symbol_removed;
+        struct EventKeyUndo             key_undo;
+        struct EventKeyRedo             key_redo;
+        struct EventKeyDelete           key_delete;
+        struct EventKeyBackspace        key_backspace;
+        struct EventKeyText             key_text;
+        struct EventKeyCopy             key_copy;
+        struct EventKeyCut              key_cut;
+        struct EventKeyPaste            key_paste;
+        struct EventRequestDeleteString request_delete_string;
+        struct EventKeyNavigation       key_navigation;
+        struct EventRequestGoUp         request_go_up;
+        struct EventRequestGoDown       request_go_down;
+        struct EventRequestGoToBof      request_go_to_bof;
+        struct EventRequestGoToEof      request_go_to_eof;
     } body;
 };
 
@@ -125,6 +127,13 @@ struct Event *event_create_key_paste(size_t index) {
     return event;
 }
 
+struct Event *event_create_request_delete_string(size_t index, size_t length) {
+    struct Event *event = event_create_empty();
+    event->type = EVENT_REQUEST_DELETE_STRING;
+    event->body.request_delete_string = (struct EventRequestDeleteString){.index = index, .length = length};
+    return event;
+}
+
 struct Event *event_create_key_navigation(int key) {
     struct Event *event = event_create_empty();
     event->type = EVENT_KEY_NAVIGATION;
@@ -181,6 +190,7 @@ void event_handle(const struct EventHandler *event_handler, struct Context *ctx,
         EVENT_CASE(KEY_COPY, key_copy);
         EVENT_CASE(KEY_CUT, key_cut);
         EVENT_CASE(KEY_PASTE, key_paste);
+        EVENT_CASE(REQUEST_DELETE_STRING, request_delete_string);
         EVENT_CASE(KEY_NAVIGATION, key_navigation);
         EVENT_CASE(REQUEST_GO_UP, request_go_up);
         EVENT_CASE(REQUEST_GO_DOWN, request_go_down);

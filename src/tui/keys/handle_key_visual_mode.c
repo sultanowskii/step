@@ -32,7 +32,8 @@ void handle_key_visual_mode(struct Context *ctx, int key) {
         case KEY_DC:
         case KEY_BACKSPACE:
         case 'd': {
-            // TODO: delete selected
+            event_queue_push_request_delete_string(events, selection_index, selection_length);
+            ctx->state = STATE_NORMAL;
             break;
         }
         case KEY_DOWN:

@@ -79,6 +79,11 @@ void event_queue_push_key_paste(struct EventQueue *event_queue, size_t index) {
     queue_push(event_queue->queue, event);
 }
 
+void event_queue_push_request_delete_string(struct EventQueue *event_queue, size_t index, size_t length) {
+    struct Event *event = event_create_request_delete_string(index, length);
+    queue_push(event_queue->queue, event);
+}
+
 void event_queue_push_key_navigation(struct EventQueue *event_queue, int key) {
     struct Event *event = event_create_key_navigation(key);
     queue_push(event_queue->queue, event);
