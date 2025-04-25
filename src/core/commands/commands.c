@@ -210,7 +210,7 @@ struct CommandResult *command_result_create_delete_string(size_t index, char *s,
     result->type = CMD_DELETE_STRING;
     result->body.delete_string = (struct CmdResultDeleteString){
         .index = index,
-        .s = s, // TODO: copy or not?
+        .s = s,
         .length = length,
     };
     return result;

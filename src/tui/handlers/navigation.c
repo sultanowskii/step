@@ -118,9 +118,11 @@ void handle_request_go_down(struct Context *ctx, const struct EventRequestGoDown
 IGNORE_UNUSED_PARAMETER()
 void handle_request_go_to_bof(struct Context *ctx, const struct EventRequestGoToBof *request_go_to_bof) {
     move_cursor_to_index(ctx, 0);
+    bit_array_flood(ctx->rows_to_redraw);
 }
 
 IGNORE_UNUSED_PARAMETER()
 void handle_request_go_to_eof(struct Context *ctx, const struct EventRequestGoToEof *request_go_to_eof) {
     move_cursor_to_index(ctx, gap_buffer_get_length(ctx->gap_buffer));
+    bit_array_flood(ctx->rows_to_redraw);
 }

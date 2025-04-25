@@ -13,7 +13,7 @@ struct Clipboard {
 
 struct Clipboard *clipboard_create(void) {
     struct Clipboard *clipboard = malloc(sizeof(struct Clipboard));
-    clipboard->data = malloc(DEFAULT_CLIPBOARD_CAPACITY);
+    clipboard->data = calloc(DEFAULT_CLIPBOARD_CAPACITY, sizeof(char));
     clipboard->capacity = DEFAULT_CLIPBOARD_CAPACITY;
     return clipboard;
 }

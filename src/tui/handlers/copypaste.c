@@ -6,6 +6,7 @@
 #include "collections/gap_buffer.h"
 #include "core/clipboard.h"
 #include "nonstd/str.h"
+#include "tui/cursor.h"
 
 void _put_to_clipboard(struct Context *ctx, size_t index, size_t length) {
     char  *buffer = calloc(length + 1, sizeof(char));
@@ -31,6 +32,8 @@ void handle_key_cut(struct Context *ctx, const struct EventKeyCut *key_cut) {
     struct CommandResult *result = command_exec(ctx, cmd);
     command_destroy(cmd);
     undo_facade_add_done(ctx->undo_facade, result);
+
+    move_cursor_to_index(ctx, key_cut->index);
 
     bit_array_flood(ctx->rows_to_redraw);
 }

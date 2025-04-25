@@ -45,9 +45,9 @@ void handle_deletion(struct Context *ctx, bool backwards) {
     command_destroy(cmd);
     undo_facade_add_done(ctx->undo_facade, result);
 
-    move_cursor_to_index(ctx, index);
-
     event_queue_push_symbol_removed(ctx->events, index_of_deleted_symbol, symbol);
+
+    move_cursor_to_index(ctx, index);
 
     // TODO: optimize?
     bit_array_flood(ctx->rows_to_redraw);
