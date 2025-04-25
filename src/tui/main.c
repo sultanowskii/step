@@ -4,7 +4,6 @@
 #include <malloc.h>
 #include <ncurses.h>
 #include <panel.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "collections/bit_array.h"
@@ -21,7 +20,6 @@
 #include "tui/boards/line_number_board.h"
 #include "tui/boards/status_board.h"
 #include "tui/boards/text_board.h"
-#include "tui/color.h"
 #include "tui/coords.h"
 #include "tui/cursor.h"
 #include "tui/events/event.h"
@@ -30,6 +28,7 @@
 #include "tui/handlers/handlers.h"
 #include "tui/keys/handle_key.h"
 #include "tui/layout.h"
+#include "tui/tui.h"
 
 void loop(struct Context *ctx) {
     struct EventHandler event_handler = {
@@ -81,39 +80,6 @@ void loop(struct Context *ctx) {
 void run(struct Context *ctx) {
     recompose_boards(ctx);
     loop(ctx);
-}
-
-void tui_setup(void) {
-    initscr();
-    setup_colors();
-
-    // direct input
-    raw();
-
-    // disable echoing user input
-    noecho();
-
-    // enable keypad
-    keypad(stdscr, TRUE);
-
-    // hide cursor (we manage it ourselves)
-    curs_set(0);
-
-    // ESCDELAY is responsible for a delay after hitting Escape
-    // in order to distinguish it from escape sequence
-    //
-    // https://en.wikipedia.org/wiki/Escape_sequence
-    // man 3 ESCDELAY
-    set_escdelay(10);
-
-    mousemask(
-        BUTTON1_PRESSED | BUTTON1_RELEASED | BUTTON1_CLICKED | BUTTON_SHIFT | BUTTON_CTRL | REPORT_MOUSE_POSITION,
-        NULL
-    );
-}
-
-void tui_teardown(void) {
-    endwin();
 }
 
 struct Context *context_setup(const char *filename) {

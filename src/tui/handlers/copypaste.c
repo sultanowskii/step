@@ -52,6 +52,7 @@ void handle_key_paste(struct Context *ctx, const struct EventKeyPaste *key_paste
     command_destroy(cmd);
     undo_facade_add_done(ctx->undo_facade, result);
 
+    move_cursor_to_index(ctx, key_paste->index + length);
     bit_array_flood(ctx->rows_to_redraw);
 }
 
