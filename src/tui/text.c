@@ -27,17 +27,15 @@ struct Coords revise_coords_with_gap_buffer(
     struct Coords current = {.y = 0, .x = 0};
     struct Coords last_valid = current;
     size_t        max_valid_index = gap_buffer_get_max_valid_index(gb);
+    size_t        buffer_index = starting_index;
 
-    size_t buffer_index = starting_index;
     while (current.y <= raw.y && buffer_index <= max_valid_index) {
         last_valid = current;
-
         if (current.y == raw.y && current.x == raw.x) {
             return last_valid;
         }
 
-        char sym = gap_buffer_get_at(gb, buffer_index);
-
+        char            sym = gap_buffer_get_at(gb, buffer_index);
         optional_coords maybe_next = next_valid_coords(&current, max_rows, max_columns, sym);
         if (coords_is_none(maybe_next)) {
             return last_valid;
@@ -53,8 +51,8 @@ optional_size_t find_start_of_next_line(
     const struct GapBuffer *gb,
     size_t                  starting_index
 ) {
-    size_t gb_length = gap_buffer_get_length(gb);
-    for (size_t i = starting_index; i < gb_length; i++) {
+    // Start of the next line is right after the closest \n (by going right).
+    for (size_t i = starting_index; i < gap_buffer_get_length(gb); i++) {
         char symbol = gap_buffer_get_at(gb, i);
         if (symbol == '\n') {
             return size_t_some(i + 1);
@@ -72,8 +70,8 @@ optional_size_t find_start_of_current_line(
         return size_t_some(0);
     }
 
+    // Start of current line is right before the closest '\n' (by going left).
     size_t i = starting_index - 1;
-
     while (true) {
         char symbol = gap_buffer_get_at(gb, i);
         if (symbol == '\n') {
@@ -101,6 +99,8 @@ optional_size_t find_start_of_previous_line(
     bool   start_of_current_line_found = false;
     size_t i = starting_index - 1;
 
+    // Start of the previous line is right before the second
+    // closest '\n' (by going left).
     while (true) {
         char symbol = gap_buffer_get_at(gb, i);
         if (symbol == '\n') {
@@ -195,14 +195,13 @@ size_t first_y_of_line_under_pos(
         char sym = gap_buffer_get_at(gb, i);
 
         if (text_board_pos.y == pos->y && text_board_pos.x == pos->x) {
-            return row_index;
+            break;
         }
 
         optional_coords maybe_next = next_valid_coords(&text_board_pos, text_board_max_rows, text_board_max_columns, sym);
         if (coords_is_none(maybe_next)) {
             break;
         }
-
         text_board_pos = coords_get_val(maybe_next);
 
         if (sym == '\n') {
@@ -225,9 +224,7 @@ size_t last_y_of_line_under_pos(
 
     bool after_pos = false;
 
-    size_t length = gap_buffer_get_length(gb);
-
-    for (size_t i = starting_symbol_index; i < length; i++) {
+    for (size_t i = starting_symbol_index; i < gap_buffer_get_length(gb); i++) {
         char sym = gap_buffer_get_at(gb, i);
 
         if (text_board_pos.y == pos->y && text_board_pos.x == pos->x) {

@@ -84,4 +84,4 @@ Basic text insertion mode - just like in most of text editors.
 
 ## About
 
-The protracted pet ncurses project. Still like it quite a lot.
+My biggest pet project so far - I quite like it.
