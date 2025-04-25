@@ -221,21 +221,25 @@ size_t last_y_of_line_under_pos(
     const struct Coords *pos
 ) {
     struct Coords text_board_pos = {.y = 0, .x = 0};
-    size_t        row_index = 0;
+    size_t        last_y = 0;
 
-    bool after_cursor = false;
+    bool after_pos = false;
 
-    for (size_t i = starting_symbol_index; i < gap_buffer_get_length(gb); i++) {
+    size_t length = gap_buffer_get_length(gb);
+
+    for (size_t i = starting_symbol_index; i < length; i++) {
         char sym = gap_buffer_get_at(gb, i);
 
         if (text_board_pos.y == pos->y && text_board_pos.x == pos->x) {
-            after_cursor = true;
+            after_pos = true;
+            // Failsafe for 'at the last line' case
+            last_y = text_board_pos.y;
         }
 
         if (sym == '\n') {
-            row_index = text_board_pos.y;
-            if (after_cursor) {
-                return row_index;
+            last_y = text_board_pos.y;
+            if (after_pos) {
+                return last_y;
             }
         }
 
@@ -247,5 +251,5 @@ size_t last_y_of_line_under_pos(
         text_board_pos = coords_get_val(maybe_next);
     }
 
-    return row_index;
+    return last_y;
 }
